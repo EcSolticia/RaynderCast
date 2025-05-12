@@ -33,6 +33,7 @@ public:
 
     Renderer() {};
     Renderer(const uint16_t window_width, const uint16_t window_height);
+    ~Renderer();
 };
 
 }

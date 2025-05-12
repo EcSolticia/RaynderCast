@@ -102,4 +102,9 @@ Renderer::Renderer(const uint16_t window_width, const uint16_t window_height) {
 
 }
 
+Renderer::~Renderer() {
+    SDL_DestroyWindow(this->window);
+    SDL_DestroyRenderer(this->context);
+}
+
 }
