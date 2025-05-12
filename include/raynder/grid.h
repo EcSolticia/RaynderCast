@@ -13,8 +13,8 @@
 namespace Raynder {
 
 class Grid {
-    std::uint8_t row_count;
-    std::uint8_t column_count;
+    std::uint8_t row_count = 0;
+    std::uint8_t column_count = 0;
 
     std::vector<int> data;
 

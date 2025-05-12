@@ -1,4 +1,5 @@
 #include <game/player.h>
+#include <stdexcept>
 
 namespace Raynder {
 
@@ -15,6 +16,7 @@ void Player::set_pos(const float x, const float y) {
 void Player::set_rotation(const float rotation) {this->rotation = rotation;}
 
 Player::Player(const float pos_x, const float pos_y, const float rotation) {
+
     this->pos_x = pos_x;
     this->pos_y = pos_y;
     this->rotation = rotation;

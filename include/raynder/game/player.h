@@ -3,9 +3,9 @@
 namespace Raynder {
 
 class Player {
-    float pos_x;
-    float pos_y;
-    float rotation;
+    float pos_x = -1;
+    float pos_y = -1;
+    float rotation = 0;
 
 public:
     float get_pos_x() const;
