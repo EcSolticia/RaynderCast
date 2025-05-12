@@ -1,7 +1,2 @@
 #pragma once
-
-namespace Raynder {
-
-    class Game;
-
-}
+#include "game/game.h"

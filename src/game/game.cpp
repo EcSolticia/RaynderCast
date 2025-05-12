@@ -1,5 +1,7 @@
 #include <game/game.h>
 
+#include <SDL2/SDL.h>
+
 namespace Raynder {
 
 void Game::create_renderer(const uint16_t window_width, const uint16_t window_height) {
@@ -19,6 +21,16 @@ void Game::create_map(const uint8_t col_count, const uint8_t row_count, const st
     }
     
     this->map = Grid(col_count, row_count, map_grid_data);
+}
+
+Game::Game() {
+    if (SDL_Init(SDL_INIT_EVERYTHING)) {
+        throw std::runtime_error(SDL_GetError());
+    }
+};
+
+Game::~Game() {
+    SDL_Quit();
 }
 
 }
