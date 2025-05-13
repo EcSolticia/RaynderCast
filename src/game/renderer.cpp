@@ -70,6 +70,13 @@ void Renderer::draw_debug_topdown_grid(const uint8_t col_count, const uint8_t ro
     
 }
 
+void Renderer::draw_debug_topdown_player(const uint8_t side_length) const {
+    this->set_drawing_color(0, 255, 0);
+    const uint16_t pos_x = this->player_ptr->get_pos_x();
+    const uint16_t pos_y = this->player_ptr->get_pos_y();
+    this->draw_rectangle(pos_x, pos_y, side_length, side_length, FillType::FILLED);
+}
+
 void Renderer::clear_display() const {
     this->set_drawing_color(0, 0, 0);
     if (SDL_RenderClear(this->context)) {
@@ -93,6 +100,7 @@ void Renderer::render_loop() const {
     this->clear_display();
     
     this->draw_debug_topdown_grid(col_count, row_count, 32);
+    this->draw_debug_topdown_player(8);
 
     this->update_display();
 }
