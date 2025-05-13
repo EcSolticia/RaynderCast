@@ -19,6 +19,18 @@ class Renderer {
     Grid* map_ptr = nullptr;
     Player* player_ptr = nullptr;
 
+    enum FillType {
+        NOT_FILLED = 0,
+        FILLED = 1
+    };
+
+    void set_drawing_color(const uint8_t r, const uint8_t g, const uint8_t b) const;
+    void draw_rectangle(const uint16_t origin_x, 
+                        const uint16_t origin_y, 
+                        const uint8_t width, 
+                        const uint8_t height,
+                        FillType filled) const;
+
 public:
     void set_map_ptr(Grid* map_ptr);
     void set_player_ptr(Player* player_ptr);

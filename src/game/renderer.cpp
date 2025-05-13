@@ -7,6 +7,37 @@
 
 namespace Raynder {
 
+void Renderer::set_drawing_color(const uint8_t r, const uint8_t g, const uint8_t b) const {
+    if (SDL_SetRenderDrawColor(this->context, r, g, b, 255)) {
+            throw std::runtime_error(SDL_GetError());
+    }
+}
+
+void Renderer::draw_rectangle(
+    const uint16_t origin_x, 
+    const uint16_t origin_y, 
+    const uint8_t width, 
+    const uint8_t height,
+    FillType filled) const 
+{
+    SDL_Rect rect;
+    rect.x = origin_x;
+    rect.y = origin_y;
+    rect.w = width;
+    rect.h = height;
+
+    if (!filled) {
+        if (SDL_RenderDrawRect(this->context, &rect)) {
+                throw std::runtime_error(SDL_GetError());
+        }
+    } else {
+        if (SDL_RenderFillRect(this->context, &rect)) {
+            throw std::runtime_error(SDL_GetError());
+        }
+    }
+    
+}
+
 void Renderer::set_map_ptr(Grid* map_ptr) {
     this->map_ptr = map_ptr;
 }
@@ -17,43 +48,30 @@ void Renderer::set_player_ptr(Player* player_ptr) {
 
 void Renderer::draw_debug_topdown_grid(const uint8_t col_count, const uint8_t row_count, const uint8_t side_length) const {
 
-    if (SDL_SetRenderDrawColor(this->context, 255, 255, 255, 255)) {
-        throw std::runtime_error(SDL_GetError());
-    }
+    this->set_drawing_color(255, 255, 255);
     
     for (size_t i = 0; i < col_count; ++i) {
         for (size_t j = 0; j < row_count; ++j) {
-            SDL_Rect rect;
-            rect.x = i * side_length;
-            rect.y = j * side_length;
-            rect.w = side_length;
-            rect.h = side_length;
-
+            const uint16_t rect_x = i * side_length;
+            const uint16_t rect_y = j * side_length;
+            
             if (this->map_ptr->get_data(i, j) == 0) {
-                if (SDL_SetRenderDrawColor(this->context, 255, 0, 0, 255)) {
-                    throw std::runtime_error(SDL_GetError());
-                }
-                if (SDL_RenderDrawRect(this->context, &rect)) {
-                    throw std::runtime_error(SDL_GetError());
-                }
+                this->set_drawing_color(255, 0, 0);
+                this->draw_rectangle(rect_x, rect_y, side_length, side_length, FillType::NOT_FILLED);
             } else {
-                if (SDL_SetRenderDrawColor(this->context, 255, 255, 255, 255)) {
-                    throw std::runtime_error(SDL_GetError());
-                }
-                if (SDL_RenderFillRect(this->context, &rect)) {
-                    throw std::runtime_error(SDL_GetError());
-                }
+                this->set_drawing_color(255, 255, 255);
+                this->draw_rectangle(rect_x, rect_y, side_length, side_length, FillType::FILLED);
             }
 
         }
 
     }
+
+    
 }
 
 void Renderer::clear_display() const {
-    if (SDL_SetRenderDrawColor(this->context, 0, 0, 0, 255)) {
-        throw std::runtime_error(SDL_GetError());
-    }
+    this->set_drawing_color(0, 0, 0);
     if (SDL_RenderClear(this->context)) {
         throw std::runtime_error(SDL_GetError());
     }
