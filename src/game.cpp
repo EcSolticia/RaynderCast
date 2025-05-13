@@ -27,12 +27,17 @@ void Game::gameloop(const uint32_t delay) {
     }
 }
 
-void Game::create_player(const float initial_x, const float initial_y, const float initial_rotation) {
+void Game::create_player(
+    const float initial_x, 
+    const float initial_y, 
+    const float initial_rotation,
+    const float collision_radius
+) {
     if (initial_x < 0 || initial_y < 0) {
         throw std::runtime_error("Position values must be non-negative");
     }
 
-    this->player = Player(initial_x, initial_y, initial_rotation);
+    this->player = Player(initial_x, initial_y, initial_rotation, collision_radius);
     this->renderer_ptr.get()->set_player_ptr(&this->player);
 }
 

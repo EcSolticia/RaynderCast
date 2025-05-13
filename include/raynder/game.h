@@ -27,7 +27,12 @@ public:
         const uint8_t side_length,
         const std::string& map_grid_data
     );
-    void create_player(const float initial_x, const float initial_y, const float initial_rotation);
+    void create_player(
+        const float initial_x, 
+        const float initial_y, 
+        const float initial_rotation,
+        const float collision_radius
+    );
 
     Game(const uint16_t window_width, const uint16_t window_height);
     ~Game();

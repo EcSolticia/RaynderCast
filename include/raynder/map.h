@@ -21,18 +21,18 @@ class Map {
 
 public:
 
-    const std::uint8_t get_row_count() const {return this->row_count;}
-    const std::uint8_t get_column_count() const {return this->column_count;}
-    const std::uint8_t get_side_length() const {return this->side_length;}
+    const uint8_t get_row_count() const {return this->row_count;}
+    const uint8_t get_column_count() const {return this->column_count;}
+    const uint8_t get_side_length() const {return this->side_length;}
     
-    const int get_data(const std::uint8_t x, const std::uint8_t y) const {
+    const int get_data(const uint8_t x, const uint8_t y) const {
         if (x >= column_count || y >= row_count) {
             throw std::out_of_range("Selected Map coordinate does not exist.");
         }
         return this->data[y * column_count + x];
     }
 
-    void set_data(const std::uint8_t x, const std::uint8_t y, const int value) {
+    void set_data(const uint8_t x, const uint8_t y, const int value) {
         if (x >= column_count || y >= row_count) {
             throw std::out_of_range("Selected Map coordinate does not exist.");
         }
@@ -59,7 +59,7 @@ public:
         std::stringstream ss(string_as_data);
         std::string line;
 
-        std::uint8_t loc_y = 0;
+        uint8_t loc_y = 0;
 
         while (std::getline(ss, line)) {
             
@@ -73,7 +73,7 @@ public:
 
             std::istringstream iss(line);
             int val;
-            std::uint8_t loc_x = 0;
+            uint8_t loc_x = 0;
 
             while (iss >> val) {
                 if (loc_x >= column_count) {

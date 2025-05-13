@@ -32,7 +32,12 @@ public:
     void handle_keypress();
 
     Player() {};
-    Player(const float pos_x, const float pos_y, const float rotation);
+    Player(
+        const float pos_x, 
+        const float pos_y, 
+        const float rotation, 
+        const float collision_radius
+    );
 };
 
 }

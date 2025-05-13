@@ -67,10 +67,16 @@ void Player::handle_keypress() {
 
 }
 
-Player::Player(const float pos_x, const float pos_y, const float rotation) {
+Player::Player(
+    const float pos_x, 
+    const float pos_y, 
+    const float rotation,
+    const float collision_radius
+) {
 
     this->pos_x = pos_x;
     this->pos_y = pos_y;
+    this->geometry.collision_radius = collision_radius;
     this->rotation = rotation;
 }
 
