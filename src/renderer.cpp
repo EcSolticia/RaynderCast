@@ -92,7 +92,7 @@ void Renderer::draw_debug_topdown_player() const {
 
     const uint16_t pos_x = this->player_ptr->get_pos_x();
     const uint16_t pos_y = this->player_ptr->get_pos_y();
-    const uint8_t side_length = this->player_ptr->geometry.debug_topdown_side_length;
+    const uint8_t side_length = 2 * this->player_ptr->get_collision_radius();
     
     this->draw_rectangle(pos_x, pos_y, side_length, side_length, FillType::FILLED);
 

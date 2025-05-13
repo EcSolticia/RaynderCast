@@ -8,6 +8,7 @@ namespace Raynder {
 float Player::get_pos_x() const {return this->pos_x;}
 float Player::get_pos_y() const {return this->pos_y;}
 float Player::get_rotation() const {return this->rotation;}
+float Player::get_collision_radius() const {return this->collision_radius;}
 
 void Player::set_pos_x(const float x) {this->pos_x = x;}
 void Player::set_pos_y(const float y) {this->pos_y = y;}
@@ -76,7 +77,7 @@ Player::Player(
 
     this->pos_x = pos_x;
     this->pos_y = pos_y;
-    this->geometry.collision_radius = collision_radius;
+    this->collision_radius = collision_radius;
     this->rotation = rotation;
 }
 

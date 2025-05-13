@@ -19,7 +19,7 @@ int main() {
 
     try {
         game.create_map(10, 9, 32, map_data);
-        game.create_player(64, 64, 0, 10);
+        game.create_player(64, 64, 0, 8);
 
         game.gameloop(16);
     } catch (const std::exception& e) {
