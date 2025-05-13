@@ -1,4 +1,4 @@
-#include <game/game.h>
+#include <game.h>
 
 #include <SDL2/SDL.h>
 
@@ -15,7 +15,7 @@ void Game::gameloop(const uint32_t delay) {
             if (event.type == SDL_QUIT || event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE) {
                 running = false;
             } else if (event.type == SDL_KEYDOWN) {
-                this->player.handle_keypress(event);
+                this->player.handle_keypress();
             }
         
         }
@@ -36,12 +36,17 @@ void Game::create_player(const float initial_x, const float initial_y, const flo
     this->renderer_ptr.get()->set_player_ptr(&this->player);
 }
 
-void Game::create_map(const uint8_t col_count, const uint8_t row_count, const std::string& map_grid_data) {       
+void Game::create_map(
+    const uint8_t col_count, 
+    const uint8_t row_count,
+    const uint8_t side_length, 
+    const std::string& map_grid_data
+) {       
     if (!row_count || !col_count) {
         throw std::runtime_error("Grid dimensions cannot be zero.");
     }
     
-    this->map = Grid(col_count, row_count, map_grid_data);
+    this->map = Map(col_count, row_count, side_length, map_grid_data);
     this->renderer_ptr.get()->set_map_ptr(&this->map);
 }
 

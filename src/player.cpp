@@ -1,4 +1,4 @@
-#include <game/player.h>
+#include <player.h>
 #include <stdexcept>
 #include <SDL2/SDL.h>
 #include <math.h>
@@ -26,9 +26,7 @@ void Player::add_pos(const float dx, const float dy) {
     this->pos_y += dy;
 }
 
-void Player::handle_keypress(SDL_Event event) {
-    SDL_Keycode keycode = event.key.keysym.sym;
-
+void Player::handle_keypress() {
     float d = 8;
 
     const uint8_t* keyboard_state = SDL_GetKeyboardState(NULL);

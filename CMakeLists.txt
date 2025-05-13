@@ -5,9 +5,9 @@ project(RaynderCast CXX)
 find_package(SDL2 CONFIG REQUIRED)
 
 add_library(${PROJECT_NAME} SHARED
-    src/game/game.cpp
-    src/game/player.cpp
-    src/game/renderer.cpp
+    src/game.cpp
+    src/player.cpp
+    src/renderer.cpp
 )
 
 target_include_directories(${PROJECT_NAME}

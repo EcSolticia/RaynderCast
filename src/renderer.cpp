@@ -1,6 +1,6 @@
-#include <game/renderer.h>
-#include <game/player.h>
-#include <grid.h>
+#include <renderer.h>
+#include <player.h>
+#include <map.h>
 
 #include <stdexcept>
 #include <cmath>
@@ -51,7 +51,7 @@ void Renderer::draw_line(
     }
 }
 
-void Renderer::set_map_ptr(Grid* map_ptr) {
+void Renderer::set_map_ptr(Map* map_ptr) {
     this->map_ptr = map_ptr;
 }
 
@@ -59,7 +59,11 @@ void Renderer::set_player_ptr(Player* player_ptr) {
     this->player_ptr = player_ptr;
 }
 
-void Renderer::draw_debug_topdown_grid(const uint8_t col_count, const uint8_t row_count, const uint8_t side_length) const {
+void Renderer::draw_debug_topdown_grid() const {
+
+    const uint8_t row_count = this->map_ptr->get_row_count();
+    const uint8_t col_count = this->map_ptr->get_column_count();
+    const uint8_t side_length = this->map_ptr->get_side_length();
 
     this->set_drawing_color(255, 255, 255);
     
@@ -122,13 +126,9 @@ void Renderer::render_loop() const {
         throw std::runtime_error("Rendering cannot proceed without valid Map and Player objects.");
     }
 
-    const uint8_t row_count = this->map_ptr->get_row_count();
-    const uint8_t col_count = this->map_ptr->get_column_count();
-
-
     this->clear_display();
     
-    this->draw_debug_topdown_grid(col_count, row_count, 32);
+    this->draw_debug_topdown_grid();
     this->draw_debug_topdown_player();
 
     this->update_display();

@@ -1,6 +1,7 @@
 #include <raynder.h>
 #include <iostream>
 #include <string>
+#include <stdexcept>
 
 int main() {
 
@@ -17,7 +18,7 @@ int main() {
                            "1 1 1 1 1 1 1 1 1 1";
 
     try {
-        game.create_map(10, 9, map_data);
+        game.create_map(10, 9, 32, map_data);
         game.create_player(64, 64, 0);
 
         game.gameloop(16);

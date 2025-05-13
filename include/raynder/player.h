@@ -29,7 +29,7 @@ public:
     float get_pos_y() const;
     float get_rotation() const;
 
-    void handle_keypress(SDL_Event event);
+    void handle_keypress();
 
     Player() {};
     Player(const float pos_x, const float pos_y, const float rotation);
