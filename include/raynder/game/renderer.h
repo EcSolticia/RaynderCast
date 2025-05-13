@@ -1,5 +1,5 @@
 #pragma once
-#include <string>
+#include <stdint.h>
 
 struct SDL_Window;
 struct SDL_Renderer;

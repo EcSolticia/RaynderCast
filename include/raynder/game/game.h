@@ -7,10 +7,12 @@
 #include <string>
 #include <stdint.h>
 
+#include <memory>
+
 namespace Raynder {
 
 class Game {
-    Renderer renderer;
+    std::unique_ptr<Renderer> renderer_ptr;
     Grid map;
     Player player;
 
