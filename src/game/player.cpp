@@ -43,15 +43,20 @@ void Player::handle_keypress(SDL_Event event) {
         basis_dy -= 1;
     }
     if (keyboard_state[SDL_SCANCODE_A] || keyboard_state[SDL_SCANCODE_LEFT]) {
-        basis_dx -= 1;   
+        basis_dx += 1;   
     }
     if (keyboard_state[SDL_SCANCODE_D] || keyboard_state[SDL_SCANCODE_RIGHT]) {
-        basis_dx += 1;   
+        basis_dx -= 1;   
+    }
+
+    if ((basis_dx != 0) && (basis_dy != 0)) {
+        basis_dx /= sqrt(2.0);
+        basis_dy /= sqrt(2.0);
     }
 
     const float global_adjusted_rotation = rotation - M_PI/2.0;
-    const float global_basis_dx = basis_dx * cos(global_adjusted_rotation) - basis_dy * sin(global_adjusted_rotation);
-    const float global_basis_dy = basis_dx * sin(global_adjusted_rotation) + basis_dy * cos(global_adjusted_rotation);
+    float global_basis_dx = basis_dx * cos(global_adjusted_rotation) - basis_dy * sin(global_adjusted_rotation);
+    float global_basis_dy = basis_dx * sin(global_adjusted_rotation) + basis_dy * cos(global_adjusted_rotation);
 
     this->add_pos(global_basis_dx * d, global_basis_dy * d);
 
