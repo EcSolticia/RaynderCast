@@ -30,6 +30,11 @@ class Renderer {
                         const uint8_t width, 
                         const uint8_t height,
                         FillType filled) const;
+    void draw_line(
+        const uint16_t x1, 
+        const uint16_t y1, 
+        const int16_t x2, 
+        const int16_t y2) const;
 
 public:
     void set_map_ptr(Grid* map_ptr);
@@ -37,7 +42,7 @@ public:
 
     void clear_display() const;
 
-    void draw_debug_topdown_player(const uint8_t side_length) const;
+    void draw_debug_topdown_player() const;
     void draw_debug_topdown_grid(const uint8_t col_count, const uint8_t row_count, const uint8_t side_length) const;
 
     void render_loop() const;

@@ -1,7 +1,9 @@
 #include <game/renderer.h>
 #include <game/player.h>
 #include <grid.h>
+
 #include <stdexcept>
+#include <cmath>
 
 #include <SDL2/SDL.h>
 
@@ -38,6 +40,17 @@ void Renderer::draw_rectangle(
     
 }
 
+void Renderer::draw_line(
+    const uint16_t x1, 
+    const uint16_t y1, 
+    const int16_t x2, 
+    const int16_t y2
+) const {
+    if (SDL_RenderDrawLine(this->context, x1, y1, x2, y2)) {
+        throw std::runtime_error(SDL_GetError());
+    }
+}
+
 void Renderer::set_map_ptr(Grid* map_ptr) {
     this->map_ptr = map_ptr;
 }
@@ -70,11 +83,27 @@ void Renderer::draw_debug_topdown_grid(const uint8_t col_count, const uint8_t ro
     
 }
 
-void Renderer::draw_debug_topdown_player(const uint8_t side_length) const {
+void Renderer::draw_debug_topdown_player() const {
     this->set_drawing_color(0, 255, 0);
+
     const uint16_t pos_x = this->player_ptr->get_pos_x();
     const uint16_t pos_y = this->player_ptr->get_pos_y();
+    const uint8_t side_length = this->player_ptr->geometry.debug_topdown_side_length;
+    
     this->draw_rectangle(pos_x, pos_y, side_length, side_length, FillType::FILLED);
+
+    this->set_drawing_color(0, 0, 255);
+    const float ray_length = 100;
+    const float rotation = this->player_ptr->get_rotation();
+    const int8_t ray_x = ray_length * std::cos(rotation);
+    const int8_t ray_y = ray_length * std::sin(rotation);
+   
+    this->draw_line(
+        pos_x + side_length/2.0, 
+        pos_y + side_length/2.0, 
+        pos_x + side_length/2.0 + ray_x, 
+        pos_y + side_length/2.0 + ray_y
+    );
 }
 
 void Renderer::clear_display() const {
@@ -100,7 +129,7 @@ void Renderer::render_loop() const {
     this->clear_display();
     
     this->draw_debug_topdown_grid(col_count, row_count, 32);
-    this->draw_debug_topdown_player(8);
+    this->draw_debug_topdown_player();
 
     this->update_display();
 }
