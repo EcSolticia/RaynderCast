@@ -94,7 +94,13 @@ void Renderer::draw_debug_topdown_player() const {
     const uint16_t pos_y = this->player_ptr->get_pos_y();
     const uint8_t side_length = 2 * this->player_ptr->get_collision_radius();
     
-    this->draw_rectangle(pos_x, pos_y, side_length, side_length, FillType::FILLED);
+    this->draw_rectangle(
+        pos_x - side_length/2.0, 
+        pos_y - side_length/2.0, 
+        side_length, 
+        side_length, 
+        FillType::FILLED
+    );
 
     this->set_drawing_color(0, 0, 255);
     const float ray_length = 100;
@@ -103,10 +109,10 @@ void Renderer::draw_debug_topdown_player() const {
     const int8_t ray_y = ray_length * std::sin(rotation);
    
     this->draw_line(
-        pos_x + side_length/2.0, 
-        pos_y + side_length/2.0, 
-        pos_x + side_length/2.0 + ray_x, 
-        pos_y + side_length/2.0 + ray_y
+        pos_x, 
+        pos_y,
+        pos_x + ray_x, 
+        pos_y + ray_y
     );
 }
 
