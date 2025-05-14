@@ -9,6 +9,11 @@ namespace Raynder {
 class Player;
 class Map;
 
+struct CartesianPair {
+    float x;
+    float y;
+};
+
 class Renderer {
     uint16_t window_width;
     uint16_t window_height;
@@ -35,6 +40,8 @@ class Renderer {
         const uint16_t y1, 
         const int16_t x2, 
         const int16_t y2) const;
+
+    CartesianPair cast_ray(const float relative_angle_to_player) const;
 
 public:
     void set_map_ptr(Map* map_ptr);

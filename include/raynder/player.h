@@ -10,6 +10,8 @@ class Player {
     float rotation = 0;
     float collision_radius = 0;
 
+    float rotation_step;
+
     void set_pos_x(const float x);
     void set_pos_y(const float y);
     void set_pos(const float x, const float y);
@@ -23,6 +25,9 @@ public:
     float get_pos_y() const;
     float get_rotation() const;
     float get_collision_radius() const;
+    float get_rotation_step() const;
+
+    void set_rotation_step(const float rotation_step);
 
     void handle_keypress();
 

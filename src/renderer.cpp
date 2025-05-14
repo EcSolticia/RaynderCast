@@ -3,7 +3,9 @@
 #include <map.h>
 
 #include <stdexcept>
+
 #include <cmath>
+#include <algorithm>
 
 #include <SDL2/SDL.h>
 
@@ -50,6 +52,57 @@ void Renderer::draw_line(
         throw std::runtime_error(SDL_GetError());
     }
 }
+
+CartesianPair Renderer::cast_ray(const float relative_angle_to_player) const {
+    const float angle = this->player_ptr->get_rotation() + relative_angle_to_player;
+    
+    CartesianPair pos;
+    pos.x = this->player_ptr->get_pos_x();
+    pos.y = this->player_ptr->get_pos_y();
+
+    const uint8_t side_length = this->map_ptr->get_side_length();
+
+    CartesianPair pos_in_tile;
+    pos_in_tile.x = pos.x - ((int)pos.x/side_length) * side_length;
+    pos_in_tile.y = pos.y - ((int)pos.y/side_length) * side_length;
+
+    const float cos_angle = cos(angle);
+    const float sin_angle = sin(angle);
+    const float tan_angle = sin_angle/cos_angle;
+    const float cot_angle = cos_angle/sin_angle;
+
+    CartesianPair Dv;
+
+    if (cos_angle < 0) {
+        Dv.x = -pos_in_tile.x;
+        Dv.y = Dv.x * tan_angle;
+    } else if (cos_angle > 0) {
+        Dv.x = side_length - pos_in_tile.x;
+        Dv.y = Dv.x * tan_angle;
+    }
+
+    CartesianPair Dh;
+
+    if (sin_angle < 0) {
+        Dh.y = -pos_in_tile.y;
+        Dh.x = Dh.y * cot_angle;
+    } else if (sin_angle > 0) {
+        Dh.y = side_length - pos_in_tile.y;
+        Dh.x = Dh.y * cot_angle;
+    }
+
+    CartesianPair resultant_ray = (pow(Dv.x, 2) + pow(Dv.y, 2) <= pow(Dh.x, 2) + pow(Dh.y, 2)) ? Dv : Dh;
+
+    this->draw_line(
+        pos.x, 
+        pos.y, 
+        pos.x + resultant_ray.x, 
+        pos.y + resultant_ray.y
+    );
+
+    return resultant_ray;
+}
+
 
 void Renderer::set_map_ptr(Map* map_ptr) {
     this->map_ptr = map_ptr;
@@ -102,18 +155,18 @@ void Renderer::draw_debug_topdown_player() const {
         FillType::FILLED
     );
 
-    this->set_drawing_color(0, 0, 255);
+    /*this->set_drawing_color(0, 0, 255);
     const float ray_length = 100;
     const float rotation = this->player_ptr->get_rotation();
     const int8_t ray_x = ray_length * std::cos(rotation);
-    const int8_t ray_y = ray_length * std::sin(rotation);
+    const int8_t ray_y = ray_length * std::sin(rotation);*/
    
-    this->draw_line(
+    /*this->draw_line(
         pos_x, 
         pos_y,
         pos_x + ray_x, 
         pos_y + ray_y
-    );
+    );*/
 }
 
 void Renderer::clear_display() const {
@@ -136,6 +189,7 @@ void Renderer::render_loop() const {
     
     this->draw_debug_topdown_grid();
     this->draw_debug_topdown_player();
+    this->cast_ray(0);
 
     this->update_display();
 }
