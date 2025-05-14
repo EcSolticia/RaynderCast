@@ -72,24 +72,72 @@ CartesianPair Renderer::cast_ray(const float relative_angle_to_player) const {
     const float cot_angle = cos_angle/sin_angle;
 
     CartesianPair Dv;
+    float Dv_unit_x = side_length;
 
     if (cos_angle < 0) {
         Dv.x = -pos_in_tile.x;
         Dv.y = Dv.x * tan_angle;
+
+        Dv_unit_x *= -1.0;
+    
     } else if (cos_angle > 0) {
         Dv.x = side_length - pos_in_tile.x;
         Dv.y = Dv.x * tan_angle;
     }
 
+    const float wall_increment_v = Dv_unit_x * tan_angle;
+    bool hit_wall_v = false;
+
+    while (!hit_wall_v) {
+        const uint8_t index_y = (int)((pos.y + Dv.y)/side_length);
+        const uint8_t index_x = (int)((pos.x + Dv.x)/side_length) - int(Dv.x < 0);
+
+        if (index_y >= this->map_ptr->get_row_count() || index_x >= this->map_ptr->get_column_count()) {
+            hit_wall_v = true;
+            break;
+        }
+
+        if (this->map_ptr->get_data(index_x, index_y)) {
+            hit_wall_v = true;
+        } else {
+            Dv.x += Dv_unit_x;
+            Dv.y += wall_increment_v;
+        }
+    }
+
     CartesianPair Dh;
+    float Dh_unit_y = side_length;
 
     if (sin_angle < 0) {
         Dh.y = -pos_in_tile.y;
         Dh.x = Dh.y * cot_angle;
+
+        Dh_unit_y *= -1.0;
     } else if (sin_angle > 0) {
         Dh.y = side_length - pos_in_tile.y;
         Dh.x = Dh.y * cot_angle;
     }
+
+    const float wall_increment_h = Dh_unit_y * cot_angle;
+    bool hit_wall_h = false;
+
+    while (!hit_wall_h) {
+        const uint8_t index_y = (int)((pos.y + Dh.y)/side_length) - int(Dv.y < 0);
+        const uint8_t index_x = (int)((pos.x + Dh.x)/side_length);
+
+        if (index_y >= this->map_ptr->get_row_count() || index_x >= this->map_ptr->get_column_count()) {
+            hit_wall_h = true;
+            break;
+        }
+
+        if (this->map_ptr->get_data(index_x, index_y)) {
+            hit_wall_h = true;
+        } else {
+            Dh.y += Dh_unit_y;
+            Dh.x += wall_increment_h;
+        }
+    }
+
 
     CartesianPair resultant_ray = (pow(Dv.x, 2) + pow(Dv.y, 2) <= pow(Dh.x, 2) + pow(Dh.y, 2)) ? Dv : Dh;
 
@@ -155,18 +203,8 @@ void Renderer::draw_debug_topdown_player() const {
         FillType::FILLED
     );
 
-    /*this->set_drawing_color(0, 0, 255);
-    const float ray_length = 100;
-    const float rotation = this->player_ptr->get_rotation();
-    const int8_t ray_x = ray_length * std::cos(rotation);
-    const int8_t ray_y = ray_length * std::sin(rotation);*/
-   
-    /*this->draw_line(
-        pos_x, 
-        pos_y,
-        pos_x + ray_x, 
-        pos_y + ray_y
-    );*/
+    this->set_drawing_color(255, 255, 0);
+    this->cast_ray(0);
 }
 
 void Renderer::clear_display() const {
@@ -189,8 +227,7 @@ void Renderer::render_loop() const {
     
     this->draw_debug_topdown_grid();
     this->draw_debug_topdown_player();
-    this->cast_ray(0);
-
+    
     this->update_display();
 }
 
