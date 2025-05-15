@@ -5,7 +5,7 @@
 
 int main() {
 
-    Raynder::Game game(640, 480);
+    Raynder::Game game(640, 640);
 
     std::string map_data = "1 1 1 1 1 1 1 1 1 1\n"
                            "1 0 0 0 1 0 0 0 0 1\n"

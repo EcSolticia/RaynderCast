@@ -53,7 +53,7 @@ void Renderer::draw_line(
     }
 }
 
-CartesianPair Renderer::cast_ray(const float relative_angle_to_player) const {
+HitData Renderer::cast_ray(const float relative_angle_to_player) const {
     const float angle = this->player_ptr->get_rotation() + relative_angle_to_player;
     
     CartesianPair pos;
@@ -62,6 +62,7 @@ CartesianPair Renderer::cast_ray(const float relative_angle_to_player) const {
 
     const uint8_t side_length = this->map_ptr->get_side_length();
 
+    // by constructor design, pos can't be negative and no checks are done in this regard.
     CartesianPair pos_in_tile;
     pos_in_tile.x = pos.x - ((int)pos.x/side_length) * side_length;
     pos_in_tile.y = pos.y - ((int)pos.y/side_length) * side_length;
@@ -138,19 +139,59 @@ CartesianPair Renderer::cast_ray(const float relative_angle_to_player) const {
         }
     }
 
+    HitData hit_data;
 
-    CartesianPair resultant_ray = (pow(Dv.x, 2) + pow(Dv.y, 2) <= pow(Dh.x, 2) + pow(Dh.y, 2)) ? Dv : Dh;
+    if (
+        pow(Dv.x, 2) + pow(Dv.y, 2) <= pow(Dh.x, 2) + pow(Dh.y, 2)
+    ) {
+        hit_data.coords = Dv;
+        hit_data.vertical = true;
+    } else {
+        hit_data.coords = Dh;
+        hit_data.vertical = false;
+    }
 
     this->draw_line(
         pos.x, 
         pos.y, 
-        pos.x + resultant_ray.x, 
-        pos.y + resultant_ray.y
+        pos.x + hit_data.coords.x, 
+        pos.y + hit_data.coords.y
     );
 
-    return resultant_ray;
+    return hit_data;
 }
 
+
+void Renderer::draw_3d(
+    const uint16_t origin_on_window_x, 
+    const uint16_t origin_on_window_y,
+    const uint16_t width_on_window,
+    const uint16_t height_on_window,
+    const float field_of_view
+) const {
+
+    for (float theta = -field_of_view/2.0; theta < field_of_view/2.0; theta += field_of_view/width_on_window) {
+        
+        HitData hit_data = this->cast_ray(theta);
+        const float distance = sqrt(pow(hit_data.coords.x, 2) + pow(hit_data.coords.y, 2)) * cos(theta);
+
+        if (hit_data.vertical) {
+            this->set_drawing_color(255, 255, 0);
+        } else {
+            this->set_drawing_color(133, 0, 0);
+        }
+
+        const float t = (theta + field_of_view/2)/field_of_view;
+        const uint16_t window_x = width_on_window * t + origin_on_window_x;
+
+        for (uint16_t window_y = origin_on_window_y; window_y < origin_on_window_y + height_on_window; ++window_y) {
+            const uint16_t line_height = 10.0 * height_on_window/distance;
+
+            this->draw_line(window_x, height_on_window/2.0, window_x, line_height);
+        }
+    }
+
+}
 
 void Renderer::set_map_ptr(Map* map_ptr) {
     this->map_ptr = map_ptr;
@@ -202,9 +243,6 @@ void Renderer::draw_debug_topdown_player() const {
         side_length, 
         FillType::FILLED
     );
-
-    this->set_drawing_color(255, 255, 0);
-    this->cast_ray(0);
 }
 
 void Renderer::clear_display() const {
@@ -224,7 +262,8 @@ void Renderer::render_loop() const {
     }
 
     this->clear_display();
-    
+
+    this->draw_3d(320, 0, 330, 480, M_PI/3.0);
     this->draw_debug_topdown_grid();
     this->draw_debug_topdown_player();
     
