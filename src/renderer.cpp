@@ -161,7 +161,22 @@ HitData Renderer::cast_ray(const float relative_angle_to_player) const {
     return hit_data;
 }
 
+void Renderer::draw_quadri_3d(
+    const uint16_t x1,
+    const uint16_t line_height1,
+    const uint16_t x2,
+    const uint16_t line_height2,
+    const uint16_t height_on_window
+) const {
+    
+    const uint16_t dist = x2 - x1;
+    for (uint16_t x = x1; x < x2; ++x) {
+        const uint16_t current_line_height = line_height1 + (line_height2 - line_height1) * float(x - x1)/float(dist);
+        this->draw_line(x, (height_on_window - current_line_height)/2, x, (height_on_window + current_line_height)/2);
+    }
 
+}
+    
 void Renderer::draw_3d(
     const uint16_t origin_on_window_x, 
     const uint16_t origin_on_window_y,
@@ -170,7 +185,10 @@ void Renderer::draw_3d(
     const float field_of_view
 ) const {
 
-    for (float theta = -field_of_view/2.0; theta < field_of_view/2.0; theta += field_of_view/width_on_window) {
+    uint16_t last_line_height = 0;
+    uint16_t last_window_x = 0;
+
+    for (float theta = -field_of_view/2.0; theta < field_of_view/2.0; theta += field_of_view/60.0) {
         
         HitData hit_data = this->cast_ray(theta);
         const float distance = sqrt(pow(hit_data.coords.x, 2) + pow(hit_data.coords.y, 2));// * cos(theta);
@@ -184,11 +202,18 @@ void Renderer::draw_3d(
         const float t = (theta + field_of_view/2)/field_of_view;
         const uint16_t window_x = width_on_window * t + origin_on_window_x;
 
-        for (uint16_t window_y = origin_on_window_y; window_y < origin_on_window_y + height_on_window; ++window_y) {
-            const uint16_t line_height = 20.0 * height_on_window/distance;
+        const uint16_t line_height = 20.0 * height_on_window/distance;
 
-            this->draw_line(window_x, (height_on_window - line_height)/2.0, window_x, (height_on_window + line_height)/2.0);
+        for (uint16_t window_y = origin_on_window_y; window_y < origin_on_window_y + height_on_window; ++window_y) {
+            if (!last_line_height) {
+                break;
+            }
+            this->draw_quadri_3d(last_window_x, last_line_height, window_x, line_height, height_on_window);
+            //this->draw_line(window_x, (height_on_window - line_height)/2.0, window_x, (height_on_window + line_height)/2.0);
         }
+
+        last_line_height = line_height;
+        last_window_x = window_x;
     }
 
 }
