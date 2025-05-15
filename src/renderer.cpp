@@ -53,6 +53,12 @@ void Renderer::draw_line(
     }
 }
 
+void Renderer::draw_point(const uint16_t x, const uint16_t y) const {
+    if (SDL_RenderDrawPoint(this->context, x, y)) {
+        throw std::runtime_error(SDL_GetError());
+    }
+}
+
 HitData Renderer::cast_ray(const float relative_angle_to_player) const {
     const float angle = this->player_ptr->get_rotation() + relative_angle_to_player;
     
@@ -176,7 +182,20 @@ void Renderer::draw_quadri_3d(
     }
 
 }
-    
+
+void Renderer::draw_3d_ground(
+    const uint16_t origin_on_window_x, 
+    const uint16_t origin_on_window_y,
+    const uint16_t width_on_window,
+    const uint16_t height_on_window
+) const {
+    for (uint16_t i = 0; i < width_on_window; ++i) {
+        for (uint16_t j = 0; j < height_on_window/2.0; ++j) {
+            this->draw_point(origin_on_window_x + i, origin_on_window_y + height_on_window/2.0 + j);
+        }
+    }
+}
+
 void Renderer::draw_3d(
     const uint16_t origin_on_window_x, 
     const uint16_t origin_on_window_y,
@@ -184,6 +203,9 @@ void Renderer::draw_3d(
     const uint16_t height_on_window,
     const float field_of_view
 ) const {
+
+    this->set_drawing_color(0, 0, 0); // ground
+    this->draw_3d_ground(origin_on_window_x, origin_on_window_y, width_on_window, height_on_window);
 
     uint16_t last_line_height = 0;
     uint16_t last_window_x = 0;
@@ -194,9 +216,9 @@ void Renderer::draw_3d(
         const float distance = sqrt(pow(hit_data.coords.x, 2) + pow(hit_data.coords.y, 2));// * cos(theta);
 
         if (hit_data.vertical) {
-            this->set_drawing_color(255, 255, 0);
+            this->set_drawing_color(100, 90, 90);
         } else {
-            this->set_drawing_color(133, 0, 0);
+            this->set_drawing_color(100, 100, 100);
         }
 
         const float t = (theta + field_of_view/2)/field_of_view;
@@ -271,7 +293,6 @@ void Renderer::draw_debug_topdown_player() const {
 }
 
 void Renderer::clear_display() const {
-    this->set_drawing_color(0, 0, 0);
     if (SDL_RenderClear(this->context)) {
         throw std::runtime_error(SDL_GetError());
     }
@@ -286,6 +307,7 @@ void Renderer::render_loop() const {
         throw std::runtime_error("Rendering cannot proceed without valid Map and Player objects.");
     }
 
+    this->set_drawing_color(37, 44, 44); // ceiling
     this->clear_display();
 
     this->draw_3d(320, 0, 700, 400, M_PI/3.0);

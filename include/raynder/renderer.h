@@ -46,6 +46,8 @@ class Renderer {
         const int16_t x2, 
         const int16_t y2) const;
 
+    void draw_point(const uint16_t x, const uint16_t y) const;
+
     HitData cast_ray(const float relative_angle_to_player) const;
 
     void draw_quadri_3d(
@@ -53,6 +55,13 @@ class Renderer {
         const uint16_t line_height1,
         const uint16_t x2,
         const uint16_t line_height2,
+        const uint16_t height_on_window
+    ) const;
+
+    void draw_3d_ground(
+        const uint16_t origin_on_window_x, 
+        const uint16_t origin_on_window_y,
+        const uint16_t width_on_window,
         const uint16_t height_on_window
     ) const;
 
