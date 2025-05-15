@@ -79,20 +79,20 @@ HitData Renderer::cast_ray(const float relative_angle_to_player) const {
     const float cot_angle = cos_angle/sin_angle;
 
     CartesianPair Dv;
-    float Dv_unit_x = side_length;
+    float Dv_x_increment = side_length;
 
     if (cos_angle < 0) {
         Dv.x = -pos_in_tile.x;
         Dv.y = Dv.x * tan_angle;
 
-        Dv_unit_x *= -1.0;
+        Dv_x_increment *= -1.0;
     
     } else if (cos_angle > 0) {
         Dv.x = side_length - pos_in_tile.x;
         Dv.y = Dv.x * tan_angle;
     }
 
-    const float wall_increment_v = Dv_unit_x * tan_angle;
+    const float Dv_y_increment = Dv_x_increment * tan_angle;
     bool hit_wall_v = false;
 
     while (!hit_wall_v) {
@@ -107,25 +107,25 @@ HitData Renderer::cast_ray(const float relative_angle_to_player) const {
         if (this->map_ptr->get_data(index_x, index_y)) {
             hit_wall_v = true;
         } else {
-            Dv.x += Dv_unit_x;
-            Dv.y += wall_increment_v;
+            Dv.x += Dv_x_increment;
+            Dv.y += Dv_y_increment;
         }
     }
 
     CartesianPair Dh;
-    float Dh_unit_y = side_length;
+    float Dh_y_increment = side_length;
 
     if (sin_angle < 0) {
         Dh.y = -pos_in_tile.y;
         Dh.x = Dh.y * cot_angle;
 
-        Dh_unit_y *= -1.0;
+        Dh_y_increment *= -1.0;
     } else if (sin_angle > 0) {
         Dh.y = side_length - pos_in_tile.y;
         Dh.x = Dh.y * cot_angle;
     }
 
-    const float wall_increment_h = Dh_unit_y * cot_angle;
+    const float Dh_x_increment = Dh_y_increment * cot_angle;
     bool hit_wall_h = false;
 
     while (!hit_wall_h) {
@@ -140,8 +140,8 @@ HitData Renderer::cast_ray(const float relative_angle_to_player) const {
         if (this->map_ptr->get_data(index_x, index_y)) {
             hit_wall_h = true;
         } else {
-            Dh.y += Dh_unit_y;
-            Dh.x += wall_increment_h;
+            Dh.y += Dh_y_increment;
+            Dh.x += Dh_x_increment;
         }
     }
 
@@ -175,9 +175,10 @@ void Renderer::draw_quadri_3d(
     const uint16_t height_on_window
 ) const {
     
-    const uint16_t dist = x2 - x1;
+    const float dist = x2 - x1;
+    const float line_height_dist = line_height2 - line_height1;
     for (uint16_t x = x1; x < x2; ++x) {
-        const uint16_t current_line_height = line_height1 + (line_height2 - line_height1) * float(x - x1)/float(dist);
+        const uint16_t current_line_height = line_height1 + (line_height_dist) * float(x - x1)/dist;
         this->draw_line(x, (height_on_window - current_line_height)/2, x, (height_on_window + current_line_height)/2);
     }
 
