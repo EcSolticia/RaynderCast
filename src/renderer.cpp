@@ -173,7 +173,7 @@ void Renderer::draw_3d(
     for (float theta = -field_of_view/2.0; theta < field_of_view/2.0; theta += field_of_view/width_on_window) {
         
         HitData hit_data = this->cast_ray(theta);
-        const float distance = sqrt(pow(hit_data.coords.x, 2) + pow(hit_data.coords.y, 2)) * cos(theta);
+        const float distance = sqrt(pow(hit_data.coords.x, 2) + pow(hit_data.coords.y, 2));// * cos(theta);
 
         if (hit_data.vertical) {
             this->set_drawing_color(255, 255, 0);
@@ -185,9 +185,9 @@ void Renderer::draw_3d(
         const uint16_t window_x = width_on_window * t + origin_on_window_x;
 
         for (uint16_t window_y = origin_on_window_y; window_y < origin_on_window_y + height_on_window; ++window_y) {
-            const uint16_t line_height = 10.0 * height_on_window/distance;
+            const uint16_t line_height = 20.0 * height_on_window/distance;
 
-            this->draw_line(window_x, height_on_window/2.0, window_x, line_height);
+            this->draw_line(window_x, (height_on_window - line_height)/2.0, window_x, (height_on_window + line_height)/2.0);
         }
     }
 
@@ -263,7 +263,7 @@ void Renderer::render_loop() const {
 
     this->clear_display();
 
-    this->draw_3d(320, 0, 330, 480, M_PI/3.0);
+    this->draw_3d(320, 0, 700, 400, M_PI/3.0);
     this->draw_debug_topdown_grid();
     this->draw_debug_topdown_player();
     
