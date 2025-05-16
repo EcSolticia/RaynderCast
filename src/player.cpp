@@ -32,25 +32,52 @@ void Player::set_rotation_step(const float rotation_step) {
     this->rotation_step = rotation_step;
 }
 
-void Player::handle_keypress() {
-    float d = 8;
-
+void Player::update_key_status() {
     const uint8_t* keyboard_state = SDL_GetKeyboardState(NULL);
 
+    KeyStatus new_status;
+
+    new_status.w = (bool)keyboard_state[SDL_SCANCODE_W];
+    new_status.s = (bool)keyboard_state[SDL_SCANCODE_S];
+    new_status.a = (bool)keyboard_state[SDL_SCANCODE_A];
+    new_status.d = (bool)keyboard_state[SDL_SCANCODE_D];
+    new_status.q = (bool)keyboard_state[SDL_SCANCODE_Q];
+    new_status.e = (bool)keyboard_state[SDL_SCANCODE_E];
+
+    this->key_just_pressed.w = (new_status.w && !this->key_pressed.w);
+    this->key_just_pressed.s = (new_status.s && !this->key_pressed.s);
+    this->key_just_pressed.a = (new_status.a && !this->key_pressed.a);
+    this->key_just_pressed.d = (new_status.d && !this->key_pressed.d);
+    this->key_just_pressed.q = (new_status.q && !this->key_pressed.q);
+    this->key_just_pressed.e = (new_status.e && !this->key_pressed.e);
+
+    this->key_just_released.w = (!new_status.w && this->key_pressed.w);
+    this->key_just_released.s = (!new_status.s && this->key_pressed.s);
+    this->key_just_released.a = (!new_status.a && this->key_pressed.a);
+    this->key_just_released.d = (!new_status.d && this->key_pressed.d);
+    this->key_just_released.q = (!new_status.q && this->key_pressed.q);
+    this->key_just_released.e = (!new_status.e && this->key_pressed.e);
+
+    this->key_pressed = new_status;
+}
+
+void Player::handle_keypress() {
+    float d = 8;
+    
     float basis_dx = 0;
     float basis_dy = 0;
 
-    if (keyboard_state[SDL_SCANCODE_W] || keyboard_state[SDL_SCANCODE_UP]) {
+    if (this->key_pressed.w) {
         basis_dy += 1;
     }
-    if (keyboard_state[SDL_SCANCODE_S] || keyboard_state[SDL_SCANCODE_DOWN]) {
+    if (this->key_pressed.s) {
         basis_dy -= 1;
     }
-    if (keyboard_state[SDL_SCANCODE_A] || keyboard_state[SDL_SCANCODE_LEFT]) {
-        basis_dx += 1;   
+    if (this->key_pressed.a) {
+        basis_dx += 1;
     }
-    if (keyboard_state[SDL_SCANCODE_D] || keyboard_state[SDL_SCANCODE_RIGHT]) {
-        basis_dx -= 1;   
+    if (this->key_pressed.d) {
+        basis_dx -= 1;
     }
 
     if ((basis_dx != 0) && (basis_dy != 0)) {
@@ -64,13 +91,12 @@ void Player::handle_keypress() {
 
     this->add_pos(global_basis_dx * d, global_basis_dy * d);
 
-    if (keyboard_state[SDL_SCANCODE_Q] || keyboard_state[SDL_SCANCODE_4]) {
+    if (this->key_pressed.q) {
         rotate(-this->rotation_step);
     }
-    if (keyboard_state[SDL_SCANCODE_E] || keyboard_state[SDL_SCANCODE_6]) {
+    if (this->key_pressed.e) {
         rotate(this->rotation_step);
     }
-
 }
 
 Player::Player(

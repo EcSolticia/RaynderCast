@@ -4,7 +4,20 @@ union SDL_Event;
 
 namespace Raynder {
 
+struct KeyStatus {
+    bool w;
+    bool s;
+    bool a;
+    bool d;
+    bool q;
+    bool e;
+};
+
 class Player {
+    KeyStatus key_pressed;
+    KeyStatus key_just_pressed;
+    KeyStatus key_just_released;
+
     float pos_x = -1;
     float pos_y = -1;
     float rotation = 0;
@@ -21,6 +34,8 @@ class Player {
     void add_pos(const float dx, const float dy);
 
 public:
+    void update_key_status();
+
     float get_pos_x() const;
     float get_pos_y() const;
     float get_rotation() const;
