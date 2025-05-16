@@ -57,12 +57,7 @@ class Renderer {
         const uint16_t height_on_window
     ) const;
 
-    void draw_3d(
-        const uint16_t origin_on_window_x, 
-        const uint16_t origin_on_window_y,
-        const uint16_t width_on_window,
-        const uint16_t height_on_window
-    ) const;
+    void draw_3d() const;
 
 public:
     RendererConfig config;

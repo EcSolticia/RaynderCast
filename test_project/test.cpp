@@ -27,7 +27,6 @@ int main() {
 
         game.configure_renderer(rconfig);
 
-
         game.gameloop(16);
     } catch (const std::exception& e) {
         std::cerr << "Exception raised: " << e.what() << std::endl;

@@ -205,12 +205,12 @@ void Renderer::draw_3d_floor(
     }
 }
 
-void Renderer::draw_3d(
-    const uint16_t origin_on_window_x, 
-    const uint16_t origin_on_window_y,
-    const uint16_t width_on_window,
-    const uint16_t height_on_window
-) const {
+void Renderer::draw_3d() const {
+
+    const uint16_t origin_on_window_x = this->config.render_origin_on_window_x;
+    const uint16_t origin_on_window_y = this->config.render_origin_on_window_y;
+    const uint16_t width_on_window = this->config.render_width_on_window;
+    const uint16_t height_on_window = this->config.render_height_on_window;
 
     this->draw_3d_floor(origin_on_window_x, origin_on_window_y, width_on_window, height_on_window);
 
@@ -320,7 +320,7 @@ void Renderer::render_loop() const {
     this->set_drawing_color(this->config.ceiling_color);
     this->clear_display();
 
-    this->draw_3d(320, 0, 700, 400);
+    this->draw_3d();
     this->draw_debug_topdown_grid();
     this->draw_debug_topdown_player();
     

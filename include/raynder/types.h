@@ -34,6 +34,10 @@ namespace Raynder {
 
         float line_height_scalar{30.0};
         
+        uint16_t render_origin_on_window_x{320};
+        uint16_t render_origin_on_window_y{0};
+        uint16_t render_width_on_window{700};
+        uint16_t render_height_on_window{400};
         //std::string window_title;
         //uint16_t window_width;
         //uint16_t window_height;
