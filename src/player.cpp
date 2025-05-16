@@ -61,9 +61,23 @@ void Player::update_key_status() {
     this->key_pressed = new_status;
 }
 
+
+void Player::apply_velocity() {
+    this->pos_x += vel_x * 0.016;
+    this->pos_y += vel_y * 0.016;
+}
+
+void Player::apply_angular_velocity() {
+    this->rotation += angular_vel * 0.016;
+}
+
 void Player::handle_keypress() {
-    float d = 8;
+    this->vel_x = 0;
+    this->vel_y = 0;
+    this->angular_vel = 0;
     
+    float d = 250;
+
     float basis_dx = 0;
     float basis_dy = 0;
 
@@ -89,13 +103,14 @@ void Player::handle_keypress() {
     float global_basis_dx = basis_dx * cos(global_adjusted_rotation) - basis_dy * sin(global_adjusted_rotation);
     float global_basis_dy = basis_dx * sin(global_adjusted_rotation) + basis_dy * cos(global_adjusted_rotation);
 
-    this->add_pos(global_basis_dx * d, global_basis_dy * d);
+    this->vel_x = global_basis_dx * d;
+    this->vel_y = global_basis_dy * d;
 
     if (this->key_pressed.q) {
-        rotate(-this->rotation_step);
+        this->angular_vel -= this->rotation_step * 75;
     }
     if (this->key_pressed.e) {
-        rotate(this->rotation_step);
+        this->angular_vel += this->rotation_step * 75;
     }
 }
 

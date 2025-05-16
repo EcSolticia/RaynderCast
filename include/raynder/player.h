@@ -23,6 +23,10 @@ class Player {
     float rotation = 0;
     float collision_radius = 0;
 
+    float vel_x = 0;
+    float vel_y = 0;
+    float angular_vel = 0;
+    
     float rotation_step;
 
     void set_pos_x(const float x);
@@ -35,6 +39,9 @@ class Player {
 
 public:
     void update_key_status();
+
+    void apply_velocity();
+    void apply_angular_velocity();
 
     float get_pos_x() const;
     float get_pos_y() const;

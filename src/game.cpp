@@ -10,16 +10,18 @@ void Game::gameloop(const uint32_t delay) {
     running = true;
     while (running) {
 
+        this->player.apply_velocity();
+        this->player.apply_angular_velocity();
+
         SDL_Event event;
 
         while (SDL_PollEvent(&event)) {
-
+                    
             this->player.update_key_status();
+            this->player.handle_keypress();
 
             if (event.type == SDL_QUIT || event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE) {
                 running = false;
-            } else if (event.type == SDL_KEYDOWN) {
-                this->player.handle_keypress();
             }
         
         }
