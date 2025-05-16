@@ -183,9 +183,13 @@ void Renderer::draw_quadri_3d(
     
     const float dist = x2 - x1;
     const float line_height_dist = line_height2 - line_height1;
+
+    const uint16_t midpoint = height_on_window/2;
+
     for (uint16_t x = x1; x < x2; ++x) {
-        const uint16_t current_line_height = line_height1 + (line_height_dist) * float(x - x1)/dist;
-        this->draw_line(x, (height_on_window - current_line_height)/2, x, (height_on_window + current_line_height)/2);
+        const uint16_t half_line_height = (line_height1 + (line_height_dist) * float(x - x1)/dist)/2;
+        const int16_t upper_point = midpoint - half_line_height;
+        this->draw_line(x, (upper_point >= 0 ? upper_point : 0), x, midpoint + half_line_height);
     }
 
 }
