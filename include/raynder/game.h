@@ -34,7 +34,7 @@ public:
         const float collision_radius
     );
 
-    Game(const uint16_t window_width, const uint16_t window_height);
+    Game(const uint16_t window_width, const uint16_t window_height, const std::string window_title);
     ~Game();
 };
 

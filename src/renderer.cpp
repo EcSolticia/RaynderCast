@@ -4,6 +4,8 @@
 
 #include <stdexcept>
 
+#include <string>
+
 #include <cmath>
 #include <algorithm>
 
@@ -15,6 +17,10 @@ void Renderer::set_drawing_color(const uint8_t r, const uint8_t g, const uint8_t
     if (SDL_SetRenderDrawColor(this->context, r, g, b, 255)) {
             throw std::runtime_error(SDL_GetError());
     }
+}
+
+void Renderer::set_drawing_color(const Color color) const {
+    this->set_drawing_color(color.r, color.g, color.b);
 }
 
 void Renderer::draw_rectangle(
@@ -184,12 +190,14 @@ void Renderer::draw_quadri_3d(
 
 }
 
-void Renderer::draw_3d_ground(
+void Renderer::draw_3d_floor(
     const uint16_t origin_on_window_x, 
     const uint16_t origin_on_window_y,
     const uint16_t width_on_window,
     const uint16_t height_on_window
-) const {
+) const {    
+    this->set_drawing_color(this->config.floor_color);
+    
     for (uint16_t i = 0; i < width_on_window; ++i) {
         for (uint16_t j = 0; j < height_on_window/2.0; ++j) {
             this->draw_point(origin_on_window_x + i, origin_on_window_y + height_on_window/2.0 + j);
@@ -201,38 +209,39 @@ void Renderer::draw_3d(
     const uint16_t origin_on_window_x, 
     const uint16_t origin_on_window_y,
     const uint16_t width_on_window,
-    const uint16_t height_on_window,
-    const float field_of_view
+    const uint16_t height_on_window
 ) const {
 
-    this->set_drawing_color(0, 0, 0); // ground
-    this->draw_3d_ground(origin_on_window_x, origin_on_window_y, width_on_window, height_on_window);
+    this->draw_3d_floor(origin_on_window_x, origin_on_window_y, width_on_window, height_on_window);
 
     uint16_t last_line_height = 0;
     uint16_t last_window_x = 0;
 
-    for (float theta = -field_of_view/2.0; theta < field_of_view/2.0; theta += field_of_view/60.0) {
+    const float field_of_view = this->config.field_of_view;
+    const float theta_increment = field_of_view/this->config.ray_count;
+    const float line_height_scalar = this->config.line_height_scalar;
+
+    for (float theta = -field_of_view/2.0; theta < field_of_view/2.0; theta += theta_increment) {
         
         HitData hit_data = this->cast_ray(theta);
-        const float distance = sqrt(pow(hit_data.coords.x, 2) + pow(hit_data.coords.y, 2));// * cos(theta);
+        const float distance = sqrt(pow(hit_data.coords.x, 2) + pow(hit_data.coords.y, 2));
 
         if (hit_data.vertical) {
-            this->set_drawing_color(100, 90, 90);
+            this->set_drawing_color(this->config.vertical_wall_color);
         } else {
-            this->set_drawing_color(100, 100, 100);
+            this->set_drawing_color(this->config.horizontal_wall_color);
         }
 
         const float t = (theta + field_of_view/2)/field_of_view;
         const uint16_t window_x = width_on_window * t + origin_on_window_x;
 
-        const uint16_t line_height = 20.0 * height_on_window/distance;
+        const uint16_t line_height = line_height_scalar * height_on_window/distance;
 
         for (uint16_t window_y = origin_on_window_y; window_y < origin_on_window_y + height_on_window; ++window_y) {
             if (!last_line_height) {
                 break;
             }
             this->draw_quadri_3d(last_window_x, last_line_height, window_x, line_height, height_on_window);
-            //this->draw_line(window_x, (height_on_window - line_height)/2.0, window_x, (height_on_window + line_height)/2.0);
         }
 
         last_line_height = line_height;
@@ -278,7 +287,7 @@ void Renderer::draw_debug_topdown_grid() const {
 }
 
 void Renderer::draw_debug_topdown_player() const {
-    this->set_drawing_color(0, 255, 0);
+    this->set_drawing_color(this->config.topdown_player_square_color);
 
     const uint16_t pos_x = this->player_ptr->get_pos_x();
     const uint16_t pos_y = this->player_ptr->get_pos_y();
@@ -308,22 +317,20 @@ void Renderer::render_loop() const {
         throw std::runtime_error("Rendering cannot proceed without valid Map and Player objects.");
     }
 
-    this->set_drawing_color(37, 44, 44); // ceiling
+    this->set_drawing_color(this->config.ceiling_color); // ceiling
     this->clear_display();
 
-    this->draw_3d(320, 0, 700, 400, M_PI/3.0);
+    this->draw_3d(320, 0, 700, 400);
     this->draw_debug_topdown_grid();
     this->draw_debug_topdown_player();
     
     this->update_display();
 }
 
-Renderer::Renderer(const uint16_t window_width, const uint16_t window_height) {       
-    this->window_width = window_width;
-    this->window_height = window_height;
+Renderer::Renderer(const uint16_t window_width, const uint16_t window_height, std::string window_title) {       
 
     this->window = SDL_CreateWindow(
-        "RaynderCast", 
+        window_title.c_str(),
         SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
         window_width, window_height,
         0

@@ -1,5 +1,7 @@
 #pragma once
 #include <stdint.h>
+#include <iostream>
+#include <math.h>
 
 struct SDL_Window;
 struct SDL_Renderer;
@@ -19,10 +21,32 @@ struct HitData {
     bool vertical;
 };
 
-class Renderer {
-    uint16_t window_width;
-    uint16_t window_height;
+struct Color {
+    uint8_t r = 0;
+    uint8_t g = 0;
+    uint8_t b = 0;
+};
 
+struct RendererConfig {
+    Color floor_color;
+    Color ceiling_color{37, 44, 44};
+    Color topdown_player_square_color{0, 255, 0};
+    
+    Color vertical_wall_color{100, 90, 90};
+    Color horizontal_wall_color{100, 100, 100};
+
+    float ray_count{60};
+
+    float field_of_view{M_PI * 1/2};
+
+    float line_height_scalar{30.0};
+    
+    //std::string window_title;
+    //uint16_t window_width;
+    //uint16_t window_height;
+};
+
+class Renderer {
     SDL_Window* window;
     SDL_Renderer* context;
 
@@ -35,6 +59,7 @@ class Renderer {
     };
 
     void set_drawing_color(const uint8_t r, const uint8_t g, const uint8_t b) const;
+    void set_drawing_color(const Color color) const;
     void draw_rectangle(const uint16_t origin_x, 
                         const uint16_t origin_y, 
                         const uint8_t width, 
@@ -58,7 +83,7 @@ class Renderer {
         const uint16_t height_on_window
     ) const;
 
-    void draw_3d_ground(
+    void draw_3d_floor(
         const uint16_t origin_on_window_x, 
         const uint16_t origin_on_window_y,
         const uint16_t width_on_window,
@@ -69,11 +94,12 @@ class Renderer {
         const uint16_t origin_on_window_x, 
         const uint16_t origin_on_window_y,
         const uint16_t width_on_window,
-        const uint16_t height_on_window,
-        const float field_of_view
+        const uint16_t height_on_window
     ) const;
 
 public:
+    RendererConfig config;
+
     void set_map_ptr(Map* map_ptr);
     void set_player_ptr(Player* player_ptr);
 
@@ -87,7 +113,7 @@ public:
     void update_display() const;
 
     Renderer() {};
-    Renderer(const uint16_t window_width, const uint16_t window_height);
+    Renderer(const uint16_t window_width, const uint16_t window_height, const std::string window_title);
     ~Renderer();
 };
 
