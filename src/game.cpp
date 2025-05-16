@@ -29,6 +29,10 @@ void Game::gameloop(const uint32_t delay) {
     }
 }
 
+void Game::configure_renderer(RendererConfig config) const {
+    this->renderer_ptr.get()->config = config;
+}
+
 void Game::create_player(
     const float initial_x, 
     const float initial_y, 

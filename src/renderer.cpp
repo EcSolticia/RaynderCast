@@ -317,7 +317,7 @@ void Renderer::render_loop() const {
         throw std::runtime_error("Rendering cannot proceed without valid Map and Player objects.");
     }
 
-    this->set_drawing_color(this->config.ceiling_color); // ceiling
+    this->set_drawing_color(this->config.ceiling_color);
     this->clear_display();
 
     this->draw_3d(320, 0, 700, 400);

@@ -21,6 +21,13 @@ int main() {
         game.create_map(10, 9, 32, map_data);
         game.create_player(72, 72, 0, 8);
 
+        Raynder::RendererConfig rconfig;
+
+        rconfig.floor_color = Raynder::Color{255, 255, 255};
+
+        game.configure_renderer(rconfig);
+
+
         game.gameloop(16);
     } catch (const std::exception& e) {
         std::cerr << "Exception raised: " << e.what() << std::endl;

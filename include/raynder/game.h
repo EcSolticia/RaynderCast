@@ -3,6 +3,7 @@
 #include <map.h>
 #include <renderer.h>
 #include <player.h>
+#include <types.h>
 
 #include <string>
 #include <stdint.h>
@@ -20,6 +21,8 @@ class Game {
 
 public:
     void gameloop(const uint32_t delay);
+
+    void configure_renderer(RendererConfig config) const;
 
     void create_map(
         const uint8_t col_count, 
