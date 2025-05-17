@@ -8,8 +8,6 @@ namespace Raynder {
 float Player::get_pos_x() const {return this->pos_x;}
 float Player::get_pos_y() const {return this->pos_y;}
 float Player::get_rotation() const {return this->rotation;}
-float Player::get_collision_radius() const {return this->collision_radius;}
-float Player::get_rotation_step() const {return this->rotation_step;}
 
 void Player::set_pos_x(const float x) {this->pos_x = x;}
 void Player::set_pos_y(const float y) {this->pos_y = y;}
@@ -26,10 +24,6 @@ void Player::rotate(const float amount_in_rad) {
 void Player::add_pos(const float dx, const float dy) {
     this->pos_x += dx;
     this->pos_y += dy;
-}
-
-void Player::set_rotation_step(const float rotation_step) {
-    this->rotation_step = rotation_step;
 }
 
 void Player::update_key_status() {
@@ -75,8 +69,6 @@ void Player::handle_keypress() {
     this->vel_x = 0;
     this->vel_y = 0;
     this->angular_vel = 0;
-    
-    float d = 100;
 
     float basis_dx = 0;
     float basis_dy = 0;
@@ -103,30 +95,25 @@ void Player::handle_keypress() {
     float global_basis_dx = basis_dx * cos(global_adjusted_rotation) - basis_dy * sin(global_adjusted_rotation);
     float global_basis_dy = basis_dx * sin(global_adjusted_rotation) + basis_dy * cos(global_adjusted_rotation);
 
-    this->vel_x = global_basis_dx * d;
-    this->vel_y = global_basis_dy * d;
+    this->vel_x = global_basis_dx * this->config.translational_speed;
+    this->vel_y = global_basis_dy * this->config.translational_speed;
 
     if (this->key_pressed.q) {
-        this->angular_vel -= this->rotation_step * 20;
+        this->angular_vel = -this->config.rotational_speed;
     }
     if (this->key_pressed.e) {
-        this->angular_vel += this->rotation_step * 20;
+        this->angular_vel = this->config.rotational_speed;
     }
 }
 
 Player::Player(
     const float pos_x, 
     const float pos_y, 
-    const float rotation,
-    const float collision_radius
+    const float rotation
 ) {
-
     this->pos_x = pos_x;
     this->pos_y = pos_y;
-    this->collision_radius = collision_radius;
     this->rotation = rotation;
-    
-    this->rotation_step = M_PI/16.0;
 }
 
 }

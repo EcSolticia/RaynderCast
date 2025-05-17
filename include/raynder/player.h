@@ -1,4 +1,5 @@
 #pragma once
+#include <types.h>
 
 union SDL_Event;
 
@@ -21,14 +22,11 @@ class Player {
     float pos_x = -1;
     float pos_y = -1;
     float rotation = 0;
-    float collision_radius = 0;
 
     float vel_x = 0;
     float vel_y = 0;
     float angular_vel = 0;
     
-    float rotation_step;
-
     void set_pos_x(const float x);
     void set_pos_y(const float y);
     void set_pos(const float x, const float y);
@@ -38,6 +36,8 @@ class Player {
     void add_pos(const float dx, const float dy);
 
 public:
+    PlayerConfig config;
+
     void update_key_status();
 
     void apply_velocity(const float delta);
@@ -46,10 +46,6 @@ public:
     float get_pos_x() const;
     float get_pos_y() const;
     float get_rotation() const;
-    float get_collision_radius() const;
-    float get_rotation_step() const;
-
-    void set_rotation_step(const float rotation_step);
 
     void handle_keypress();
 
@@ -57,8 +53,7 @@ public:
     Player(
         const float pos_x, 
         const float pos_y, 
-        const float rotation, 
-        const float collision_radius
+        const float rotation
     );
 };
 

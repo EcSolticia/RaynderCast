@@ -19,12 +19,16 @@ int main() {
 
     try {
         game.create_map(10, 9, 32, map_data);
-        game.create_player(72, 72, 0, 8);
+        game.create_player(72, 72, 0);
 
         Raynder::RendererConfig rconfig;
+        Raynder::PlayerConfig pconfig;
 
+        pconfig.translational_speed = 50.0;
+        pconfig.collision_radius = 2.0;
         rconfig.floor_color = Raynder::Color{255, 255, 255};
 
+        game.configure_player(pconfig);
         game.configure_renderer(rconfig);
 
         game.gameloop(16);

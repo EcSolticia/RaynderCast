@@ -47,17 +47,20 @@ void Game::configure_renderer(RendererConfig config) const {
     this->renderer_ptr.get()->config = config;
 }
 
+void Game::configure_player(PlayerConfig config) {
+    this->player.config = config;
+}
+
 void Game::create_player(
     const float initial_x, 
     const float initial_y, 
-    const float initial_rotation,
-    const float collision_radius
+    const float initial_rotation
 ) {
     if (initial_x < 0 || initial_y < 0) {
         throw std::runtime_error("Position values must be non-negative");
     }
 
-    this->player = Player(initial_x, initial_y, initial_rotation, collision_radius);
+    this->player = Player(initial_x, initial_y, initial_rotation);
     this->renderer_ptr.get()->set_player_ptr(&this->player);
 }
 

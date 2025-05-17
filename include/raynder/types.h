@@ -43,4 +43,11 @@ namespace Raynder {
         //uint16_t window_height;
     };
 
+    struct PlayerConfig {
+        float collision_radius{10.0};
+        
+        float translational_speed{100.0};
+        float rotational_speed{M_PI * 3/4};
+    };
+
 }

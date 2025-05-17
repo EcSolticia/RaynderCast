@@ -28,6 +28,7 @@ public:
     void gameloop(const uint32_t delay);
 
     void configure_renderer(RendererConfig config) const;
+    void configure_player(PlayerConfig config);
 
     void create_map(
         const uint8_t col_count, 
@@ -38,8 +39,7 @@ public:
     void create_player(
         const float initial_x, 
         const float initial_y, 
-        const float initial_rotation,
-        const float collision_radius
+        const float initial_rotation
     );
 
     Game(const uint16_t window_width, const uint16_t window_height, const std::string window_title);
