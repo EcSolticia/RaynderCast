@@ -164,12 +164,15 @@ HitData Renderer::cast_ray(const float relative_angle_to_player) const {
         hit_data.vertical = false;
     }
 
-    this->draw_line(
-        pos.x, 
-        pos.y, 
-        pos.x + hit_data.coords.x, 
-        pos.y + hit_data.coords.y
-    );
+    if (this->config.debug) {
+        this->set_drawing_color(this->config.topdown_ray_color);
+        this->draw_line(
+            pos.x, 
+            pos.y, 
+            pos.x + hit_data.coords.x, 
+            pos.y + hit_data.coords.y
+        );
+    }
 
     return hit_data;
 }

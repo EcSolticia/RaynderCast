@@ -4,6 +4,8 @@
 
 #include <string>
 
+#include <iostream>
+
 namespace Raynder {
 
 void Game::compute_delta() {
@@ -19,6 +21,7 @@ void Game::gameloop() {
     while (running) {
 
         this->compute_delta();
+        std::cout << delta << "\n";
         
         this->player.apply_velocity(this->delta);
         this->player.apply_angular_velocity(this->delta);

@@ -24,7 +24,10 @@ namespace Raynder {
         Color floor_color;
         Color ceiling_color{37, 44, 44};
         Color topdown_player_square_color{0, 255, 0};
-        
+
+        bool debug = true;
+        Color topdown_ray_color{255, 255, 255};
+
         Color vertical_wall_color{100, 90, 90};
         Color horizontal_wall_color{100, 100, 100};
 
@@ -38,9 +41,6 @@ namespace Raynder {
         uint16_t render_origin_on_window_y{0};
         uint16_t render_width_on_window{700};
         uint16_t render_height_on_window{400};
-        //std::string window_title;
-        //uint16_t window_width;
-        //uint16_t window_height;
     };
 
     struct PlayerConfig {
