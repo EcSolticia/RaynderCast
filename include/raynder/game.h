@@ -25,7 +25,7 @@ class Game {
 
     void compute_delta();
 public:
-    void gameloop(const uint32_t delay);
+    void gameloop();
 
     void configure_renderer(RendererConfig config) const;
     void configure_player(PlayerConfig config);

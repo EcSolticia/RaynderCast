@@ -31,7 +31,7 @@ int main() {
         game.configure_player(pconfig);
         game.configure_renderer(rconfig);
 
-        game.gameloop(16);
+        game.gameloop();
     } catch (const std::exception& e) {
         std::cerr << "Exception raised: " << e.what() << std::endl;
     } catch (...) {

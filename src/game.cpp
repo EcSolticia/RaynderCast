@@ -14,12 +14,12 @@ void Game::compute_delta() {
     this->last_tick = this->current_tick;
 }
 
-void Game::gameloop(const uint32_t delay) {
+void Game::gameloop() {
     running = true;
     while (running) {
 
         this->compute_delta();
-
+        
         this->player.apply_velocity(this->delta);
         this->player.apply_angular_velocity(this->delta);
 
@@ -37,9 +37,6 @@ void Game::gameloop(const uint32_t delay) {
         }
 
         this->renderer_ptr.get()->render_loop();
-
-        SDL_Delay(delay);
-
     }
 }
 
