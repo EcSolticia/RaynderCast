@@ -202,10 +202,12 @@ void Renderer::draw_3d_floor(
 ) const {    
     this->set_drawing_color(this->config.floor_color);
     
-    for (uint16_t i = 0; i < width_on_window; ++i) {
-        for (uint16_t j = 0; j < height_on_window/2.0; ++j) {
-            this->draw_point(origin_on_window_x + i, origin_on_window_y + height_on_window/2.0 + j);
-        }
+    const uint16_t top_y = origin_on_window_y + height_on_window/2.0;
+    const uint16_t bottom_y = origin_on_window_y + height_on_window;
+    const uint16_t max_x = origin_on_window_x + width_on_window;
+
+    for (uint16_t i = origin_on_window_x; i < max_x; ++i) {
+        this->draw_line(i, top_y, i, bottom_y);
     }
 }
 
