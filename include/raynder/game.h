@@ -19,6 +19,11 @@ class Game {
 
     bool running = false;
 
+    uint64_t last_tick;
+    uint64_t current_tick;
+    float delta;
+
+    void compute_delta();
 public:
     void gameloop(const uint32_t delay);
 

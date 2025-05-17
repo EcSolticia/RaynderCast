@@ -40,8 +40,8 @@ class Player {
 public:
     void update_key_status();
 
-    void apply_velocity();
-    void apply_angular_velocity();
+    void apply_velocity(const float delta);
+    void apply_angular_velocity(const float delta);
 
     float get_pos_x() const;
     float get_pos_y() const;

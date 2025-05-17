@@ -6,12 +6,22 @@
 
 namespace Raynder {
 
+void Game::compute_delta() {
+    this->current_tick = SDL_GetTicks();
+
+    this->delta = (this->current_tick - this->last_tick) * 0.001;
+
+    this->last_tick = this->current_tick;
+}
+
 void Game::gameloop(const uint32_t delay) {
     running = true;
     while (running) {
 
-        this->player.apply_velocity();
-        this->player.apply_angular_velocity();
+        this->compute_delta();
+
+        this->player.apply_velocity(this->delta);
+        this->player.apply_angular_velocity(this->delta);
 
         SDL_Event event;
 
