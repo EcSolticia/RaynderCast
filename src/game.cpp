@@ -51,6 +51,10 @@ void Game::configure_player(PlayerConfig config) {
     this->player.config = config;
 }
 
+void Game::set_renderer_distance_func(RendererDistanceFunc func) const {
+    this->renderer_ptr.get()->distance_func = func;
+}
+
 void Game::create_player(
     const float initial_x, 
     const float initial_y, 

@@ -30,6 +30,8 @@ public:
     void configure_renderer(RendererConfig config) const;
     void configure_player(PlayerConfig config);
 
+    void set_renderer_distance_func(RendererDistanceFunc func) const;
+
     void create_map(
         const uint8_t col_count, 
         const uint8_t row_count,

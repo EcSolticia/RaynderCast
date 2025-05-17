@@ -13,7 +13,7 @@ namespace Raynder {
 class Player;
 class Map;
 
-class Renderer {
+class Renderer {    
     SDL_Window* window;
     SDL_Renderer* context;
 
@@ -70,6 +70,10 @@ class Renderer {
 
 public:
     RendererConfig config;
+
+    RendererDistanceFunc distance_func = [](float x, float y) -> float {
+        return sqrt(pow(x, 2) + pow(y, 2));
+    };
 
     void set_map_ptr(Map* map_ptr);
     void set_player_ptr(Player* player_ptr);

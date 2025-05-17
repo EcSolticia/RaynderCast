@@ -1,6 +1,7 @@
 #pragma once
 #include <stdint.h>
 #include <cmath>
+#include <functional>
 
 namespace Raynder {
 
@@ -42,6 +43,8 @@ namespace Raynder {
         uint16_t render_width_on_window{700};
         uint16_t render_height_on_window{400};
     };
+
+    typedef std::function<float(float, float)> RendererDistanceFunc;
 
     struct PlayerConfig {
         float collision_radius{10.0};

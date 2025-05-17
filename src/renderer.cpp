@@ -271,7 +271,7 @@ void Renderer::draw_3d() const {
     for (float theta = -field_of_view/2.0; theta < field_of_view/2.0; theta += theta_increment) {
         
         HitData hit_data = this->cast_ray(theta);
-        const float distance = sqrt(pow(hit_data.coords.x, 2) + pow(hit_data.coords.y, 2));
+        const float distance = this->distance_func(hit_data.coords.x, hit_data.coords.y);//sqrt(pow(hit_data.coords.x, 2) + pow(hit_data.coords.y, 2));
 
         const float t = (theta + field_of_view/2)/field_of_view;
         const uint16_t window_x = width_on_window * t + origin_on_window_x;
