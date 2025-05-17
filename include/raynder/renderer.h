@@ -47,7 +47,8 @@ class Renderer {
         const uint16_t line_height1,
         const uint16_t x2,
         const uint16_t line_height2,
-        const uint16_t height_on_window
+        const uint16_t height_on_window,
+        const bool hit_vertical
     ) const;
 
     void draw_3d_floor(

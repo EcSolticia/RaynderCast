@@ -5,6 +5,7 @@
 #include <stdexcept>
 
 #include <string>
+#include <vector>
 
 #include <cmath>
 #include <algorithm>
@@ -178,20 +179,37 @@ void Renderer::draw_quadri_3d(
     const uint16_t line_height1,
     const uint16_t x2,
     const uint16_t line_height2,
-    const uint16_t height_on_window
+    const uint16_t height_on_window,
+    const bool hit_vertical
 ) const {
+    const Color col = hit_vertical ? (this->config.vertical_wall_color) : (this->config.horizontal_wall_color);
+    const SDL_Color draw_color{col.r, col.g, col.b, 255};
+
+    const float midpoint = height_on_window/2;
     
-    const float dist = x2 - x1;
-    const float line_height_dist = line_height2 - line_height1;
+    const float half_line_height1 = line_height1/2;
+    const float half_line_height2 = line_height2/2;
 
-    const uint16_t midpoint = height_on_window/2;
-
-    for (uint16_t x = x1; x < x2; ++x) {
-        const uint16_t half_line_height = (line_height1 + (line_height_dist) * float(x - x1)/dist)/2;
-        const int16_t upper_point = midpoint - half_line_height;
-        this->draw_line(x, (upper_point >= 0 ? upper_point : 0), x, midpoint + half_line_height);
+    float top_point1 = midpoint - half_line_height1;
+    float top_point2 = midpoint - half_line_height2;
+    if (top_point1 < 0) {
+        top_point1 = 0;
+    }
+    if (top_point2 < 0) {
+        top_point2 = 0;
     }
 
+    std::vector<SDL_Vertex> quad = {
+        {SDL_FPoint{(float)x1, top_point1}, draw_color, SDL_FPoint{0}},
+        {SDL_FPoint{(float)x2, top_point2}, draw_color, SDL_FPoint{0}},        
+        {SDL_FPoint{(float)x2, midpoint + half_line_height2}, draw_color, SDL_FPoint{0}},
+        {SDL_FPoint{(float)x1, midpoint + half_line_height1}, draw_color, SDL_FPoint{0}}
+    };
+    std::vector<int> indices = { 0, 1, 2, 0, 2, 3 };
+
+    if (SDL_RenderGeometry(this->context, nullptr, quad.data(), 4, indices.data(), 6)) {
+        throw std::runtime_error("Not supported :(");
+    }
 }
 
 void Renderer::draw_3d_floor(
@@ -232,12 +250,6 @@ void Renderer::draw_3d() const {
         HitData hit_data = this->cast_ray(theta);
         const float distance = sqrt(pow(hit_data.coords.x, 2) + pow(hit_data.coords.y, 2));
 
-        if (hit_data.vertical) {
-            this->set_drawing_color(this->config.vertical_wall_color);
-        } else {
-            this->set_drawing_color(this->config.horizontal_wall_color);
-        }
-
         const float t = (theta + field_of_view/2)/field_of_view;
         const uint16_t window_x = width_on_window * t + origin_on_window_x;
 
@@ -247,7 +259,7 @@ void Renderer::draw_3d() const {
             if (!last_line_height) {
                 break;
             }
-            this->draw_quadri_3d(last_window_x, last_line_height, window_x, line_height, height_on_window);
+            this->draw_quadri_3d(last_window_x, last_line_height, window_x, line_height, height_on_window, hit_data.vertical);
         }
 
         last_line_height = line_height;
@@ -346,7 +358,7 @@ Renderer::Renderer(const uint16_t window_width, const uint16_t window_height, st
     }
 
     this->context = SDL_CreateRenderer(
-        this->window, -1, 0
+        this->window, -1, SDL_RENDERER_ACCELERATED
     );
     if (this->context == NULL) {
         throw std::runtime_error(SDL_GetError());
