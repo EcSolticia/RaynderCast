@@ -42,6 +42,14 @@ class Renderer {
 
     HitData cast_ray(const float relative_angle_to_player) const;
 
+    void draw_quad(
+        const float x1, const float y1,
+        const float x2, const float y2,
+        const float x3, const float y3,
+        const float x4, const float y4,
+        const Color color
+    ) const;
+        
     void draw_quadri_3d(
         const uint16_t x1,
         const uint16_t line_height1,

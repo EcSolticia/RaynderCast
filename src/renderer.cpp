@@ -174,6 +174,27 @@ HitData Renderer::cast_ray(const float relative_angle_to_player) const {
     return hit_data;
 }
 
+void Renderer::draw_quad(
+        const float x1, const float y1,
+        const float x2, const float y2,
+        const float x3, const float y3,
+        const float x4, const float y4,
+        const Color color
+) const {
+    const SDL_Color draw_color{color.r, color.g, color.b, 255};
+    std::vector<SDL_Vertex> quad = {
+        {SDL_FPoint{x1, y1}, draw_color, SDL_FPoint{0}},
+        {SDL_FPoint{x2, y2}, draw_color, SDL_FPoint{0}},        
+        {SDL_FPoint{x3, y3}, draw_color, SDL_FPoint{0}},
+        {SDL_FPoint{x4, y4}, draw_color, SDL_FPoint{0}}
+    };
+    std::vector<int> indices = { 0, 1, 2, 0, 2, 3 };
+
+    if (SDL_RenderGeometry(this->context, nullptr, quad.data(), 4, indices.data(), 6)) {
+        throw std::runtime_error("SDL_RenderGeometry is not supported.");
+    }
+}
+
 void Renderer::draw_quadri_3d(
     const uint16_t x1,
     const uint16_t line_height1,
@@ -182,9 +203,6 @@ void Renderer::draw_quadri_3d(
     const uint16_t height_on_window,
     const bool hit_vertical
 ) const {
-    const Color col = hit_vertical ? (this->config.vertical_wall_color) : (this->config.horizontal_wall_color);
-    const SDL_Color draw_color{col.r, col.g, col.b, 255};
-
     const float midpoint = height_on_window/2;
     
     const float half_line_height1 = line_height1/2;
@@ -199,17 +217,15 @@ void Renderer::draw_quadri_3d(
         top_point2 = 0;
     }
 
-    std::vector<SDL_Vertex> quad = {
-        {SDL_FPoint{(float)x1, top_point1}, draw_color, SDL_FPoint{0}},
-        {SDL_FPoint{(float)x2, top_point2}, draw_color, SDL_FPoint{0}},        
-        {SDL_FPoint{(float)x2, midpoint + half_line_height2}, draw_color, SDL_FPoint{0}},
-        {SDL_FPoint{(float)x1, midpoint + half_line_height1}, draw_color, SDL_FPoint{0}}
-    };
-    std::vector<int> indices = { 0, 1, 2, 0, 2, 3 };
+    const Color col = hit_vertical ? (this->config.vertical_wall_color) : (this->config.horizontal_wall_color);
 
-    if (SDL_RenderGeometry(this->context, nullptr, quad.data(), 4, indices.data(), 6)) {
-        throw std::runtime_error("Not supported :(");
-    }
+    this->draw_quad(
+        (float)x1, top_point1,
+        (float)x2, top_point2,
+        (float)x2, midpoint + half_line_height2,
+        (float)x1, midpoint + half_line_height1,
+        col
+    );
 }
 
 void Renderer::draw_3d_floor(
@@ -217,16 +233,20 @@ void Renderer::draw_3d_floor(
     const uint16_t origin_on_window_y,
     const uint16_t width_on_window,
     const uint16_t height_on_window
-) const {    
-    this->set_drawing_color(this->config.floor_color);
-    
-    const uint16_t top_y = origin_on_window_y + height_on_window/2.0;
-    const uint16_t bottom_y = origin_on_window_y + height_on_window;
-    const uint16_t max_x = origin_on_window_x + width_on_window;
+) const {        
+    const float top_y = origin_on_window_y + height_on_window/2.0;
+    const float bottom_y = origin_on_window_y + height_on_window;
+    const float max_x = origin_on_window_x + width_on_window;
 
-    for (uint16_t i = origin_on_window_x; i < max_x; ++i) {
-        this->draw_line(i, top_y, i, bottom_y);
-    }
+    const Color col = this->config.floor_color;
+
+    this->draw_quad(
+        (float)origin_on_window_x, top_y,
+        max_x, top_y,
+        max_x, bottom_y,
+        (float)origin_on_window_x, bottom_y,
+        col 
+    );
 }
 
 void Renderer::draw_3d() const {
