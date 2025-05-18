@@ -366,7 +366,12 @@ void Renderer::render_loop() const {
     this->update_display();
 }
 
-Renderer::Renderer(const uint16_t window_width, const uint16_t window_height, std::string window_title) {       
+Renderer::Renderer(
+    const uint16_t window_width, 
+    const uint16_t window_height, 
+    std::string window_title,
+    const bool enable_vsync
+) {       
 
     this->window = SDL_CreateWindow(
         window_title.c_str(),
@@ -379,7 +384,9 @@ Renderer::Renderer(const uint16_t window_width, const uint16_t window_height, st
     }
 
     this->context = SDL_CreateRenderer(
-        this->window, -1, SDL_RENDERER_ACCELERATED
+        this->window, 
+        -1, 
+        SDL_RENDERER_ACCELERATED | (int(enable_vsync) * SDL_RENDERER_PRESENTVSYNC)
     );
     if (this->context == NULL) {
         throw std::runtime_error(SDL_GetError());

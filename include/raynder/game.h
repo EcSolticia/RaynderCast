@@ -17,6 +17,8 @@ class Game {
     Map map;
     Player player;
 
+    GameConfig config;
+
     bool running = false;
 
     uint64_t last_tick;
@@ -44,7 +46,12 @@ public:
         const float initial_rotation
     );
 
-    Game(const uint16_t window_width, const uint16_t window_height, const std::string window_title);
+    Game(
+        const uint16_t window_width, 
+        const uint16_t window_height, 
+        const std::string window_title,
+        const GameConfig& config
+    );
     ~Game();
 };
 

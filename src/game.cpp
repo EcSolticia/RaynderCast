@@ -82,7 +82,12 @@ void Game::create_map(
     this->renderer_ptr.get()->set_map_ptr(&this->map);
 }
 
-Game::Game(const uint16_t window_width, const uint16_t window_height, const std::string window_title) {
+Game::Game(
+    const uint16_t window_width, 
+    const uint16_t window_height, 
+    const std::string window_title,
+    const GameConfig& config
+) {
     if (!window_width || !window_height) {
         throw std::runtime_error("Window resolution cannot be 0x0.");
     }
@@ -91,7 +96,14 @@ Game::Game(const uint16_t window_width, const uint16_t window_height, const std:
         throw std::runtime_error(SDL_GetError());
     }
     
-    this->renderer_ptr = std::make_unique<Renderer>(window_width, window_height, window_title);
+    this->renderer_ptr = std::make_unique<Renderer>(
+        window_width, 
+        window_height, 
+        window_title,
+        config.vsync_enabled
+    );
+
+    this->config = config;
 };
 
 Game::~Game() {

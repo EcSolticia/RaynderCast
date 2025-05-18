@@ -53,4 +53,8 @@ namespace Raynder {
         float rotational_speed{M_PI * 3/4};
     };
 
+    struct GameConfig {
+        bool vsync_enabled{false};
+    };
+
 }

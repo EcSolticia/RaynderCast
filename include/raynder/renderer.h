@@ -94,7 +94,12 @@ public:
     void update_display() const;
 
     Renderer() {};
-    Renderer(const uint16_t window_width, const uint16_t window_height, const std::string window_title);
+    Renderer(
+        const uint16_t window_width, 
+        const uint16_t window_height, 
+        const std::string window_title,
+        const bool enable_vsync
+    );
     ~Renderer();
 };
 

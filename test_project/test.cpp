@@ -5,7 +5,10 @@
 
 int main() {
 
-    Raynder::Game game(1024, 320, "New Parameter?");
+    Raynder::GameConfig gconfig;
+    gconfig.vsync_enabled = true;
+
+    Raynder::Game game(1024, 320, "New Parameter?", gconfig);
 
     std::string map_data = "1 1 1 1 1 1 1 1 1 1\n"
                            "1 0 0 0 0 0 0 0 0 1\n"
