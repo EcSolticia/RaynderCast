@@ -17,8 +17,6 @@ class Game {
     Map map;
     Player player;
 
-    GameConfig config;
-
     bool running = false;
 
     uint64_t last_tick;
@@ -29,8 +27,8 @@ class Game {
 public:
     void gameloop();
 
-    void configure_renderer(RendererConfig config) const;
-    void configure_player(PlayerConfig config);
+    void configure_renderer(const RendererConfig& config) const;
+    void configure_player(const PlayerConfig& config);
 
     void set_renderer_distance_func(RendererDistanceFunc func) const;
 

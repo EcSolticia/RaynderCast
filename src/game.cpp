@@ -43,11 +43,11 @@ void Game::gameloop() {
     }
 }
 
-void Game::configure_renderer(RendererConfig config) const {
+void Game::configure_renderer(const RendererConfig& config) const {
     this->renderer_ptr.get()->config = config;
 }
 
-void Game::configure_player(PlayerConfig config) {
+void Game::configure_player(const PlayerConfig& config) {
     this->player.config = config;
 }
 
@@ -102,8 +102,6 @@ Game::Game(
         window_title,
         config.vsync_enabled
     );
-
-    this->config = config;
 };
 
 Game::~Game() {
