@@ -185,15 +185,13 @@ void Renderer::draw_quad(
         const Color color
 ) const {
     const SDL_Color draw_color{color.r, color.g, color.b, 255};
-    std::vector<SDL_Vertex> quad = {
-        {SDL_FPoint{x1, y1}, draw_color, SDL_FPoint{0}},
-        {SDL_FPoint{x2, y2}, draw_color, SDL_FPoint{0}},        
-        {SDL_FPoint{x3, y3}, draw_color, SDL_FPoint{0}},
-        {SDL_FPoint{x4, y4}, draw_color, SDL_FPoint{0}}
-    };
-    std::vector<int> indices = { 0, 1, 2, 0, 2, 3 };
-
-    if (SDL_RenderGeometry(this->context, nullptr, quad.data(), 4, indices.data(), 6)) {
+    
+    this->quad_buffer[0] = SDL_Vertex{SDL_FPoint{x1, y1}, draw_color, SDL_FPoint{0}};
+    this->quad_buffer[1] = SDL_Vertex{SDL_FPoint{x2, y2}, draw_color, SDL_FPoint{0}};
+    this->quad_buffer[2] = SDL_Vertex{SDL_FPoint{x3, y3}, draw_color, SDL_FPoint{0}};
+    this->quad_buffer[3] = SDL_Vertex{SDL_FPoint{x4, y4}, draw_color, SDL_FPoint{0}};
+    
+    if (SDL_RenderGeometry(this->context, nullptr, this->quad_buffer.data(), 4, this->quad_indices.data(), 6)) {
         throw std::runtime_error("SDL_RenderGeometry is not supported.");
     }
 }
@@ -387,6 +385,7 @@ Renderer::Renderer(const uint16_t window_width, const uint16_t window_height, st
         throw std::runtime_error(SDL_GetError());
     }
 
+    this->quad_buffer.resize(4);
 }
 
 Renderer::~Renderer() {

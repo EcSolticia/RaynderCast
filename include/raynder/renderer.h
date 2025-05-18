@@ -1,7 +1,10 @@
 #pragma once
 #include <stdint.h>
-#include <iostream>
 #include <cmath>
+#include <vector>
+#include <string>
+
+#include <SDL2/SDL.h>
 
 #include <types.h>
 
@@ -24,6 +27,9 @@ class Renderer {
         NOT_FILLED = 0,
         FILLED = 1
     };
+
+    mutable std::vector<SDL_Vertex> quad_buffer;
+    std::vector<int> quad_indices = { 0, 1, 2, 0, 2, 3 };
 
     void set_drawing_color(const uint8_t r, const uint8_t g, const uint8_t b) const;
     void set_drawing_color(const Color color) const;
