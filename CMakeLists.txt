@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 3.12)
 
 project(RaynderCast CXX)
 
+set(CMAKE_DEBUG_POSTFIX
+    d
+)
+
 find_package(SDL2 CONFIG REQUIRED)
 
 add_library(${PROJECT_NAME} SHARED
@@ -21,3 +25,9 @@ target_link_libraries(${PROJECT_NAME}
 )
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
+
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_definitions(-DDEBUG_BUILD)
+else()
+    add_definitions(-DRELEASE_BUILD)
+endif()

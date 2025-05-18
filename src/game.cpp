@@ -4,7 +4,9 @@
 
 #include <string>
 
+#ifdef DEBUG_BUILD
 #include <iostream>
+#endif
 
 namespace Raynder {
 
@@ -21,8 +23,10 @@ void Game::gameloop() {
     while (running) {
 
         this->compute_delta();
-        std::cout << delta << "\n";
-        
+        #ifdef DEBUG_BUILD
+            std::cout << delta << "\n";
+        #endif
+
         this->player.apply_velocity(this->delta);
         this->player.apply_angular_velocity(this->delta);
 
