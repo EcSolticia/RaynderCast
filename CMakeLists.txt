@@ -9,7 +9,7 @@ set(CMAKE_DEBUG_POSTFIX
 find_package(SDL2 CONFIG REQUIRED)
 
 add_library(${PROJECT_NAME} SHARED
-    src/game.cpp
+    src/raynder.cpp
     src/player.cpp
     src/renderer.cpp
 )
