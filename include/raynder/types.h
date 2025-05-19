@@ -1,27 +1,29 @@
 #pragma once
+#include <raynder/export_raynder.h>
+
 #include <stdint.h>
 #include <cmath>
 #include <functional>
 
 namespace Raynder {
 
-    struct CartesianPair {
+    struct RAYNDERCAST_EXPORT CartesianPair {
         float x;
         float y;
     };
 
-    struct HitData {
+    struct RAYNDERCAST_EXPORT HitData {
         CartesianPair coords;
         bool vertical;
     };
 
-    struct Color {
+    struct RAYNDERCAST_EXPORT Color {
         uint8_t r = 0;
         uint8_t g = 0;
         uint8_t b = 0;
     };
 
-    struct RendererConfig {
+    struct RAYNDERCAST_EXPORT RendererConfig {
         Color floor_color;
         Color ceiling_color{37, 44, 44};
         Color topdown_player_square_color{0, 255, 0};
@@ -44,16 +46,16 @@ namespace Raynder {
         uint16_t render_height_on_window{400};
     };
 
-    typedef std::function<float(float, float)> RendererDistanceFunc;
+    typedef RAYNDERCAST_EXPORT std::function<float(float, float)> RendererDistanceFunc;
 
-    struct PlayerConfig {
+    struct RAYNDERCAST_EXPORT PlayerConfig {
         float collision_radius{10.0};
         
         float translational_speed{100.0};
         float rotational_speed{M_PI * 3/4};
     };
 
-    struct GameConfig {
+    struct RAYNDERCAST_EXPORT GameConfig {
         bool vsync_enabled{false};
     };
 

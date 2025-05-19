@@ -1,6 +1,8 @@
 #pragma once
 
-#include <types.h>
+#include <raynder/export_raynder.h>
+
+#include <raynder/types.h>
 
 #include <string>
 #include <stdint.h>
@@ -13,7 +15,7 @@ class Renderer;
 class Map;
 class Player;
 
-class Game {
+class RAYNDERCAST_EXPORT Game {
     std::unique_ptr<Renderer> renderer_ptr;
     std::unique_ptr<Map> map_ptr;
     std::unique_ptr<Player> player_ptr;
