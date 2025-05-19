@@ -1,8 +1,5 @@
 #pragma once
 
-#include <map.h>
-#include <renderer.h>
-#include <player.h>
 #include <types.h>
 
 #include <string>
@@ -12,10 +9,14 @@
 
 namespace Raynder {
 
+class Renderer;
+class Map;
+class Player;
+
 class Game {
     std::unique_ptr<Renderer> renderer_ptr;
-    Map map;
-    Player player;
+    std::unique_ptr<Map> map_ptr;
+    std::unique_ptr<Player> player_ptr;
 
     bool running = false;
 

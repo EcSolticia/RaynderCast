@@ -1,5 +1,9 @@
 #include <raynder.h>
 
+#include <renderer.h>
+#include <map.h>
+#include <player.h>
+
 #include <SDL2/SDL.h>
 
 #include <string>
@@ -27,15 +31,15 @@ void Game::gameloop() {
             std::cout << delta << "\n";
         #endif
 
-        this->player.apply_velocity(this->delta);
-        this->player.apply_angular_velocity(this->delta);
+        this->player_ptr->apply_velocity(this->delta);
+        this->player_ptr->apply_angular_velocity(this->delta);
 
         SDL_Event event;
 
         while (SDL_PollEvent(&event)) {
                     
-            this->player.update_key_status();
-            this->player.handle_keypress();
+            this->player_ptr->update_key_status();
+            this->player_ptr->handle_keypress();
 
             if (event.type == SDL_QUIT || event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE) {
                 running = false;
@@ -43,20 +47,20 @@ void Game::gameloop() {
         
         }
 
-        this->renderer_ptr.get()->render_loop();
+        this->renderer_ptr->render_loop();
     }
 }
 
 void Game::configure_renderer(const RendererConfig& config) const {
-    this->renderer_ptr.get()->config = config;
+    this->renderer_ptr->config = config;
 }
 
 void Game::configure_player(const PlayerConfig& config) {
-    this->player.config = config;
+    this->player_ptr->config = config;
 }
 
 void Game::set_renderer_distance_func(RendererDistanceFunc func) const {
-    this->renderer_ptr.get()->distance_func = func;
+    this->renderer_ptr->distance_func = func;
 }
 
 void Game::create_player(
@@ -68,8 +72,10 @@ void Game::create_player(
         throw std::runtime_error("Position values must be non-negative");
     }
 
-    this->player = Player(initial_x, initial_y, initial_rotation);
-    this->renderer_ptr.get()->set_player_ptr(&this->player);
+    this->player_ptr = std::make_unique<Player> (
+        Player(initial_x, initial_y, initial_rotation)
+    );
+    this->renderer_ptr->set_player_ptr(this->player_ptr.get());
 }
 
 void Game::create_map(
@@ -82,8 +88,10 @@ void Game::create_map(
         throw std::runtime_error("Grid dimensions cannot be zero.");
     }
     
-    this->map = Map(col_count, row_count, side_length, map_grid_data);
-    this->renderer_ptr.get()->set_map_ptr(&this->map);
+    this->map_ptr = std::make_unique<Map>(
+        Map(col_count, row_count, side_length, map_grid_data)
+    );
+    this->renderer_ptr->set_map_ptr(this->map_ptr.get());
 }
 
 Game::Game(
