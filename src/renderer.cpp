@@ -163,6 +163,8 @@ void Renderer::draw_3d() const {
             this->map_ptr, 
             #ifdef DEBUG_BUILD
             this,
+            #else
+            std::nullopt,
             #endif
             theta
         );

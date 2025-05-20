@@ -1,5 +1,6 @@
 #pragma once
 #include <raynder/types.h>
+#include <optional>
 
 namespace Raynder {
 
@@ -12,9 +13,7 @@ namespace Raycaster {
     HitData cast_ray(
         Player* player_ptr, 
         Map* map_ptr,
-        #ifdef DEBUG_BUILD
-        const Renderer* renderer_ptr,
-        #endif
+        std::optional<const Renderer*> renderer_ptr,
         const float relative_angle_to_player
     );
 

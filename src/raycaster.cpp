@@ -8,9 +8,7 @@ namespace Raynder {
 HitData Raycaster::cast_ray(
     Player* player_ptr, 
     Map* map_ptr,
-    #ifdef DEBUG_BUILD
-    const Renderer* renderer_ptr,
-    #endif
+    std::optional<const Renderer*> renderer_ptr,
     const float relative_angle_to_player
 ) {
 
@@ -111,15 +109,15 @@ HitData Raycaster::cast_ray(
         hit_data.vertical = false;
     }
 
-    #ifdef DEBUG_BUILD
-    renderer_ptr->set_drawing_color(renderer_ptr->config.topdown_ray_color);
-    renderer_ptr->draw_line(
+    if (renderer_ptr.has_value()) {
+    renderer_ptr.value()->set_drawing_color(renderer_ptr.value()->config.topdown_ray_color);
+    renderer_ptr.value()->draw_line(
         pos.x, 
         pos.y, 
         pos.x + hit_data.coords.x, 
         pos.y + hit_data.coords.y
     );
-    #endif
+    }
 
     return hit_data;
 }
