@@ -46,7 +46,7 @@ namespace Raynder {
         uint16_t render_height_on_window{400};
     };
 
-    typedef RAYNDERCAST_EXPORT std::function<float(float, float)> RendererDistanceFunc;
+    typedef std::function<float(float, float)> RendererDistanceFunc;
 
     struct RAYNDERCAST_EXPORT PlayerConfig {
         float collision_radius{10.0};
