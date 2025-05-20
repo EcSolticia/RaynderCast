@@ -26,6 +26,7 @@ target_sources(${PROJECT_NAME} PRIVATE
     src/player.cpp
     src/renderer.cpp
     src/map.cpp
+    src/raycaster.cpp
 )
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)

@@ -1,6 +1,7 @@
 #include <renderer.h>
 #include <player.h>
 #include <map.h>
+#include <raycaster.h>
 
 #include <stdexcept>
 
@@ -64,118 +65,6 @@ void Renderer::draw_point(const uint16_t x, const uint16_t y) const {
     if (SDL_RenderDrawPoint(this->context, x, y)) {
         throw std::runtime_error(SDL_GetError());
     }
-}
-
-HitData Renderer::cast_ray(const float relative_angle_to_player) const {
-    const float angle = this->player_ptr->get_rotation() + relative_angle_to_player;
-    
-    CartesianPair pos;
-    pos.x = this->player_ptr->get_pos_x();
-    pos.y = this->player_ptr->get_pos_y();
-
-    const uint8_t side_length = this->map_ptr->get_side_length();
-
-    // by constructor design, pos can't be negative and no checks are done in this regard.
-    CartesianPair pos_in_tile;
-    pos_in_tile.x = pos.x - ((int)pos.x/side_length) * side_length;
-    pos_in_tile.y = pos.y - ((int)pos.y/side_length) * side_length;
-
-    const float cos_angle = cos(angle);
-    const float sin_angle = sin(angle);
-    const float tan_angle = sin_angle/cos_angle;
-    const float cot_angle = cos_angle/sin_angle;
-
-    CartesianPair Dv;
-    float Dv_x_increment = side_length;
-
-    if (cos_angle < 0) {
-        Dv.x = -pos_in_tile.x;
-        Dv.y = Dv.x * tan_angle;
-
-        Dv_x_increment *= -1.0;
-    
-    } else if (cos_angle > 0) {
-        Dv.x = side_length - pos_in_tile.x;
-        Dv.y = Dv.x * tan_angle;
-    }
-
-    const float Dv_y_increment = Dv_x_increment * tan_angle;
-    bool hit_wall_v = false;
-
-    while (!hit_wall_v) {
-        const uint8_t index_y = (int)((pos.y + Dv.y)/side_length);
-        const uint8_t index_x = (int)((pos.x + Dv.x)/side_length) - int(Dv.x < 0);
-
-        if (index_y >= this->map_ptr->get_row_count() || index_x >= this->map_ptr->get_column_count()) {
-            hit_wall_v = true;
-            break;
-        }
-
-        if (this->map_ptr->get_data(index_x, index_y)) {
-            hit_wall_v = true;
-        } else {
-            Dv.x += Dv_x_increment;
-            Dv.y += Dv_y_increment;
-        }
-    }
-
-    CartesianPair Dh;
-    float Dh_y_increment = side_length;
-
-    if (sin_angle < 0) {
-        Dh.y = -pos_in_tile.y;
-        Dh.x = Dh.y * cot_angle;
-
-        Dh_y_increment *= -1.0;
-    } else if (sin_angle > 0) {
-        Dh.y = side_length - pos_in_tile.y;
-        Dh.x = Dh.y * cot_angle;
-    }
-
-    const float Dh_x_increment = Dh_y_increment * cot_angle;
-    bool hit_wall_h = false;
-
-    while (!hit_wall_h) {
-        const uint8_t index_y = (int)((pos.y + Dh.y)/side_length) - int(Dv.y < 0);
-        const uint8_t index_x = (int)((pos.x + Dh.x)/side_length);
-
-        if (index_y >= this->map_ptr->get_row_count() || index_x >= this->map_ptr->get_column_count()) {
-            hit_wall_h = true;
-            break;
-        }
-
-        if (this->map_ptr->get_data(index_x, index_y)) {
-            hit_wall_h = true;
-        } else {
-            Dh.y += Dh_y_increment;
-            Dh.x += Dh_x_increment;
-        }
-    }
-
-    HitData hit_data;
-
-    if (
-        pow(Dv.x, 2) + pow(Dv.y, 2) <= pow(Dh.x, 2) + pow(Dh.y, 2)
-    ) {
-        hit_data.coords = Dv;
-        hit_data.vertical = true;
-    } else {
-        hit_data.coords = Dh;
-        hit_data.vertical = false;
-    }
-
-
-    #ifdef DEBUG_BUILD
-    this->set_drawing_color(this->config.topdown_ray_color);
-    this->draw_line(
-        pos.x, 
-        pos.y, 
-        pos.x + hit_data.coords.x, 
-        pos.y + hit_data.coords.y
-    );
-    #endif
-
-    return hit_data;
 }
 
 void Renderer::draw_quad(
@@ -269,7 +158,15 @@ void Renderer::draw_3d() const {
 
     for (float theta = -field_of_view/2.0; theta < field_of_view/2.0; theta += theta_increment) {
         
-        HitData hit_data = this->cast_ray(theta);
+        HitData hit_data = Raycaster::cast_ray(
+            this->player_ptr, 
+            this->map_ptr, 
+            #ifdef DEBUG_BUILD
+            this,
+            #endif
+            theta
+        );
+        
         const float distance = this->distance_func(hit_data.coords.x, hit_data.coords.y);//sqrt(pow(hit_data.coords.x, 2) + pow(hit_data.coords.y, 2));
 
         const float t = (theta + field_of_view/2)/field_of_view;

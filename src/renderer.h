@@ -31,22 +31,14 @@ class Renderer {
     mutable std::vector<SDL_Vertex> quad_buffer;
     std::vector<int> quad_indices = { 0, 1, 2, 0, 2, 3 };
 
-    void set_drawing_color(const uint8_t r, const uint8_t g, const uint8_t b) const;
-    void set_drawing_color(const Color color) const;
+    
     void draw_rectangle(const uint16_t origin_x, 
                         const uint16_t origin_y, 
                         const uint8_t width, 
                         const uint8_t height,
                         FillType filled) const;
-    void draw_line(
-        const uint16_t x1, 
-        const uint16_t y1, 
-        const int16_t x2, 
-        const int16_t y2) const;
 
     void draw_point(const uint16_t x, const uint16_t y) const;
-
-    HitData cast_ray(const float relative_angle_to_player) const;
 
     void draw_quad(
         const float x1, const float y1,
@@ -75,6 +67,16 @@ class Renderer {
     void draw_3d() const;
 
 public:
+    void set_drawing_color(const uint8_t r, const uint8_t g, const uint8_t b) const;
+    void set_drawing_color(const Color color) const;
+
+    void draw_line(
+        const uint16_t x1, 
+        const uint16_t y1, 
+        const int16_t x2, 
+        const int16_t y2
+    ) const;
+
     RendererConfig config;
 
     RendererDistanceFunc distance_func = [](float x, float y) -> float {
