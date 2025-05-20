@@ -1,4 +1,4 @@
-#include <raynder.h>
+#include <raynder/raynder.h>
 
 #include <renderer.h>
 #include <map.h>
