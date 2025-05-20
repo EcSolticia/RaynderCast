@@ -9,5 +9,5 @@ target_include_directories(${PROJECT_NAME}
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../build/libRaynderCast.so.0
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../build/libRaynderCastd.so.0
 )

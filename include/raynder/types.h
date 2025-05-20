@@ -26,9 +26,8 @@ namespace Raynder {
     struct RAYNDERCAST_EXPORT RendererConfig {
         Color floor_color;
         Color ceiling_color{37, 44, 44};
+        
         Color topdown_player_square_color{0, 255, 0};
-
-        bool debug = true;
         Color topdown_ray_color{255, 255, 255};
 
         Color vertical_wall_color{100, 90, 90};

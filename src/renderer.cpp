@@ -164,15 +164,16 @@ HitData Renderer::cast_ray(const float relative_angle_to_player) const {
         hit_data.vertical = false;
     }
 
-    if (this->config.debug) {
-        this->set_drawing_color(this->config.topdown_ray_color);
-        this->draw_line(
-            pos.x, 
-            pos.y, 
-            pos.x + hit_data.coords.x, 
-            pos.y + hit_data.coords.y
-        );
-    }
+
+    #ifdef DEBUG_BUILD
+    this->set_drawing_color(this->config.topdown_ray_color);
+    this->draw_line(
+        pos.x, 
+        pos.y, 
+        pos.x + hit_data.coords.x, 
+        pos.y + hit_data.coords.y
+    );
+    #endif
 
     return hit_data;
 }
@@ -297,6 +298,7 @@ void Renderer::set_player_ptr(Player* player_ptr) {
     this->player_ptr = player_ptr;
 }
 
+#ifdef DEBUG_BUILD
 void Renderer::draw_debug_topdown_grid() const {
 
     const uint8_t row_count = this->map_ptr->get_row_count();
@@ -340,6 +342,7 @@ void Renderer::draw_debug_topdown_player() const {
         FillType::FILLED
     );
 }
+#endif
 
 void Renderer::clear_display() const {
     if (SDL_RenderClear(this->context)) {
@@ -360,9 +363,12 @@ void Renderer::render_loop() const {
     this->clear_display();
 
     this->draw_3d();
+
+    #ifdef DEBUG_BUILD
     this->draw_debug_topdown_grid();
     this->draw_debug_topdown_player();
-    
+    #endif
+
     this->update_display();
 }
 
