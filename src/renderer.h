@@ -6,7 +6,7 @@
 
 #include <SDL2/SDL.h>
 
-#include <types.h>
+#include <raynder/types.h>
 
 struct SDL_Window;
 struct SDL_Renderer;
