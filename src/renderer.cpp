@@ -176,11 +176,15 @@ void Renderer::draw_3d() const {
 
         const uint16_t line_height = line_height_scalar * height_on_window/distance;
 
-        for (uint16_t window_y = origin_on_window_y; window_y < origin_on_window_y + height_on_window; ++window_y) {
-            if (!last_line_height) {
-                break;
-            }
-            this->draw_quadri_3d(last_window_x, last_line_height, window_x, line_height, height_on_window, hit_data.vertical);
+        if (last_line_height) {
+            this->draw_quadri_3d(
+                last_window_x, 
+                last_line_height, 
+                window_x, 
+                line_height, 
+                height_on_window, 
+                hit_data.vertical
+            );
         }
 
         last_line_height = line_height;
