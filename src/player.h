@@ -5,6 +5,8 @@ union SDL_Event;
 
 namespace Raynder {
 
+class Map;
+
 struct KeyStatus {
     bool w;
     bool s;
@@ -27,6 +29,8 @@ class Player {
     float vel_y = 0;
     float angular_vel = 0;
     
+    Map* map_ptr;
+
     void set_pos_x(const float x);
     void set_pos_y(const float y);
     void set_pos(const float x, const float y);
@@ -53,7 +57,8 @@ public:
     Player(
         const float pos_x, 
         const float pos_y, 
-        const float rotation
+        const float rotation,
+        Map* map_ptr
     );
 };
 

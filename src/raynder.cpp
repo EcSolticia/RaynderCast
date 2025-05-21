@@ -68,12 +68,16 @@ void Game::create_player(
     const float initial_y, 
     const float initial_rotation
 ) {
+    if (!this->map_ptr) {
+        throw std::runtime_error("Cannot create Player object prior to the Map object.");
+    }
+
     if (initial_x < 0 || initial_y < 0) {
         throw std::runtime_error("Position values must be non-negative");
     }
 
     this->player_ptr = std::make_unique<Player> (
-        Player(initial_x, initial_y, initial_rotation)
+        Player(initial_x, initial_y, initial_rotation, this->map_ptr.get())
     );
     this->renderer_ptr->set_player_ptr(this->player_ptr.get());
 }

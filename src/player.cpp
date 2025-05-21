@@ -3,6 +3,9 @@
 #include <SDL2/SDL.h>
 #include <math.h>
 
+#include <raycaster.h>
+#include <map.h>
+
 namespace Raynder {
 
 float Player::get_pos_x() const {return this->pos_x;}
@@ -95,8 +98,19 @@ void Player::handle_keypress() {
     float global_basis_dx = basis_dx * cos(global_adjusted_rotation) - basis_dy * sin(global_adjusted_rotation);
     float global_basis_dy = basis_dx * sin(global_adjusted_rotation) + basis_dy * cos(global_adjusted_rotation);
 
-    this->vel_x = global_basis_dx * this->config.translational_speed;
-    this->vel_y = global_basis_dy * this->config.translational_speed;
+    const float p_vel_x = global_basis_dx * this->config.translational_speed;
+    const float p_vel_y = global_basis_dy * this->config.translational_speed;
+
+    const float relative_angle = basis_dx ? tan(basis_dy/basis_dx) - M_PI/2.0 : M_PI/2.0;
+
+    HitData hit_data = Raycaster::cast_ray(
+        this,
+        this->map_ptr,
+        std::nullopt,
+        relative_angle
+    );
+
+    
 
     if (this->key_pressed.q) {
         this->angular_vel = -this->config.rotational_speed;
@@ -109,11 +123,13 @@ void Player::handle_keypress() {
 Player::Player(
     const float pos_x, 
     const float pos_y, 
-    const float rotation
+    const float rotation,
+    Map* map_ptr
 ) {
     this->pos_x = pos_x;
     this->pos_y = pos_y;
     this->rotation = rotation;
+    this->map_ptr = map_ptr;
 }
 
 }
