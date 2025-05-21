@@ -3,10 +3,7 @@
 #include <SDL2/SDL.h>
 #include <math.h>
 
-#include <raycaster.h>
 #include <map.h>
-
-#include <iostream>
 
 namespace Raynder {
 
@@ -71,23 +68,25 @@ void Player::apply_angular_velocity(const float delta) {
 }
 
 const float Player::get_basis_d_relative_rotation() const {
+    float result;
     if (basis_dy > 0 && basis_dx == 0) { //forward
-        return 0;
+        result = 0;
     } else if (basis_dy < 0 && basis_dx == 0) { //backward
-        return M_PI;
+        result = M_PI;
     } else if (basis_dy == 0 && basis_dx > 0) { //left
-        return -M_PI/2.0;
+        result = -M_PI/2.0;
     } else if (basis_dy == 0 && basis_dx < 0) { //right
-        return M_PI/2.0;
+        result = M_PI/2.0;
     } else if (basis_dx > 0 && basis_dy > 0) {
-        return -M_PI/4.0;
+        result = -M_PI/4.0;
     } else if (basis_dx < 0 && basis_dy > 0) {
-        return M_PI/4.0;
+        result = M_PI/4.0;
     } else if (basis_dx < 0 && basis_dy < 0) {
-        return 2.0/3.0 * M_PI;
+        result = 2.0/3.0 * M_PI;
     } else if (basis_dx > 0 && basis_dy < 0) {
-        return -2.0/3.0 * M_PI;
+        result = -2.0/3.0 * M_PI;
     }
+    return result;
 }
 
 void Player::input_to_dir() {
@@ -127,11 +126,9 @@ void Player::move_and_slide() {
 
     const float relative_angle = this->get_basis_d_relative_rotation();
 
-    const float hit_dist = sqrt(pow(hit_data.coords.x, 2) + pow(hit_data.coords.y, 2));
+    const float hit_dist_squared = pow(hit_data.coords.x, 2) + pow(hit_data.coords.y, 2);
 
-    std::cout << hit_dist << "\n";
-
-    if (hit_dist <= this->config.collision_radius) {
+    if (hit_dist_squared <= pow(this->config.collision_radius, 2)) {
         
         if (hit_data.vertical) {
             this->vel_y = p_vel_y;
