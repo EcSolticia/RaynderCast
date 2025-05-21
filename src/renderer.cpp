@@ -151,6 +151,7 @@ void Renderer::draw_3d() const {
 
     uint16_t last_line_height = 0;
     uint16_t last_window_x = 0;
+    HitData last_hit_data;
 
     const float field_of_view = this->config.field_of_view;
     const float theta_increment = field_of_view/this->config.ray_count;
@@ -177,18 +178,74 @@ void Renderer::draw_3d() const {
         const uint16_t line_height = line_height_scalar * height_on_window/distance;
 
         if (last_line_height) {
-            this->draw_quadri_3d(
-                last_window_x, 
-                last_line_height, 
-                window_x, 
-                line_height, 
-                height_on_window, 
-                hit_data.vertical
-            );
+
+            if (hit_data.vertical != last_hit_data.vertical) {
+
+                const float diff_x = hit_data.coords.x - last_hit_data.coords.x;
+                const float diff_y = hit_data.coords.y - last_hit_data.coords.y;
+
+                float corner_coords_x = last_hit_data.coords.x;
+                float corner_coords_y = last_hit_data.coords.y;
+
+                if (diff_x > 0 && diff_y < 0) {
+                    corner_coords_x += diff_x;
+                } else if (diff_x < 0 && diff_y < 0) {
+                    corner_coords_y += diff_y;
+                } else if (diff_x < 0 && diff_y > 0) {
+                    corner_coords_x += diff_x;
+                } else if (diff_x > 0 && diff_y > 0) {
+                    corner_coords_y += diff_y;
+                }
+
+                const float dotprod = corner_coords_x * last_hit_data.coords.x + corner_coords_y * last_hit_data.coords.y;
+                const float last_euclidean_dist = sqrt(pow(last_hit_data.coords.x, 2) + pow(last_hit_data.coords.y, 2));
+                const float corner_euclidean_dist = sqrt(pow(corner_coords_x, 2) + pow(corner_coords_y, 2));
+
+                const float corner_theta = acos(dotprod/(last_euclidean_dist * corner_euclidean_dist));
+
+                const float corner_t = (corner_theta + field_of_view/2)/field_of_view;
+
+                const uint16_t corner_window_x = width_on_window * t + origin_on_window_x;
+                
+                const float corner_distance = this->distance_func(corner_coords_x, corner_coords_y);
+
+                const uint16_t corner_line_height = line_height_scalar * height_on_window/corner_distance;
+
+                this->draw_quadri_3d(
+                    last_window_x,
+                    last_line_height,
+                    corner_window_x,
+                    corner_line_height,
+                    height_on_window,
+                    last_hit_data.vertical
+                );
+
+                this->draw_quadri_3d(
+                    corner_window_x,
+                    corner_line_height,
+                    window_x,
+                    line_height,
+                    height_on_window,
+                    hit_data.vertical
+                );
+
+            } else {
+                this->draw_quadri_3d(
+                    last_window_x, 
+                    last_line_height, 
+                    window_x, 
+                    line_height, 
+                    height_on_window, 
+                    hit_data.vertical
+                );                
+            }
+
+            
         }
 
         last_line_height = line_height;
         last_window_x = window_x;
+        last_hit_data = hit_data;
     }
 
 }
