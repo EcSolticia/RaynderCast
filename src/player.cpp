@@ -3,6 +3,8 @@
 #include <SDL2/SDL.h>
 #include <math.h>
 
+#include <map.h>
+
 namespace Raynder {
 
 float Player::get_pos_x() const {return this->pos_x;}
@@ -65,38 +67,78 @@ void Player::apply_angular_velocity(const float delta) {
     this->rotation += angular_vel * delta;
 }
 
-void Player::handle_keypress() {
+const float Player::get_basis_d_relative_rotation() const {
+    float result;
+    if (basis_dy > 0 && basis_dx == 0) { //forward
+        result = 0;
+    } else if (basis_dy < 0 && basis_dx == 0) { //backward
+        result = M_PI;
+    } else if (basis_dy == 0 && basis_dx > 0) { //left
+        result = -M_PI/2.0;
+    } else if (basis_dy == 0 && basis_dx < 0) { //right
+        result = M_PI/2.0;
+    } else if (basis_dx > 0 && basis_dy > 0) {
+        result = -M_PI/4.0;
+    } else if (basis_dx < 0 && basis_dy > 0) {
+        result = M_PI/4.0;
+    } else if (basis_dx < 0 && basis_dy < 0) {
+        result = 2.0/3.0 * M_PI;
+    } else if (basis_dx > 0 && basis_dy < 0) {
+        result = -2.0/3.0 * M_PI;
+    }
+    return result;
+}
+
+void Player::input_to_dir() {
+    this->basis_dx = 0;
+    this->basis_dy = 0;
+
+    if (this->key_pressed.w) {
+        this->basis_dy += 1;
+    }
+    if (this->key_pressed.s) {
+        this->basis_dy -= 1;
+    }
+    if (this->key_pressed.a) {
+        this->basis_dx += 1;
+    }
+    if (this->key_pressed.d) {
+        this->basis_dx -= 1;
+    }
+
+    if ((basis_dx != 0) && (basis_dy != 0)) {
+        this->basis_dx /= sqrt(2.0);
+        this->basis_dy /= sqrt(2.0);
+    }
+
+    const float global_adjusted_rotation = rotation - M_PI/2.0;
+    this->global_basis_dx = this->basis_dx * cos(global_adjusted_rotation) - this->basis_dy * sin(global_adjusted_rotation);
+    this->global_basis_dy = this->basis_dx * sin(global_adjusted_rotation) + this->basis_dy * cos(global_adjusted_rotation);
+}
+
+void Player::move_and_slide() {
     this->vel_x = 0;
     this->vel_y = 0;
     this->angular_vel = 0;
 
-    float basis_dx = 0;
-    float basis_dy = 0;
+    const float p_vel_x = this->global_basis_dx * this->config.translational_speed;
+    const float p_vel_y = this->global_basis_dy * this->config.translational_speed;
 
-    if (this->key_pressed.w) {
-        basis_dy += 1;
-    }
-    if (this->key_pressed.s) {
-        basis_dy -= 1;
-    }
-    if (this->key_pressed.a) {
-        basis_dx += 1;
-    }
-    if (this->key_pressed.d) {
-        basis_dx -= 1;
-    }
+    const float relative_angle = this->get_basis_d_relative_rotation();
 
-    if ((basis_dx != 0) && (basis_dy != 0)) {
-        basis_dx /= sqrt(2.0);
-        basis_dy /= sqrt(2.0);
+    const float hit_dist_squared = pow(hit_data.coords.x, 2) + pow(hit_data.coords.y, 2);
+
+    if (hit_dist_squared <= pow(this->config.collision_radius, 2)) {
+        
+        if (hit_data.vertical) {
+            this->vel_y = p_vel_y;
+        } else {
+            this->vel_x = p_vel_x;
+        }
+    } else {
+        this->vel_x = p_vel_x;
+        this->vel_y = p_vel_y;
     }
-
-    const float global_adjusted_rotation = rotation - M_PI/2.0;
-    float global_basis_dx = basis_dx * cos(global_adjusted_rotation) - basis_dy * sin(global_adjusted_rotation);
-    float global_basis_dy = basis_dx * sin(global_adjusted_rotation) + basis_dy * cos(global_adjusted_rotation);
-
-    this->vel_x = global_basis_dx * this->config.translational_speed;
-    this->vel_y = global_basis_dy * this->config.translational_speed;
 
     if (this->key_pressed.q) {
         this->angular_vel = -this->config.rotational_speed;
@@ -109,11 +151,13 @@ void Player::handle_keypress() {
 Player::Player(
     const float pos_x, 
     const float pos_y, 
-    const float rotation
+    const float rotation,
+    Map* map_ptr
 ) {
     this->pos_x = pos_x;
     this->pos_y = pos_y;
     this->rotation = rotation;
+    this->map_ptr = map_ptr;
 }
 
 }

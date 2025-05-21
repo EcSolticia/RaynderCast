@@ -5,6 +5,8 @@ union SDL_Event;
 
 namespace Raynder {
 
+class Map;
+
 struct KeyStatus {
     bool w;
     bool s;
@@ -27,6 +29,13 @@ class Player {
     float vel_y = 0;
     float angular_vel = 0;
     
+    Map* map_ptr;
+
+    float basis_dx = 0;
+    float basis_dy = 0;
+    float global_basis_dx = 0;
+    float global_basis_dy = 0;
+
     void set_pos_x(const float x);
     void set_pos_y(const float y);
     void set_pos(const float x, const float y);
@@ -38,6 +47,8 @@ class Player {
 public:
     PlayerConfig config;
 
+    HitData hit_data;
+
     void update_key_status();
 
     void apply_velocity(const float delta);
@@ -47,13 +58,17 @@ public:
     float get_pos_y() const;
     float get_rotation() const;
 
-    void handle_keypress();
+    const float get_basis_d_relative_rotation() const;
+    void input_to_dir();
+
+    void move_and_slide();
 
     Player() {};
     Player(
         const float pos_x, 
         const float pos_y, 
-        const float rotation
+        const float rotation,
+        Map* map_ptr
     );
 };
 

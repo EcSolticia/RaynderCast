@@ -3,6 +3,7 @@
 #include <renderer.h>
 #include <map.h>
 #include <player.h>
+#include <raycaster.h>
 
 #include <SDL2/SDL.h>
 
@@ -28,18 +29,20 @@ void Game::gameloop() {
 
         this->compute_delta();
         #ifdef DEBUG_BUILD
-            std::cout << delta << "\n";
+            std::cout << "[Game] delta: " << delta << "\n";
         #endif
 
         this->player_ptr->apply_velocity(this->delta);
         this->player_ptr->apply_angular_velocity(this->delta);
 
+        this->player_ptr->update_key_status();
+        this->player_ptr->input_to_dir();
+        
+        this->player_ptr->move_and_slide();
+
         SDL_Event event;
 
         while (SDL_PollEvent(&event)) {
-                    
-            this->player_ptr->update_key_status();
-            this->player_ptr->handle_keypress();
 
             if (event.type == SDL_QUIT || event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE) {
                 running = false;
@@ -48,6 +51,20 @@ void Game::gameloop() {
         }
 
         this->renderer_ptr->render_loop();
+
+        this->player_ptr->hit_data = Raycaster::cast_ray(
+            this->player_ptr.get(),
+            this->map_ptr.get(),
+            #ifdef DEBUG_BUILD
+            this->renderer_ptr.get(),
+            #endif
+            #ifdef RELEASE_BUILD
+            std::nullopt,
+            #endif
+            this->player_ptr->get_basis_d_relative_rotation()
+        );
+
+        this->renderer_ptr->update_display();
     }
 }
 
@@ -68,12 +85,16 @@ void Game::create_player(
     const float initial_y, 
     const float initial_rotation
 ) {
+    if (!this->map_ptr) {
+        throw std::runtime_error("Cannot create Player object prior to the Map object.");
+    }
+
     if (initial_x < 0 || initial_y < 0) {
         throw std::runtime_error("Position values must be non-negative");
     }
 
     this->player_ptr = std::make_unique<Player> (
-        Player(initial_x, initial_y, initial_rotation)
+        Player(initial_x, initial_y, initial_rotation, this->map_ptr.get())
     );
     this->renderer_ptr->set_player_ptr(this->player_ptr.get());
 }
