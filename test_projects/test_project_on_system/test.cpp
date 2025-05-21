@@ -29,7 +29,7 @@ int main() {
         Raynder::PlayerConfig pconfig;
 
         pconfig.translational_speed = 75.0;
-        pconfig.collision_radius = 2.0;
+        pconfig.collision_radius = 20.0;
         rconfig.floor_color = Raynder::Color{78, 102, 136};
         rconfig.ceiling_color = Raynder::Color{51, 45, 86};
 
