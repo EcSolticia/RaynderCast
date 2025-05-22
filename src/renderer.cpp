@@ -211,6 +211,21 @@ void Renderer::draw_3d() const {
 
             const bool same_block = (euclidean_dist_diff < this->map_ptr->get_side_length()/2.0);
             
+            CartesianPair middle_hit;
+            middle_hit.x = (hit_data.coords.x + last_hit_data.coords.x)/2.0;
+            middle_hit.y = (hit_data.coords.y + last_hit_data.coords.y)/2.0;
+
+            const float middle_theta = Renderer::angular_distance_between(last_hit_data.coords, middle_hit) + last_theta;
+
+            HitData middle_hit_data = Raycaster::cast_ray(
+                this->player_ptr,
+                this->map_ptr,
+                std::nullopt,
+                middle_theta
+            );
+
+            const float middle_hit_distance = sqrt(pow(middle_hit_data.coords.x, 2) + pow(middle_hit_data.coords.y, 2));
+
             if ((hit_data.vertical != last_hit_data.vertical) && same_block) {
                 
                 const float diff_x = hit_data.coords.x - last_hit_data.coords.x;
@@ -220,18 +235,46 @@ void Renderer::draw_3d() const {
                 float corner_coords_y = last_hit_data.coords.y;
 
                 float diff;
+
+                bool concave;
+                if (middle_hit_data.vertical == last_hit_data.vertical) {
+                    concave = (middle_hit_distance < last_euclidean_dist);
+                } else {
+                    concave = (middle_hit_distance < euclidean_dist);
+                }
+
                 if (diff_x > 0 && diff_y < 0) {
-                    diff = diff_x;
-                    corner_coords_x += diff;
+                    if (concave) {
+                        diff = diff_x;
+                        corner_coords_x += diff;
+                    } else {
+                        diff = diff_y;
+                        corner_coords_y += diff;
+                    }
                 } else if (diff_x < 0 && diff_y < 0) {
-                    diff = diff_y;
-                    corner_coords_y += diff;
+                    if (concave) {
+                        diff = diff_y;
+                        corner_coords_y += diff;
+                    } else {
+                        diff = diff_x;
+                        corner_coords_x += diff;
+                    }
                 } else if (diff_x < 0 && diff_y > 0) {
-                    diff = diff_x;
-                    corner_coords_x += diff;
+                    if (concave) {
+                        diff = diff_x;
+                        corner_coords_x += diff;
+                    } else {
+                        diff = diff_y;
+                        corner_coords_y += diff;
+                    }
                 } else if (diff_x > 0 && diff_y > 0) {
-                    diff = diff_y;
-                    corner_coords_y += diff;
+                    if (concave) {
+                        diff = diff_y;
+                        corner_coords_y += diff;
+                    } else {
+                        diff = diff_x;
+                        corner_coords_x += diff;
+                    }
                 }
 
                 const float dotprod = corner_coords_x * last_hit_data.coords.x + corner_coords_y * last_hit_data.coords.y;

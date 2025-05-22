@@ -31,6 +31,12 @@ class Renderer {
     mutable std::vector<SDL_Vertex> quad_buffer;
     std::vector<int> quad_indices = { 0, 1, 2, 0, 2, 3 };
 
+    static const float angular_distance_between(CartesianPair v1, CartesianPair v2) {
+        const float dotprod = v1.x * v2.x + v1.y * v2.y;
+        const float v1_euc_dist = sqrt(pow(v1.x, 2) + pow(v1.y, 2));
+        const float v2_euc_dist = sqrt(pow(v2.x, 2) + pow(v2.y, 2));
+        return acos(dotprod/(v1_euc_dist * v2_euc_dist));
+    }
     
     void draw_rectangle(const uint16_t origin_x, 
                         const uint16_t origin_y, 
