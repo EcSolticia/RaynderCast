@@ -119,6 +119,38 @@ void Renderer::draw_quadri_3d(
     );
 }
 
+void Renderer::draw_quadri_3d_from_angles(
+    const float angle1, 
+    const CartesianPair hit_coords1,
+    const float angle2,
+    const CartesianPair hit_coords2,
+    const bool vertical
+) const {
+    
+    const float t1 = (angle1 + this->config.field_of_view/2)/this->config.field_of_view;
+    const uint16_t x1 = this->config.render_width_on_window * t1 + this->config.render_origin_on_window_x;
+
+    const float distance1 = this->distance_func(hit_coords1.x, hit_coords1.y);
+
+    const uint16_t line_height1 = this->config.line_height_scalar * this->config.render_height_on_window/distance1;
+
+    const float t2 = (angle2 + this->config.field_of_view/2)/this->config.field_of_view;
+    const uint16_t x2 = this->config.render_width_on_window * t2 + this->config.render_origin_on_window_x;
+
+    const float distance2 = this->distance_func(hit_coords2.x, hit_coords2.y);
+
+    const uint16_t line_height2 = this->config.line_height_scalar * this->config.render_height_on_window/distance2;
+
+    this->draw_quadri_3d(
+        x1, 
+        line_height1, 
+        x2, 
+        line_height2, 
+        this->config.render_height_on_window, 
+        vertical
+    );
+}
+
 void Renderer::draw_3d_floor(
     const uint16_t origin_on_window_x, 
     const uint16_t origin_on_window_y,
@@ -149,13 +181,14 @@ void Renderer::draw_3d() const {
 
     this->draw_3d_floor(origin_on_window_x, origin_on_window_y, width_on_window, height_on_window);
 
-    uint16_t last_line_height = 0;
-    uint16_t last_window_x = 0;
+    //uint16_t last_line_height = 0;
+    //uint16_t last_window_x = 0;
+    float last_theta;
     HitData last_hit_data;
 
     const float field_of_view = this->config.field_of_view;
     const float theta_increment = field_of_view/this->config.ray_count;
-    const float line_height_scalar = this->config.line_height_scalar;
+    //const float line_height_scalar = this->config.line_height_scalar;
 
     for (float theta = -field_of_view/2.0; theta < field_of_view/2.0; theta += theta_increment) {
         
@@ -169,83 +202,100 @@ void Renderer::draw_3d() const {
             #endif
             theta
         );
-        
-        const float distance = this->distance_func(hit_data.coords.x, hit_data.coords.y);//sqrt(pow(hit_data.coords.x, 2) + pow(hit_data.coords.y, 2));
 
-        const float t = (theta + field_of_view/2)/field_of_view;
-        const uint16_t window_x = width_on_window * t + origin_on_window_x;
-
-        const uint16_t line_height = line_height_scalar * height_on_window/distance;
-
-        if (last_line_height) {
+        if (theta > -field_of_view/2.0) {
 
             if (hit_data.vertical != last_hit_data.vertical) {
-
+                
                 const float diff_x = hit_data.coords.x - last_hit_data.coords.x;
                 const float diff_y = hit_data.coords.y - last_hit_data.coords.y;
 
                 float corner_coords_x = last_hit_data.coords.x;
                 float corner_coords_y = last_hit_data.coords.y;
 
+                float diff;
                 if (diff_x > 0 && diff_y < 0) {
-                    corner_coords_x += diff_x;
+                    diff = diff_x;
+                    corner_coords_x += diff;
                 } else if (diff_x < 0 && diff_y < 0) {
-                    corner_coords_y += diff_y;
+                    diff = diff_y;
+                    corner_coords_y += diff;
                 } else if (diff_x < 0 && diff_y > 0) {
-                    corner_coords_x += diff_x;
+                    diff = diff_x;
+                    corner_coords_x += diff;
                 } else if (diff_x > 0 && diff_y > 0) {
-                    corner_coords_y += diff_y;
+                    diff = diff_y;
+                    corner_coords_y += diff;
                 }
 
                 const float dotprod = corner_coords_x * last_hit_data.coords.x + corner_coords_y * last_hit_data.coords.y;
                 const float last_euclidean_dist = sqrt(pow(last_hit_data.coords.x, 2) + pow(last_hit_data.coords.y, 2));
                 const float corner_euclidean_dist = sqrt(pow(corner_coords_x, 2) + pow(corner_coords_y, 2));
 
-                const float corner_theta = acos(dotprod/(last_euclidean_dist * corner_euclidean_dist));
+                const float corner_theta = acos(dotprod/(last_euclidean_dist * corner_euclidean_dist)) + last_theta;
 
                 const float corner_t = (corner_theta + field_of_view/2)/field_of_view;
 
-                const uint16_t corner_window_x = width_on_window * t + origin_on_window_x;
-                
-                const float corner_distance = this->distance_func(corner_coords_x, corner_coords_y);
+                CartesianPair corner_coords;
+                corner_coords.x = corner_coords_x;
+                corner_coords.y = corner_coords_y;
+                this->draw_quadri_3d_from_angles(
+                    last_theta, 
+                    last_hit_data.coords, 
+                    corner_theta, 
+                    corner_coords, 
+                    last_hit_data.vertical
+                );
 
-                const uint16_t corner_line_height = line_height_scalar * height_on_window/corner_distance;
-
-                this->draw_quadri_3d(
+                /*this->draw_quadri_3d(
                     last_window_x,
                     last_line_height,
                     corner_window_x,
                     corner_line_height,
                     height_on_window,
                     last_hit_data.vertical
+                );*/
+
+                this->draw_quadri_3d_from_angles(
+                    corner_theta,
+                    corner_coords,
+                    theta,
+                    hit_data.coords,
+                    hit_data.vertical
                 );
 
-                this->draw_quadri_3d(
+                /*this->draw_quadri_3d(
                     corner_window_x,
                     corner_line_height,
                     window_x,
                     line_height,
                     height_on_window,
                     hit_data.vertical
-                );
-
+                );*/
+                
             } else {
-                this->draw_quadri_3d(
+                this->draw_quadri_3d_from_angles(
+                    last_theta,
+                    last_hit_data.coords,
+                    theta,
+                    hit_data.coords,
+                    hit_data.vertical
+                );
+                /*this->draw_quadri_3d(
                     last_window_x, 
                     last_line_height, 
                     window_x, 
                     line_height, 
                     height_on_window, 
                     hit_data.vertical
-                );                
+                );*/                
             }
 
             
         }
 
-        last_line_height = line_height;
-        last_window_x = window_x;
         last_hit_data = hit_data;
+        last_theta = theta;
     }
 
 }

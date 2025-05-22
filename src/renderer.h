@@ -57,6 +57,14 @@ class Renderer {
         const bool hit_vertical
     ) const;
 
+    void draw_quadri_3d_from_angles(
+        const float angle1, 
+        const CartesianPair hit_coords1,
+        const float angle2,
+        const CartesianPair hit_coords2,
+        const bool vertical
+    ) const;
+
     void draw_3d_floor(
         const uint16_t origin_on_window_x, 
         const uint16_t origin_on_window_y,
