@@ -19,10 +19,14 @@ int main() {
                            "1 0 0 1 0 0 0 0 0 1\n"
                            "1 0 0 1 0 0 0 0 0 1\n"
                            "1 0 0 0 0 0 0 0 0 1\n"
-                           "1 1 1 1 1 1 1 1 1 1";
+                           "1 0 0 0 0 0 0 0 0 1\n"
+                           "1 0 0 0 0 0 0 0 0 1\n"
+                           "1 0 0 0 0 0 0 0 0 1\n"
+                           "1 0 0 0 0 0 0 0 0 1\n"
+                           "1 0 0 0 0 0 0 0 0 1\n";
 
     try {
-        game.create_map(10, 9, 32, map_data);
+        game.create_map(10, 13, 32, map_data);
         game.create_player(72, 72, 0);
 
         Raynder::RendererConfig rconfig;

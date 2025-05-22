@@ -46,17 +46,18 @@ HitData Raycaster::cast_ray(
 
     const float Dv_y_increment = Dv_x_increment * tan_angle;
     bool hit_wall_v = false;
+    IdxPair idxv;
 
     while (!hit_wall_v) {
-        const uint8_t index_y = (int)((pos.y + Dv.y)/side_length);
-        const uint8_t index_x = (int)((pos.x + Dv.x)/side_length) - int(Dv.x < 0);
+        idxv.y = (int)((pos.y + Dv.y)/side_length);
+        idxv.x = (int)((pos.x + Dv.x)/side_length) - int(Dv.x < 0);
 
-        if (index_y >= map_ptr->get_row_count() || index_x >= map_ptr->get_column_count()) {
+        if (idxv.y >= map_ptr->get_row_count() || idxv.x >= map_ptr->get_column_count()) {
             hit_wall_v = true;
             break;
         }
 
-        if (map_ptr->get_data(index_x, index_y)) {
+        if (map_ptr->get_data(idxv.x, idxv.y)) {
             hit_wall_v = true;
         } else {
             Dv.x += Dv_x_increment;
@@ -79,17 +80,18 @@ HitData Raycaster::cast_ray(
 
     const float Dh_x_increment = Dh_y_increment * cot_angle;
     bool hit_wall_h = false;
+    IdxPair idxh;
 
     while (!hit_wall_h) {
-        const uint8_t index_y = (int)((pos.y + Dh.y)/side_length) - int(Dv.y < 0);
-        const uint8_t index_x = (int)((pos.x + Dh.x)/side_length);
+        idxh.y = (int)((pos.y + Dh.y)/side_length) - int(Dv.y < 0);
+        idxh.x = (int)((pos.x + Dh.x)/side_length);
 
-        if (index_y >= map_ptr->get_row_count() || index_x >= map_ptr->get_column_count()) {
+        if (idxh.y >= map_ptr->get_row_count() || idxh.x >= map_ptr->get_column_count()) {
             hit_wall_h = true;
             break;
         }
 
-        if (map_ptr->get_data(index_x, index_y)) {
+        if (map_ptr->get_data(idxh.x, idxh.y)) {
             hit_wall_h = true;
         } else {
             Dh.y += Dh_y_increment;
@@ -104,9 +106,11 @@ HitData Raycaster::cast_ray(
     ) {
         hit_data.coords = Dv;
         hit_data.vertical = true;
+        hit_data.hit_idx = idxv;
     } else {
         hit_data.coords = Dh;
         hit_data.vertical = false;
+        hit_data.hit_idx = idxh;
     }
 
     if (renderer_ptr.has_value()) {
