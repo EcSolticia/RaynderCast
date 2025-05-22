@@ -205,7 +205,13 @@ void Renderer::draw_3d() const {
 
         if (theta > -field_of_view/2.0) {
 
-            if (hit_data.vertical != last_hit_data.vertical) {
+            const float last_euclidean_dist = sqrt(pow(last_hit_data.coords.x, 2) + pow(last_hit_data.coords.y, 2));
+            const float euclidean_dist = sqrt(pow(hit_data.coords.x, 2) + pow(hit_data.coords.y, 2));
+            const float euclidean_dist_diff = abs(euclidean_dist - last_euclidean_dist);
+
+            const bool same_block = (euclidean_dist_diff < this->map_ptr->get_side_length()/2.0);
+            
+            if ((hit_data.vertical != last_hit_data.vertical) && same_block) {
                 
                 const float diff_x = hit_data.coords.x - last_hit_data.coords.x;
                 const float diff_y = hit_data.coords.y - last_hit_data.coords.y;
@@ -229,7 +235,6 @@ void Renderer::draw_3d() const {
                 }
 
                 const float dotprod = corner_coords_x * last_hit_data.coords.x + corner_coords_y * last_hit_data.coords.y;
-                const float last_euclidean_dist = sqrt(pow(last_hit_data.coords.x, 2) + pow(last_hit_data.coords.y, 2));
                 const float corner_euclidean_dist = sqrt(pow(corner_coords_x, 2) + pow(corner_coords_y, 2));
 
                 const float corner_theta = acos(dotprod/(last_euclidean_dist * corner_euclidean_dist)) + last_theta;
@@ -273,7 +278,7 @@ void Renderer::draw_3d() const {
                     hit_data.vertical
                 );*/
                 
-            } else {
+            } else if (same_block) {
                 this->draw_quadri_3d_from_angles(
                     last_theta,
                     last_hit_data.coords,
