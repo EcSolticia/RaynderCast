@@ -29,7 +29,7 @@ void Game::gameloop() {
 
         this->compute_delta();
         #ifdef DEBUG_BUILD
-            std::cout << "[Game] delta: " << delta << "\n";
+            //std::cout << "[Game] delta: " << delta << "\n";
         #endif
 
         this->player_ptr->apply_velocity(this->delta);

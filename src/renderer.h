@@ -38,6 +38,13 @@ class Renderer {
         return (dx <= 1 && dy <= 1);
     }
 
+    static bool diagonal_blocks(const IdxPair A, const IdxPair B) {
+        const uint8_t dx = abs((int)A.x - (int)B.x);
+        const uint8_t dy = abs((int)A.y - (int)B.y);
+
+        return (dx == 1 && dy == 1);
+    }
+
     static const float angular_distance_between(CartesianPair v1, CartesianPair v2) {
         const float dotprod = v1.x * v2.x + v1.y * v2.y;
         const float v1_euc_dist = sqrt(pow(v1.x, 2) + pow(v1.y, 2));

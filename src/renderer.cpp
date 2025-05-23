@@ -203,63 +203,46 @@ void Renderer::draw_3d() const {
             theta
         );
 
-        const float last_euclidean_dist = sqrt(pow(last_hit_data.coords.x, 2) + pow(last_hit_data.coords.y, 2));
-        const float euclidean_dist = sqrt(pow(hit_data.coords.x, 2) + pow(hit_data.coords.y, 2));
-
         const bool same_or_adjacent_blocks = Renderer::same_or_adjacent_blocks(last_hit_data.hit_idx, hit_data.hit_idx);
 
-        if (theta > -field_of_view/2.0 && same_or_adjacent_blocks) {    
-            
-            CartesianPair middle_hit;
-            middle_hit.x = (hit_data.coords.x + last_hit_data.coords.x)/2.0;
-            middle_hit.y = (hit_data.coords.y + last_hit_data.coords.y)/2.0;
+        bool convex_outline_from_view;
 
-            const float middle_theta = Renderer::angular_distance_between(last_hit_data.coords, middle_hit) + last_theta;
+        if (same_or_adjacent_blocks && theta != -field_of_view/2.0) {
 
-            HitData middle_hit_data = Raycaster::cast_ray(
-                this->player_ptr,
-                this->map_ptr,
-                std::nullopt,
-                middle_theta
-            );
+            convex_outline_from_view = !diagonal_blocks(last_hit_data.hit_idx, hit_data.hit_idx);
+            const bool diagonal = !convex_outline_from_view;
 
-            const float middle_hit_distance = sqrt(pow(middle_hit_data.coords.x, 2) + pow(middle_hit_data.coords.y, 2));
+            CartesianPair diff{
+                hit_data.coords.x - last_hit_data.coords.x,
+                hit_data.coords.y - last_hit_data.coords.y
+            };
 
-            if (hit_data.vertical != last_hit_data.vertical) {
-                CartesianPair diff{
-                    hit_data.coords.x - last_hit_data.coords.x,
-                    hit_data.coords.y - last_hit_data.coords.y
-                };
+            CartesianPair corner{
+                last_hit_data.coords.x,
+                last_hit_data.coords.y
+            };
 
-                CartesianPair corner{
-                    last_hit_data.coords.x,
-                    last_hit_data.coords.y
-                };
+            if (diff.x > 0 && diff.y < 0) {
+                corner.x += diff.x * int(convex_outline_from_view);
+                corner.y += diff.y * int(!convex_outline_from_view);
+            } else if (diff.x < 0 && diff.y < 0) {
+                corner.y += diff.y * int(convex_outline_from_view);
+                corner.x += diff.x * int(!convex_outline_from_view);
+            } else if (diff.x < 0 && diff.y > 0) {
+                corner.x += diff.x * int(convex_outline_from_view);
+                corner.y += diff.y * int(!convex_outline_from_view);
+            } else if (diff.x > 0 && diff.y > 0) {
+                corner.y += diff.y * int(convex_outline_from_view);
+                corner.x += diff.x * int(!convex_outline_from_view);
+            }
 
-                bool concave;
-                if (middle_hit_data.vertical == last_hit_data.vertical) {
-                    concave = (middle_hit_distance < last_euclidean_dist);
-                } else {
-                    concave = (middle_hit_distance < euclidean_dist);
-                }
-    
-                if (diff.x > 0 && diff.y < 0) {
-                    corner.x += diff.x * int(concave);
-                    corner.y += diff.y * int(!concave);
-                } else if (diff.x < 0 && diff.y < 0) {
-                    corner.y += diff.y * int(concave);
-                    corner.x += diff.x * int(!concave);
-                } else if (diff.x < 0 && diff.y > 0) {
-                    corner.x += diff.x * int(concave);
-                    corner.y += diff.y * int(!concave);
-                } else if (diff.x > 0 && diff.y > 0) {
-                    corner.y += diff.y * int(concave);
-                    corner.x += diff.x * int(!concave);
-                }
+            const float corner_theta = Renderer::angular_distance_between(last_hit_data.coords, corner) + last_theta;
+            const float corner_param = (corner_theta + field_of_view/2)/field_of_view;
 
-                const float corner_theta = Renderer::angular_distance_between(last_hit_data.coords, corner) + last_theta;
-                const float corner_param = (corner_theta + field_of_view/2)/field_of_view;
+            const bool same_orientation = hit_data.vertical == last_hit_data.vertical;
 
+            if (!same_orientation) {
+                
                 this->draw_quadri_3d_from_angles(
                     last_theta, 
                     last_hit_data.coords, 
@@ -275,16 +258,23 @@ void Renderer::draw_3d() const {
                     hit_data.coords,
                     hit_data.vertical
                 );
-
             } else {
-                this->draw_quadri_3d_from_angles(
-                    last_theta,
-                    last_hit_data.coords,
-                    theta,
-                    hit_data.coords,
-                    hit_data.vertical
-                );
-            }            
+                if (!diagonal) {
+                    this->draw_quadri_3d_from_angles(
+                        last_theta,
+                        last_hit_data.coords,
+                        theta,
+                        hit_data.coords,
+                        hit_data.vertical
+                    );
+                } else {
+                    
+                }
+                
+            }
+
+        } else if (theta != -field_of_view/2.0) {
+            //std::cout << "Far\n";
         }
 
         last_hit_data = hit_data;
