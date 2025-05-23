@@ -119,6 +119,38 @@ void Renderer::draw_quadri_3d(
     );
 }
 
+void Renderer::draw_quadri_3d_from_angles(
+    const float angle1, 
+    const CartesianPair hit_coords1,
+    const float angle2,
+    const CartesianPair hit_coords2,
+    const bool vertical
+) const {
+    
+    const float t1 = (angle1 + this->config.field_of_view/2)/this->config.field_of_view;
+    const uint16_t x1 = this->config.render_width_on_window * t1 + this->config.render_origin_on_window_x;
+
+    const float distance1 = this->distance_func(hit_coords1.x, hit_coords1.y);
+
+    const uint16_t line_height1 = this->config.line_height_scalar * this->config.render_height_on_window/distance1;
+
+    const float t2 = (angle2 + this->config.field_of_view/2)/this->config.field_of_view;
+    const uint16_t x2 = this->config.render_width_on_window * t2 + this->config.render_origin_on_window_x;
+
+    const float distance2 = this->distance_func(hit_coords2.x, hit_coords2.y);
+
+    const uint16_t line_height2 = this->config.line_height_scalar * this->config.render_height_on_window/distance2;
+
+    this->draw_quadri_3d(
+        x1, 
+        line_height1, 
+        x2, 
+        line_height2, 
+        this->config.render_height_on_window, 
+        vertical
+    );
+}
+
 void Renderer::draw_3d_floor(
     const uint16_t origin_on_window_x, 
     const uint16_t origin_on_window_y,
@@ -149,14 +181,14 @@ void Renderer::draw_3d() const {
 
     this->draw_3d_floor(origin_on_window_x, origin_on_window_y, width_on_window, height_on_window);
 
-    uint16_t last_line_height = 0;
-    uint16_t last_window_x = 0;
+    float last_theta;
+    HitData last_hit_data;
+    bool first_theta_iteration = true;
 
     const float field_of_view = this->config.field_of_view;
     const float theta_increment = field_of_view/this->config.ray_count;
-    const float line_height_scalar = this->config.line_height_scalar;
 
-    for (float theta = -field_of_view/2.0; theta < field_of_view/2.0; theta += theta_increment) {
+    for (float theta = -field_of_view/2.0; theta < field_of_view/2.0 + theta_increment; theta += theta_increment) {
         
         HitData hit_data = Raycaster::cast_ray(
             this->player_ptr, 
@@ -168,23 +200,32 @@ void Renderer::draw_3d() const {
             #endif
             theta
         );
-        
-        const float distance = this->distance_func(hit_data.coords.x, hit_data.coords.y);//sqrt(pow(hit_data.coords.x, 2) + pow(hit_data.coords.y, 2));
 
-        const float t = (theta + field_of_view/2)/field_of_view;
-        const uint16_t window_x = width_on_window * t + origin_on_window_x;
+        const bool same_or_adjacent_blocks = Renderer::same_or_adjacent_blocks(last_hit_data.hit_idx, hit_data.hit_idx);
 
-        const uint16_t line_height = line_height_scalar * height_on_window/distance;
+        bool convex_outline_from_view;
 
-        for (uint16_t window_y = origin_on_window_y; window_y < origin_on_window_y + height_on_window; ++window_y) {
-            if (!last_line_height) {
-                break;
+        if (!first_theta_iteration && same_or_adjacent_blocks) {
+
+            convex_outline_from_view = !diagonal_blocks(last_hit_data.hit_idx, hit_data.hit_idx);
+            const bool diagonal = !convex_outline_from_view;
+
+            const bool same_orientation = hit_data.vertical == last_hit_data.vertical;
+
+            if (same_orientation && !diagonal) {
+                this->draw_quadri_3d_from_angles(
+                    last_theta,
+                    last_hit_data.coords,
+                    theta,
+                    hit_data.coords,
+                    hit_data.vertical
+                );
             }
-            this->draw_quadri_3d(last_window_x, last_line_height, window_x, line_height, height_on_window, hit_data.vertical);
         }
 
-        last_line_height = line_height;
-        last_window_x = window_x;
+        last_hit_data = hit_data;
+        last_theta = theta;
+        first_theta_iteration = false;
     }
 
 }

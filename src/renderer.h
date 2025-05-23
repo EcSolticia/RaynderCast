@@ -31,6 +31,26 @@ class Renderer {
     mutable std::vector<SDL_Vertex> quad_buffer;
     std::vector<int> quad_indices = { 0, 1, 2, 0, 2, 3 };
 
+    static bool same_or_adjacent_blocks(const IdxPair A, const IdxPair B) {
+        const uint8_t dx = abs((int)A.x - (int)B.x);
+        const uint8_t dy = abs((int)A.y - (int)B.y);
+
+        return (dx <= 1 && dy <= 1);
+    }
+
+    static bool diagonal_blocks(const IdxPair A, const IdxPair B) {
+        const uint8_t dx = abs((int)A.x - (int)B.x);
+        const uint8_t dy = abs((int)A.y - (int)B.y);
+
+        return (dx == 1 && dy == 1);
+    }
+
+    static const float angular_distance_between(CartesianPair v1, CartesianPair v2) {
+        const float dotprod = v1.x * v2.x + v1.y * v2.y;
+        const float v1_euc_dist = sqrt(pow(v1.x, 2) + pow(v1.y, 2));
+        const float v2_euc_dist = sqrt(pow(v2.x, 2) + pow(v2.y, 2));
+        return acos(dotprod/(v1_euc_dist * v2_euc_dist));
+    }
     
     void draw_rectangle(const uint16_t origin_x, 
                         const uint16_t origin_y, 
@@ -55,6 +75,14 @@ class Renderer {
         const uint16_t line_height2,
         const uint16_t height_on_window,
         const bool hit_vertical
+    ) const;
+
+    void draw_quadri_3d_from_angles(
+        const float angle1, 
+        const CartesianPair hit_coords1,
+        const float angle2,
+        const CartesianPair hit_coords2,
+        const bool vertical
     ) const;
 
     void draw_3d_floor(

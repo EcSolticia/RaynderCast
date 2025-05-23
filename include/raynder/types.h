@@ -7,6 +7,11 @@
 
 namespace Raynder {
 
+    struct RAYNDERCAST_EXPORT IdxPair {
+        uint8_t x;
+        uint8_t y;
+    };
+
     struct RAYNDERCAST_EXPORT CartesianPair {
         float x;
         float y;
@@ -14,6 +19,7 @@ namespace Raynder {
 
     struct RAYNDERCAST_EXPORT HitData {
         CartesianPair coords;
+        IdxPair hit_idx;
         bool vertical;
     };
 
