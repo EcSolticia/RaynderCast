@@ -41,9 +41,10 @@ int main() {
         rconfig.render_height_on_window = 480;
         rconfig.render_width_on_window = 640;
 
+        rconfig.ray_count = 1024;
+
         game.set_renderer_distance_func([](float x, float y) -> float {
-            const float length = sqrt(pow(x, 2) + pow(y, 2));
-            return length + sin(length) * length/16.0;
+            return abs(x) + 50.0;
         });
 
         game.configure_player(pconfig);

@@ -241,21 +241,21 @@ void Renderer::draw_3d() const {
 
             if (!same_orientation) {
                 
-                this->draw_quadri_3d_from_angles(
+                /*this->draw_quadri_3d_from_angles(
                     last_theta, 
                     last_hit_data.coords, 
                     corner_theta, 
                     corner, 
                     last_hit_data.vertical
-                );
+                );*/
 
-                this->draw_quadri_3d_from_angles(
+                /*this->draw_quadri_3d_from_angles(
                     corner_theta,
                     corner,
                     theta,
                     hit_data.coords,
                     hit_data.vertical
-                );
+                );*/
             } else {
                 if (!diagonal) {
                     this->draw_quadri_3d_from_angles(

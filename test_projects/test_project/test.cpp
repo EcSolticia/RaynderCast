@@ -40,7 +40,7 @@ int main() {
         rconfig.horizontal_wall_color = Raynder::Color{255, 255, 255};
         rconfig.vertical_wall_color = Raynder::Color{0, 0, 0};
 
-        rconfig.ray_count = 60;
+        rconfig.ray_count = 1024;
         rconfig.field_of_view = M_PI/3.0;
 
         game.configure_player(pconfig);
