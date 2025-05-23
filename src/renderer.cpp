@@ -181,16 +181,14 @@ void Renderer::draw_3d() const {
 
     this->draw_3d_floor(origin_on_window_x, origin_on_window_y, width_on_window, height_on_window);
 
-    //uint16_t last_line_height = 0;
-    //uint16_t last_window_x = 0;
     float last_theta;
     HitData last_hit_data;
+    bool first_theta_iteration = true;
 
     const float field_of_view = this->config.field_of_view;
     const float theta_increment = field_of_view/this->config.ray_count;
-    //const float line_height_scalar = this->config.line_height_scalar;
 
-    for (float theta = -field_of_view/2.0; theta < field_of_view/2.0; theta += theta_increment) {
+    for (float theta = -field_of_view/2.0; theta < field_of_view/2.0 + theta_increment; theta += theta_increment) {
         
         HitData hit_data = Raycaster::cast_ray(
             this->player_ptr, 
@@ -207,7 +205,7 @@ void Renderer::draw_3d() const {
 
         bool convex_outline_from_view;
 
-        if (same_or_adjacent_blocks && theta != -field_of_view/2.0) {
+        if (!first_theta_iteration && same_or_adjacent_blocks) {
 
             convex_outline_from_view = !diagonal_blocks(last_hit_data.hit_idx, hit_data.hit_idx);
             const bool diagonal = !convex_outline_from_view;
@@ -273,12 +271,13 @@ void Renderer::draw_3d() const {
                 
             }
 
-        } else if (theta != -field_of_view/2.0) {
+        } else if (!first_theta_iteration) {
             //std::cout << "Far\n";
         }
 
         last_hit_data = hit_data;
         last_theta = theta;
+        first_theta_iteration = false;
     }
 
 }
