@@ -9,39 +9,44 @@ int main() {
     Raynder::GameConfig gconfig;
     gconfig.vsync_enabled = false;
 
-    Raynder::Game game(1024, 320, "New Parameter?", gconfig);
+    Raynder::Game game(640, 480, "New Parameter?", gconfig);
 
     std::string map_data = "1 1 1 1 1 1 1 1 1 1\n"
                            "1 0 0 0 0 0 0 0 0 1\n"
                            "1 0 0 0 0 0 0 0 0 1\n"
+                           "1 0 0 0 0 0 0 0 0 1\n"
+                           "1 0 0 1 1 1 0 1 1 1\n"
                            "1 0 0 1 0 0 0 0 0 1\n"
-                           "1 0 0 0 1 1 0 1 1 1\n"
+                           "1 0 0 1 0 0 0 0 0 1\n"
                            "1 0 0 0 0 0 0 0 0 1\n"
-                           "1 0 0 0 0 0 0 0 0 1\n"
-                           "1 0 0 0 0 1 0 0 0 1\n"
-                           "1 0 0 0 1 0 0 0 0 1\n"
-                           "1 0 0 0 0 0 0 0 0 1\n"
-                           "1 0 0 0 0 0 0 0 0 1\n"
-                           "1 0 0 0 0 0 0 0 0 1\n"
-                           "1 0 0 0 0 0 0 0 0 1\n";
+                           "1 1 1 1 1 1 1 1 1 1";
 
     try {
-        game.create_map(10, 13, 32, map_data);
+        game.create_map(10, 9, 32, map_data);
         game.create_player(72, 72, 0);
 
         Raynder::RendererConfig rconfig;
         Raynder::PlayerConfig pconfig;
 
         pconfig.translational_speed = 75.0;
-        pconfig.collision_radius = 10.0;
-        rconfig.floor_color = Raynder::Color{133, 133, 255};
-        rconfig.topdown_ray_color = Raynder::Color{0, 0, 0};
+        pconfig.collision_radius = 20.0;
+        rconfig.floor_color = Raynder::Color{78, 102, 136};
+        rconfig.ceiling_color = Raynder::Color{51, 45, 86};
 
-        rconfig.horizontal_wall_color = Raynder::Color{255, 255, 255};
-        rconfig.vertical_wall_color = Raynder::Color{0, 0, 0};
+        rconfig.horizontal_wall_color = Raynder::Color{227, 238, 178};
+        rconfig.vertical_wall_color = Raynder::Color{255, 255, 255};
+        
+        rconfig.render_origin_on_window_x = 0;
+        rconfig.render_origin_on_window_y = 0;
+        rconfig.render_height_on_window = 480;
+        rconfig.render_width_on_window = 640;
 
         rconfig.ray_count = 1024;
-        rconfig.field_of_view = M_PI/3.0;
+
+        game.set_renderer_distance_func([](float x, float y) -> float {
+            const float length = sqrt(pow(x, 2) + pow(y, 2));
+            return length + sin(length) * length/16.0;
+        });
 
         game.configure_player(pconfig);
         game.configure_renderer(rconfig);

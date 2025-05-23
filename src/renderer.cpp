@@ -210,69 +210,17 @@ void Renderer::draw_3d() const {
             convex_outline_from_view = !diagonal_blocks(last_hit_data.hit_idx, hit_data.hit_idx);
             const bool diagonal = !convex_outline_from_view;
 
-            CartesianPair diff{
-                hit_data.coords.x - last_hit_data.coords.x,
-                hit_data.coords.y - last_hit_data.coords.y
-            };
-
-            CartesianPair corner{
-                last_hit_data.coords.x,
-                last_hit_data.coords.y
-            };
-
-            if (diff.x > 0 && diff.y < 0) {
-                corner.x += diff.x * int(convex_outline_from_view);
-                corner.y += diff.y * int(!convex_outline_from_view);
-            } else if (diff.x < 0 && diff.y < 0) {
-                corner.y += diff.y * int(convex_outline_from_view);
-                corner.x += diff.x * int(!convex_outline_from_view);
-            } else if (diff.x < 0 && diff.y > 0) {
-                corner.x += diff.x * int(convex_outline_from_view);
-                corner.y += diff.y * int(!convex_outline_from_view);
-            } else if (diff.x > 0 && diff.y > 0) {
-                corner.y += diff.y * int(convex_outline_from_view);
-                corner.x += diff.x * int(!convex_outline_from_view);
-            }
-
-            const float corner_theta = Renderer::angular_distance_between(last_hit_data.coords, corner) + last_theta;
-            const float corner_param = (corner_theta + field_of_view/2)/field_of_view;
-
             const bool same_orientation = hit_data.vertical == last_hit_data.vertical;
 
-            if (!same_orientation) {
-                
-                /*this->draw_quadri_3d_from_angles(
-                    last_theta, 
-                    last_hit_data.coords, 
-                    corner_theta, 
-                    corner, 
-                    last_hit_data.vertical
-                );*/
-
-                /*this->draw_quadri_3d_from_angles(
-                    corner_theta,
-                    corner,
+            if (same_orientation && !diagonal) {
+                this->draw_quadri_3d_from_angles(
+                    last_theta,
+                    last_hit_data.coords,
                     theta,
                     hit_data.coords,
                     hit_data.vertical
-                );*/
-            } else {
-                if (!diagonal) {
-                    this->draw_quadri_3d_from_angles(
-                        last_theta,
-                        last_hit_data.coords,
-                        theta,
-                        hit_data.coords,
-                        hit_data.vertical
-                    );
-                } else {
-                    
-                }
-                
+                );
             }
-
-        } else if (!first_theta_iteration) {
-            //std::cout << "Far\n";
         }
 
         last_hit_data = hit_data;
