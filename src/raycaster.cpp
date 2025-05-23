@@ -1,7 +1,7 @@
 #include <raycaster.h>
 #include <player.h>
 #include <map.h>
-#include <renderer.h>
+#include <renderer/renderer.h>
 
 namespace Raynder {
 

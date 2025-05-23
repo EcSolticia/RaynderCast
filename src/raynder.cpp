@@ -1,6 +1,6 @@
 #include <raynder/raynder.h>
 
-#include <renderer.h>
+#include <renderer/renderer.h>
 #include <map.h>
 #include <player.h>
 #include <raycaster.h>

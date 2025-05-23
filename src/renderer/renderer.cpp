@@ -1,4 +1,4 @@
-#include <renderer.h>
+#include <renderer/renderer.h>
 #include <player.h>
 #include <map.h>
 #include <raycaster.h>
