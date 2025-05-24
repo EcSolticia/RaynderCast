@@ -238,52 +238,6 @@ void Renderer::set_player_ptr(Player* player_ptr) {
     this->player_ptr = player_ptr;
 }
 
-#ifdef DEBUG_BUILD
-void Renderer::draw_debug_topdown_grid() const {
-
-    const uint8_t row_count = this->map_ptr->get_row_count();
-    const uint8_t col_count = this->map_ptr->get_column_count();
-    const uint8_t side_length = this->map_ptr->get_side_length();
-
-    this->set_drawing_color(255, 255, 255);
-    
-    for (size_t i = 0; i < col_count; ++i) {
-        for (size_t j = 0; j < row_count; ++j) {
-            const uint16_t rect_x = i * side_length;
-            const uint16_t rect_y = j * side_length;
-            
-            if (this->map_ptr->get_data(i, j) == 0) {
-                this->set_drawing_color(255, 0, 0);
-                this->draw_rectangle(rect_x, rect_y, side_length, side_length, FillType::NOT_FILLED);
-            } else {
-                this->set_drawing_color(255, 255, 255);
-                this->draw_rectangle(rect_x, rect_y, side_length, side_length, FillType::FILLED);
-            }
-
-        }
-
-    }
-
-    
-}
-
-void Renderer::draw_debug_topdown_player() const {
-    this->set_drawing_color(this->config.topdown_player_square_color);
-
-    const uint16_t pos_x = this->player_ptr->get_pos_x();
-    const uint16_t pos_y = this->player_ptr->get_pos_y();
-    const uint8_t side_length = 2 * this->player_ptr->config.collision_radius;
-    
-    this->draw_rectangle(
-        pos_x - side_length/2.0, 
-        pos_y - side_length/2.0, 
-        side_length, 
-        side_length, 
-        FillType::FILLED
-    );
-}
-#endif
-
 void Renderer::clear_display() const {
     if (SDL_RenderClear(this->context)) {
         throw std::runtime_error(SDL_GetError());
@@ -303,11 +257,6 @@ void Renderer::render_loop() const {
     this->clear_display();
 
     this->draw_3d();
-
-    #ifdef DEBUG_BUILD
-    this->draw_debug_topdown_grid();
-    this->draw_debug_topdown_player();
-    #endif
 
     this->update_display();
 }

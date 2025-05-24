@@ -28,6 +28,7 @@ target_sources(${PROJECT_NAME} PRIVATE
     src/raycaster.cpp
 
     src/renderer/renderer.cpp
+    src/renderer/renderer_hud.cpp
 )
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)

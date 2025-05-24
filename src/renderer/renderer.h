@@ -116,8 +116,7 @@ public:
 
     void clear_display() const;
 
-    void draw_debug_topdown_player() const;
-    void draw_debug_topdown_grid() const;
+    void hud_draw_minimap() const;
 
     void render_loop() const;
 

@@ -114,7 +114,7 @@ HitData Raycaster::cast_ray(
     }
 
     if (renderer_ptr.has_value()) {
-    renderer_ptr.value()->set_drawing_color(renderer_ptr.value()->config.topdown_ray_color);
+    renderer_ptr.value()->set_drawing_color(renderer_ptr.value()->config.hud_minimap_ray_color);
     renderer_ptr.value()->draw_line(
         pos.x, 
         pos.y, 
