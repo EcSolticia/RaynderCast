@@ -55,12 +55,6 @@ void Game::gameloop() {
         this->player_ptr->hit_data = Raycaster::cast_ray(
             this->player_ptr.get(),
             this->map_ptr.get(),
-            #ifdef DEBUG_BUILD
-            this->renderer_ptr.get(),
-            #endif
-            #ifdef RELEASE_BUILD
-            std::nullopt,
-            #endif
             this->player_ptr->get_basis_d_relative_rotation()
         );
 

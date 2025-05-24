@@ -113,7 +113,8 @@ public:
 
     void clear_display() const;
 
-    void hud_draw_minimap() const;
+    void hud_draw_minimap_base() const;
+    void hud_draw_minimap_ray(const HitData& hit_data) const;
 
     void render_loop() const;
 
