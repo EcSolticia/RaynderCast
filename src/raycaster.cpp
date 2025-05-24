@@ -113,7 +113,7 @@ HitData Raycaster::cast_ray(
         hit_data.hit_idx = idxh;
     }
 
-    if (renderer_ptr.has_value()) {
+    /*if (renderer_ptr.has_value()) {
     renderer_ptr.value()->set_drawing_color(renderer_ptr.value()->config.hud_minimap_ray_color);
     renderer_ptr.value()->draw_line(
         pos.x, 
@@ -121,7 +121,7 @@ HitData Raycaster::cast_ray(
         pos.x + hit_data.coords.x, 
         pos.y + hit_data.coords.y
     );
-    }
+    }*/
 
     return hit_data;
 }

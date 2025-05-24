@@ -16,7 +16,10 @@ namespace Raynder {
 class Player;
 class Map;
 
-class Renderer {    
+class Renderer {
+    const uint16_t window_height;
+    const uint16_t window_width;
+
     SDL_Window* window;
     SDL_Renderer* context;
 
@@ -73,7 +76,6 @@ class Renderer {
         const uint16_t line_height1,
         const uint16_t x2,
         const uint16_t line_height2,
-        const uint16_t height_on_window,
         const bool hit_vertical
     ) const;
 
@@ -85,12 +87,7 @@ class Renderer {
         const bool vertical
     ) const;
 
-    void draw_3d_floor(
-        const uint16_t origin_on_window_x, 
-        const uint16_t origin_on_window_y,
-        const uint16_t width_on_window,
-        const uint16_t height_on_window
-    ) const;
+    void draw_3d_floor() const;
 
     void draw_3d() const;
 
@@ -122,7 +119,7 @@ public:
 
     void update_display() const;
 
-    Renderer() {};
+    Renderer() : window_width{window_width}, window_height{window_height} {};
     Renderer(
         const uint16_t window_width, 
         const uint16_t window_height, 

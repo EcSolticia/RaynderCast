@@ -91,10 +91,9 @@ void Renderer::draw_quadri_3d(
     const uint16_t line_height1,
     const uint16_t x2,
     const uint16_t line_height2,
-    const uint16_t height_on_window,
     const bool hit_vertical
 ) const {
-    const float midpoint = height_on_window/2;
+    const float midpoint = this->window_height/2;
     
     const float half_line_height1 = line_height1/2;
     const float half_line_height2 = line_height2/2;
@@ -128,58 +127,47 @@ void Renderer::draw_quadri_3d_from_angles(
 ) const {
     
     const float t1 = (angle1 + this->config.field_of_view/2)/this->config.field_of_view;
-    const uint16_t x1 = this->config.render_width_on_window * t1 + this->config.render_origin_on_window_x;
+    const uint16_t x1 = this->window_width * t1;
 
     const float distance1 = this->distance_func(hit_coords1.x, hit_coords1.y);
 
-    const uint16_t line_height1 = this->config.line_height_scalar * this->config.render_height_on_window/distance1;
+    const uint16_t line_height1 = this->config.line_height_scalar * this->window_height/distance1;
 
     const float t2 = (angle2 + this->config.field_of_view/2)/this->config.field_of_view;
-    const uint16_t x2 = this->config.render_width_on_window * t2 + this->config.render_origin_on_window_x;
+    const uint16_t x2 = this->window_width * t2;
 
     const float distance2 = this->distance_func(hit_coords2.x, hit_coords2.y);
 
-    const uint16_t line_height2 = this->config.line_height_scalar * this->config.render_height_on_window/distance2;
+    const uint16_t line_height2 = this->config.line_height_scalar * this->window_height/distance2;
 
     this->draw_quadri_3d(
         x1, 
         line_height1, 
         x2, 
         line_height2, 
-        this->config.render_height_on_window, 
         vertical
     );
 }
 
-void Renderer::draw_3d_floor(
-    const uint16_t origin_on_window_x, 
-    const uint16_t origin_on_window_y,
-    const uint16_t width_on_window,
-    const uint16_t height_on_window
-) const {        
-    const float top_y = origin_on_window_y + height_on_window/2.0;
-    const float bottom_y = origin_on_window_y + height_on_window;
-    const float max_x = origin_on_window_x + width_on_window;
+void Renderer::draw_3d_floor() const {        
+    const float top_y = this->window_height/2.0;
+    const float bottom_y = this->window_height;
+    const float max_x = this->window_width;
 
     const Color col = this->config.floor_color;
 
     this->draw_quad(
-        (float)origin_on_window_x, top_y,
+        0, top_y,
         max_x, top_y,
         max_x, bottom_y,
-        (float)origin_on_window_x, bottom_y,
+        0, bottom_y,
         col 
     );
 }
 
 void Renderer::draw_3d() const {
 
-    const uint16_t origin_on_window_x = this->config.render_origin_on_window_x;
-    const uint16_t origin_on_window_y = this->config.render_origin_on_window_y;
-    const uint16_t width_on_window = this->config.render_width_on_window;
-    const uint16_t height_on_window = this->config.render_height_on_window;
-
-    this->draw_3d_floor(origin_on_window_x, origin_on_window_y, width_on_window, height_on_window);
+    this->draw_3d_floor();
 
     float last_theta;
     HitData last_hit_data;
@@ -266,7 +254,7 @@ Renderer::Renderer(
     const uint16_t window_height, 
     std::string window_title,
     const bool enable_vsync
-) {       
+) : window_width{window_width}, window_height{window_height} {       
 
     this->window = SDL_CreateWindow(
         window_title.c_str(),

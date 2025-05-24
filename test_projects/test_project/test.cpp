@@ -9,7 +9,7 @@ int main() {
     Raynder::GameConfig gconfig;
     gconfig.vsync_enabled = false;
 
-    Raynder::Game game(640, 480, "New Parameter?", gconfig);
+    Raynder::Game game(1280, 720, "New Parameter?", gconfig);
 
     std::string map_data = "1 1 1 1 1 1 1 1 1 1\n"
                            "1 0 0 0 0 0 0 0 0 1\n"
@@ -28,18 +28,13 @@ int main() {
         Raynder::RendererConfig rconfig;
         Raynder::PlayerConfig pconfig;
 
-        pconfig.translational_speed = 75.0;
+        pconfig.translational_speed = 125.0;
         pconfig.collision_radius = 20.0;
         rconfig.floor_color = Raynder::Color{78, 102, 136};
         rconfig.ceiling_color = Raynder::Color{51, 45, 86};
 
         rconfig.horizontal_wall_color = Raynder::Color{227, 238, 178};
         rconfig.vertical_wall_color = Raynder::Color{255, 255, 255};
-        
-        rconfig.render_origin_on_window_x = 0;
-        rconfig.render_origin_on_window_y = 0;
-        rconfig.render_height_on_window = 480;
-        rconfig.render_width_on_window = 640;
 
         rconfig.ray_count = 1024;
 
