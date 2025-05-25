@@ -4,7 +4,7 @@
 
 namespace Raynder {
 
-void Renderer::hud_draw_minimap_base() const {
+void Renderer::hud_draw_minimap_base() {
     const uint16_t side_length = 16;
     const uint16_t height = side_length * 12;
     const uint16_t width = side_length * 16;
@@ -22,7 +22,7 @@ void Renderer::hud_draw_minimap_base() const {
     );
 }
 
-void Renderer::hud_draw_minimap_ray(const HitData& hit_data) const {
+void Renderer::hud_draw_minimap_ray(const HitData& hit_data) {
     const uint8_t map_side_length = this->map_ptr->get_side_length();
     const uint16_t side_length = 16;
     const uint16_t origin_x = 8;

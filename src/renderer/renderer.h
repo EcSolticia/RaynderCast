@@ -31,7 +31,7 @@ class Renderer {
         FILLED = 1
     };
 
-    mutable std::vector<SDL_Vertex> quad_buffer;
+    std::vector<SDL_Vertex> quad_buffer;
     std::vector<int> quad_indices = { 0, 1, 2, 0, 2, 3 };
 
     static bool same_or_adjacent_blocks(const IdxPair A, const IdxPair B) {
@@ -59,9 +59,9 @@ class Renderer {
                         const uint16_t origin_y, 
                         const uint8_t width, 
                         const uint8_t height,
-                        FillType filled) const;
+                        FillType filled);
 
-    void draw_point(const uint16_t x, const uint16_t y) const;
+    void draw_point(const uint16_t x, const uint16_t y);
 
     void draw_quad(
         const float x1, const float y1,
@@ -69,7 +69,7 @@ class Renderer {
         const float x3, const float y3,
         const float x4, const float y4,
         const Color color
-    ) const;
+    );
         
     void draw_quadri_3d(
         const uint16_t x1,
@@ -77,7 +77,7 @@ class Renderer {
         const uint16_t x2,
         const uint16_t line_height2,
         const bool hit_vertical
-    ) const;
+    );
 
     void draw_quadri_3d_from_angles(
         const float angle1, 
@@ -85,22 +85,22 @@ class Renderer {
         const float angle2,
         const CartesianPair hit_coords2,
         const bool vertical
-    ) const;
+    );
 
-    void draw_3d_floor() const;
+    void draw_3d_floor();
 
-    void draw_3d() const;
+    void draw_3d();
 
 public:
-    void set_drawing_color(const uint8_t r, const uint8_t g, const uint8_t b) const;
-    void set_drawing_color(const Color color) const;
+    void set_drawing_color(const uint8_t r, const uint8_t g, const uint8_t b);
+    void set_drawing_color(const Color color);
 
     void draw_line(
         const uint16_t x1, 
         const uint16_t y1, 
         const int16_t x2, 
         const int16_t y2
-    ) const;
+    );
 
     RendererConfig config;
 
@@ -111,14 +111,14 @@ public:
     void set_map_ptr(Map* map_ptr);
     void set_player_ptr(Player* player_ptr);
 
-    void clear_display() const;
+    void clear_display();
 
-    void hud_draw_minimap_base() const;
-    void hud_draw_minimap_ray(const HitData& hit_data) const;
+    void hud_draw_minimap_base();
+    void hud_draw_minimap_ray(const HitData& hit_data);
 
-    void render_loop() const;
+    void render_loop();
 
-    void update_display() const;
+    void update_display();
 
     Renderer() : window_width{window_width}, window_height{window_height} {};
     Renderer(

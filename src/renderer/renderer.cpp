@@ -15,13 +15,13 @@
 
 namespace Raynder {
 
-void Renderer::set_drawing_color(const uint8_t r, const uint8_t g, const uint8_t b) const {
+void Renderer::set_drawing_color(const uint8_t r, const uint8_t g, const uint8_t b) {
     if (SDL_SetRenderDrawColor(this->context, r, g, b, 255)) {
             throw std::runtime_error(SDL_GetError());
     }
 }
 
-void Renderer::set_drawing_color(const Color color) const {
+void Renderer::set_drawing_color(const Color color) {
     this->set_drawing_color(color.r, color.g, color.b);
 }
 
@@ -30,7 +30,7 @@ void Renderer::draw_rectangle(
     const uint16_t origin_y, 
     const uint8_t width, 
     const uint8_t height,
-    FillType filled) const 
+    FillType filled) 
 {
     SDL_Rect rect;
     rect.x = origin_x;
@@ -55,13 +55,13 @@ void Renderer::draw_line(
     const uint16_t y1, 
     const int16_t x2, 
     const int16_t y2
-) const {
+) {
     if (SDL_RenderDrawLine(this->context, x1, y1, x2, y2)) {
         throw std::runtime_error(SDL_GetError());
     }
 }
 
-void Renderer::draw_point(const uint16_t x, const uint16_t y) const {
+void Renderer::draw_point(const uint16_t x, const uint16_t y) {
     if (SDL_RenderDrawPoint(this->context, x, y)) {
         throw std::runtime_error(SDL_GetError());
     }
@@ -73,7 +73,7 @@ void Renderer::draw_quad(
         const float x3, const float y3,
         const float x4, const float y4,
         const Color color
-) const {
+) {
     const SDL_Color draw_color{color.r, color.g, color.b, 255};
     
     this->quad_buffer[0] = SDL_Vertex{SDL_FPoint{x1, y1}, draw_color, SDL_FPoint{0}};
@@ -92,7 +92,7 @@ void Renderer::draw_quadri_3d(
     const uint16_t x2,
     const uint16_t line_height2,
     const bool hit_vertical
-) const {
+) {
     const float midpoint = this->window_height/2;
     
     const float half_line_height1 = line_height1/2;
@@ -124,7 +124,7 @@ void Renderer::draw_quadri_3d_from_angles(
     const float angle2,
     const CartesianPair hit_coords2,
     const bool vertical
-) const {
+) {
     
     const float t1 = (angle1 + this->config.field_of_view/2)/this->config.field_of_view;
     const uint16_t x1 = this->window_width * t1;
@@ -149,7 +149,7 @@ void Renderer::draw_quadri_3d_from_angles(
     );
 }
 
-void Renderer::draw_3d_floor() const {        
+void Renderer::draw_3d_floor() {        
     const float top_y = this->window_height/2.0;
     const float bottom_y = this->window_height;
     const float max_x = this->window_width;
@@ -165,7 +165,7 @@ void Renderer::draw_3d_floor() const {
     );
 }
 
-void Renderer::draw_3d() const {
+void Renderer::draw_3d() {
 
     this->draw_3d_floor();
 
@@ -227,17 +227,17 @@ void Renderer::set_player_ptr(Player* player_ptr) {
     this->player_ptr = player_ptr;
 }
 
-void Renderer::clear_display() const {
+void Renderer::clear_display() {
     if (SDL_RenderClear(this->context)) {
         throw std::runtime_error(SDL_GetError());
     }
 }
 
-void Renderer::update_display() const {
+void Renderer::update_display() {
     SDL_RenderPresent(this->context);
 }
 
-void Renderer::render_loop() const {
+void Renderer::render_loop() {
     if (!this->map_ptr || !this->player_ptr) {
         throw std::runtime_error("Rendering cannot proceed without valid Map and Player objects.");
     }
