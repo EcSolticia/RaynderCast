@@ -23,6 +23,11 @@ namespace Raynder {
         bool vertical;
     };
 
+    struct RayData {
+        HitData hit_data;
+        float relative_theta;
+    };
+
     struct RAYNDERCAST_EXPORT Color {
         uint8_t r = 0;
         uint8_t g = 0;

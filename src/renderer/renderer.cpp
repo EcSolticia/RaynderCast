@@ -186,7 +186,8 @@ void Renderer::draw_3d() {
             theta
         );
 
-        this->hud_minimap_ray_buffer[i] = hit_data;
+        this->hud_minimap_ray_buffer[i].hit_data = hit_data;
+        this->hud_minimap_ray_buffer[i].relative_theta = theta;
         ++i;
 
         const bool same_or_adjacent_blocks = Renderer::same_or_adjacent_blocks(last_hit_data.hit_idx, hit_data.hit_idx);

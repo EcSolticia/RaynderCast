@@ -103,7 +103,7 @@ public:
     );
 
     RendererConfig config;
-    std::vector<HitData> hud_minimap_ray_buffer;
+    std::vector<RayData> hud_minimap_ray_buffer;
 
     RendererDistanceFunc distance_func = [](float x, float y) -> float {
         return sqrt(pow(x, 2) + pow(y, 2));
@@ -115,7 +115,7 @@ public:
     void clear_display();
 
     void hud_draw_minimap_base();
-    void hud_draw_minimap_ray(const HitData& hit_data);
+    void hud_draw_minimap_ray(const HitData& hit_data, const float theta);
     void hud_draw_minimap_ray_from_buffer();
 
     void render_loop();
