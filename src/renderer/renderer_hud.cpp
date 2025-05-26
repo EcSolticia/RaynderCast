@@ -38,4 +38,11 @@ void Renderer::hud_draw_minimap_ray(const HitData& hit_data) {
     );
 }
 
+void Renderer::hud_draw_minimap_ray_from_buffer() {
+    this->set_drawing_color(255, 255, 255);
+    for (HitData ray: hud_minimap_ray_buffer) {
+        this->hud_draw_minimap_ray(ray);
+    }
+}
+
 }

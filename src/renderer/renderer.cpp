@@ -176,7 +176,7 @@ void Renderer::draw_3d() {
     const float field_of_view = this->config.field_of_view;
     const float theta_increment = field_of_view/this->config.ray_count;
 
-    this->hud_draw_minimap_base();
+    size_t i = 0;
 
     for (float theta = -field_of_view/2.0; theta < field_of_view/2.0 + theta_increment; theta += theta_increment) {
         
@@ -186,9 +186,8 @@ void Renderer::draw_3d() {
             theta
         );
 
-        // for minimap rays
-        this->set_drawing_color(255, 255, 255);
-        this->hud_draw_minimap_ray(hit_data);
+        this->hud_minimap_ray_buffer[i] = hit_data;
+        ++i;
 
         const bool same_or_adjacent_blocks = Renderer::same_or_adjacent_blocks(last_hit_data.hit_idx, hit_data.hit_idx);
 
@@ -216,6 +215,9 @@ void Renderer::draw_3d() {
         last_theta = theta;
         first_theta_iteration = false;
     }
+
+    this->hud_draw_minimap_base();
+    this->hud_draw_minimap_ray_from_buffer();
 
 }
 
