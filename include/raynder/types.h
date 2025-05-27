@@ -38,10 +38,6 @@ namespace Raynder {
         Color floor_color;
         Color ceiling_color{37, 44, 44};
         
-        Color hud_minimap_ray_color{255, 255, 255};
-        Color hud_minimap_bg_color;
-        Color hud_minimap_wall_color;
-
         Color vertical_wall_color{100, 90, 90};
         Color horizontal_wall_color{100, 100, 100};
 

@@ -9,7 +9,7 @@ int main() {
     Raynder::GameConfig gconfig;
     gconfig.vsync_enabled = false;
 
-    Raynder::Game game(640, 480, "New Parameter?", gconfig);
+    Raynder::Game game(1024, 720, "New Parameter?", gconfig);
 
     std::string map_data = "1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1\n"
                            "1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1\n"
@@ -47,7 +47,7 @@ int main() {
 
         game.set_renderer_distance_func([](float x, float y) -> float {
             const float length = sqrt(pow(x, 2) + pow(y, 2));
-            return 500.0/log(length);
+            return length;
         });
 
         game.configure_player(pconfig);

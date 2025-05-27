@@ -64,7 +64,6 @@ void Game::gameloop() {
 
 void Game::configure_renderer(const RendererConfig& config) const {
     this->renderer_ptr->config = config;
-    this->renderer_ptr->hud_minimap_ray_buffer.resize(config.ray_count + 1);
 }
 
 void Game::configure_player(const PlayerConfig& config) {

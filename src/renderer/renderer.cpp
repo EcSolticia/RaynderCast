@@ -176,8 +176,6 @@ void Renderer::draw_3d() {
     const float field_of_view = this->config.field_of_view;
     const float theta_increment = field_of_view/this->config.ray_count;
 
-    size_t i = 0;
-
     for (float theta = -field_of_view/2.0; theta < field_of_view/2.0 + theta_increment; theta += theta_increment) {
         
         HitData hit_data = Raycaster::cast_ray(
@@ -185,10 +183,6 @@ void Renderer::draw_3d() {
             this->map_ptr,
             theta
         );
-
-        this->hud_minimap_ray_buffer[i].hit_data = hit_data;
-        this->hud_minimap_ray_buffer[i].relative_theta = theta;
-        ++i;
 
         const bool same_or_adjacent_blocks = Renderer::same_or_adjacent_blocks(last_hit_data.hit_idx, hit_data.hit_idx);
 
@@ -217,9 +211,7 @@ void Renderer::draw_3d() {
         first_theta_iteration = false;
     }
 
-    this->hud_draw_minimap_base();
-    this->hud_draw_minimap_ray_from_buffer();
-
+    //this->hud_draw_minimap_base();
 }
 
 void Renderer::set_map_ptr(Map* map_ptr) {
