@@ -91,9 +91,10 @@ void Renderer::draw_quadri_3d(
     const uint16_t line_height1,
     const uint16_t x2,
     const uint16_t line_height2,
-    const bool hit_vertical
+    const bool hit_vertical,
+    enum Viewport viewport
 ) {
-    const float midpoint = this->window_height/2;
+    const float midpoint = (viewport == Viewport::MAIN) ? this->window_height/2.0 : this->eucliview_height/2.0;
     
     const float half_line_height1 = line_height1/2;
     const float half_line_height2 = line_height2/2;
@@ -123,29 +124,34 @@ void Renderer::draw_quadri_3d_from_angles(
     const CartesianPair hit_coords1,
     const float angle2,
     const CartesianPair hit_coords2,
-    const bool vertical
+    const bool vertical,
+    enum Viewport viewport
 ) {
-    
+
+    const uint16_t w = (viewport == Viewport::MAIN) ? this->window_width : this->eucliview_width;
+    const uint16_t h = (viewport == Viewport::MAIN) ? this->window_height : this->eucliview_height;
+
     const float t1 = (angle1 + this->config.field_of_view/2)/this->config.field_of_view;
-    const uint16_t x1 = this->window_width * t1;
+    const uint16_t x1 = w * t1;
 
-    const float distance1 = this->distance_func(hit_coords1.x, hit_coords1.y);
+    const float distance1 = this->get_renderer_distance(hit_coords1.x, hit_coords1.y, viewport);
 
-    const uint16_t line_height1 = this->config.line_height_scalar * this->window_height/distance1;
+    const uint16_t line_height1 = this->config.line_height_scalar * h/distance1;
 
     const float t2 = (angle2 + this->config.field_of_view/2)/this->config.field_of_view;
-    const uint16_t x2 = this->window_width * t2;
+    const uint16_t x2 = w * t2;
 
-    const float distance2 = this->distance_func(hit_coords2.x, hit_coords2.y);
+    const float distance2 = this->get_renderer_distance(hit_coords2.x, hit_coords2.y, viewport);
 
-    const uint16_t line_height2 = this->config.line_height_scalar * this->window_height/distance2;
+    const uint16_t line_height2 = this->config.line_height_scalar * h/distance2;
 
     this->draw_quadri_3d(
         x1, 
         line_height1, 
         x2, 
         line_height2, 
-        vertical
+        vertical,
+        viewport
     );
 }
 
@@ -201,7 +207,16 @@ void Renderer::draw_3d() {
                     last_hit_data.coords,
                     theta,
                     hit_data.coords,
-                    hit_data.vertical
+                    hit_data.vertical,
+                    Viewport::MAIN
+                );
+                this->draw_quadri_3d_from_angles(
+                    last_theta,
+                    last_hit_data.coords,
+                    theta,
+                    hit_data.coords,
+                    hit_data.vertical,
+                    Viewport::EUCLI
                 );
             }
         }
@@ -212,6 +227,19 @@ void Renderer::draw_3d() {
     }
 
     //this->hud_draw_minimap_base();
+}
+
+const float Renderer::get_renderer_distance(const float x, const float y, enum Viewport viewport) {
+    float result;
+    switch (viewport) {
+        case Viewport::MAIN:
+            result = this->distance_func(x, y);
+            break;
+        case Viewport::EUCLI:
+            result = sqrt(pow(x, 2) + pow(y, 2));
+            break;
+    }
+    return result;
 }
 
 void Renderer::set_map_ptr(Map* map_ptr) {

@@ -10,10 +10,10 @@ int main() {
     gconfig.vsync_enabled = false;
 
     Raynder::Game game(
-        1024, 
+        1280, 
         720,
-        640,
-        480, 
+        16 * 12,
+        16 * 16, 
         "Eucliview!", 
         gconfig
     );

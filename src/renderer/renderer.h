@@ -73,13 +73,19 @@ class Renderer {
         const float x4, const float y4,
         const Color color
     );
-        
+      
+    enum Viewport {
+        MAIN,
+        EUCLI
+    };
+
     void draw_quadri_3d(
         const uint16_t x1,
         const uint16_t line_height1,
         const uint16_t x2,
         const uint16_t line_height2,
-        const bool hit_vertical
+        const bool hit_vertical,
+        enum Viewport viewport
     );
 
     void draw_quadri_3d_from_angles(
@@ -87,7 +93,8 @@ class Renderer {
         const CartesianPair hit_coords1,
         const float angle2,
         const CartesianPair hit_coords2,
-        const bool vertical
+        const bool vertical,
+        enum Viewport viewport
     );
 
     void draw_3d_floor();
@@ -110,6 +117,12 @@ public:
     RendererDistanceFunc distance_func = [](float x, float y) -> float {
         return sqrt(pow(x, 2) + pow(y, 2));
     };
+
+    const float get_renderer_distance(
+        const float x,
+        const float y,
+        enum Viewport viewport
+    );
 
     void set_map_ptr(Map* map_ptr);
     void set_player_ptr(Player* player_ptr);
