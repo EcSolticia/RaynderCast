@@ -50,8 +50,6 @@ int main() {
         rconfig.horizontal_wall_color = Raynder::Color{227, 238, 178};
         rconfig.vertical_wall_color = Raynder::Color{255, 255, 255};
 
-        rconfig.ray_count = 1024;
-
         game.set_renderer_distance_func([](float x, float y) -> float {
             const float length = sqrt(pow(x, 2) + pow(y, 2));
             return length;

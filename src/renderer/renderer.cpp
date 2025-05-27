@@ -136,14 +136,14 @@ void Renderer::draw_quadri_3d_from_angles(
 
     const float distance1 = this->get_renderer_distance(hit_coords1.x, hit_coords1.y, viewport);
 
-    const uint16_t line_height1 = this->config.line_height_scalar * h/distance1;
+    const uint16_t line_height1 = std::clamp(this->config.line_height_scalar * h/distance1, (float)0.0, (float)h);
 
     const float t2 = (angle2 + this->config.field_of_view/2)/this->config.field_of_view;
     const uint16_t x2 = w * t2;
 
     const float distance2 = this->get_renderer_distance(hit_coords2.x, hit_coords2.y, viewport);
 
-    const uint16_t line_height2 = this->config.line_height_scalar * h/distance2;
+    const uint16_t line_height2 = std::clamp(this->config.line_height_scalar * h/distance2, (float)0.0, (float)h);
 
     this->draw_quadri_3d(
         x1, 
@@ -194,7 +194,7 @@ void Renderer::draw_3d(enum Viewport viewport) {
     bool first_theta_iteration = true;
 
     const float field_of_view = this->config.field_of_view;
-    const float theta_increment = field_of_view/this->config.ray_count;
+    const float theta_increment = field_of_view/((viewport == Viewport::MAIN) ? this->config.ray_count : this->config.eucliview_ray_count);
 
     for (float theta = -field_of_view/2.0; theta < field_of_view/2.0 + theta_increment; theta += theta_increment) {
         
