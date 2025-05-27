@@ -97,6 +97,8 @@ class Renderer {
         enum Viewport viewport
     );
 
+    void draw_eucliview_ceiling();
+
     void draw_3d_floor(enum Viewport viewport);
 
     void draw_3d(enum Viewport viewport);

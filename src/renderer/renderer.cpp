@@ -155,6 +155,21 @@ void Renderer::draw_quadri_3d_from_angles(
     );
 }
 
+void Renderer::draw_eucliview_ceiling() {
+
+    const float max_y = this->eucliview_height/2.0;
+    const float max_x = this->eucliview_width;
+
+    this->draw_quad(
+        0, 0,
+        max_x, 0,
+        max_x, max_y,
+        0, max_y,
+        this->config.ceiling_color
+    );
+
+}
+
 void Renderer::draw_3d_floor(enum Viewport viewport) {        
     
     float top_y;
@@ -186,6 +201,10 @@ void Renderer::draw_3d_floor(enum Viewport viewport) {
 }
 
 void Renderer::draw_3d(enum Viewport viewport) {
+
+    if (viewport == Viewport::EUCLI) {
+        this->draw_eucliview_ceiling();
+    }
 
     this->draw_3d_floor(viewport);
 
