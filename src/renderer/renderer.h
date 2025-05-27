@@ -97,9 +97,9 @@ class Renderer {
         enum Viewport viewport
     );
 
-    void draw_3d_floor();
+    void draw_3d_floor(enum Viewport viewport);
 
-    void draw_3d();
+    void draw_3d(enum Viewport viewport);
 
 public:
     void set_drawing_color(const uint8_t r, const uint8_t g, const uint8_t b);

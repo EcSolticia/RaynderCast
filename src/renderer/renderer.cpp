@@ -155,11 +155,25 @@ void Renderer::draw_quadri_3d_from_angles(
     );
 }
 
-void Renderer::draw_3d_floor() {        
-    const float top_y = this->window_height/2.0;
-    const float bottom_y = this->window_height;
-    const float max_x = this->window_width;
+void Renderer::draw_3d_floor(enum Viewport viewport) {        
+    
+    float top_y;
+    float bottom_y;
+    float max_x;
 
+    switch (viewport) {
+        case Viewport::MAIN:
+            top_y = this->window_height/2.0;
+            bottom_y = this->window_height;
+            max_x = this->window_width;        
+            break;
+        case Viewport::EUCLI:
+            top_y = this->eucliview_height/2.0;
+            bottom_y = this->eucliview_height;
+            max_x = this->eucliview_width;
+            break; 
+    }
+    
     const Color col = this->config.floor_color;
 
     this->draw_quad(
@@ -171,9 +185,9 @@ void Renderer::draw_3d_floor() {
     );
 }
 
-void Renderer::draw_3d() {
+void Renderer::draw_3d(enum Viewport viewport) {
 
-    this->draw_3d_floor();
+    this->draw_3d_floor(viewport);
 
     float last_theta;
     HitData last_hit_data;
@@ -208,15 +222,7 @@ void Renderer::draw_3d() {
                     theta,
                     hit_data.coords,
                     hit_data.vertical,
-                    Viewport::MAIN
-                );
-                this->draw_quadri_3d_from_angles(
-                    last_theta,
-                    last_hit_data.coords,
-                    theta,
-                    hit_data.coords,
-                    hit_data.vertical,
-                    Viewport::EUCLI
+                    viewport
                 );
             }
         }
@@ -268,8 +274,9 @@ void Renderer::render_loop() {
     this->set_drawing_color(this->config.ceiling_color);
     this->clear_display();
 
-    this->draw_3d();
-    
+    this->draw_3d(Viewport::MAIN);
+    this->draw_3d(Viewport::EUCLI);
+
     this->update_display();
 }
 
