@@ -247,10 +247,16 @@ void Renderer::render_loop() {
 
 Renderer::Renderer(
     const uint16_t window_width, 
-    const uint16_t window_height, 
+    const uint16_t window_height,
+    const uint16_t eucliview_height,
+    const uint16_t eucliview_width,
     std::string window_title,
     const bool enable_vsync
-) : window_width{window_width}, window_height{window_height} {       
+) : window_width{window_width}, 
+    window_height{window_height}, 
+    eucliview_height{eucliview_height}, 
+    eucliview_width{eucliview_width} 
+{       
 
     this->window = SDL_CreateWindow(
         window_title.c_str(),

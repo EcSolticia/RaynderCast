@@ -20,6 +20,9 @@ class Renderer {
     const uint16_t window_height;
     const uint16_t window_width;
 
+    const uint16_t eucliview_height;
+    const uint16_t eucliview_width;
+
     SDL_Window* window;
     SDL_Renderer* context;
 
@@ -119,10 +122,12 @@ public:
 
     void update_display();
 
-    Renderer() : window_width{window_width}, window_height{window_height} {};
+    Renderer() : window_width{0}, window_height{0}, eucliview_height{0}, eucliview_width{0} {};
     Renderer(
-        const uint16_t window_width, 
-        const uint16_t window_height, 
+        const uint16_t window_width,
+        const uint16_t window_height,
+        const uint16_t eucliview_height,
+        const uint16_t eucliview_width,
         const std::string window_title,
         const bool enable_vsync
     );

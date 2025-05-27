@@ -112,6 +112,8 @@ void Game::create_map(
 Game::Game(
     const uint16_t window_width, 
     const uint16_t window_height, 
+    const uint16_t eucliview_height,
+    const uint16_t eucliview_width,
     const std::string window_title,
     const GameConfig& config
 ) {
@@ -125,7 +127,9 @@ Game::Game(
     
     this->renderer_ptr = std::make_unique<Renderer>(
         window_width, 
-        window_height, 
+        window_height,
+        eucliview_height,
+        eucliview_width, 
         window_title,
         config.vsync_enabled
     );
