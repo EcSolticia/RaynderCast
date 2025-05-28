@@ -91,10 +91,9 @@ void Renderer::draw_quadri_3d(
     const uint16_t line_height1,
     const uint16_t x2,
     const uint16_t line_height2,
-    const bool hit_vertical,
-    enum Viewport viewport
+    const uint16_t midpoint,
+    const bool hit_vertical
 ) {
-    const float midpoint = (viewport == Viewport::MAIN) ? this->window_height/2.0 : this->eucliview_height/2.0;
     
     const float half_line_height1 = line_height1/2;
     const float half_line_height2 = line_height2/2;
@@ -145,13 +144,15 @@ void Renderer::draw_quadri_3d_from_angles(
 
     const uint16_t line_height2 = std::clamp(this->config.line_height_scalar * h/distance2, (float)0.0, (float)h);
 
+    const uint16_t midpoint = h/2.0; // + origin or offset
+
     this->draw_quadri_3d(
         x1, 
         line_height1, 
         x2, 
         line_height2, 
-        vertical,
-        viewport
+        midpoint,
+        vertical
     );
 }
 

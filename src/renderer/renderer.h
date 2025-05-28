@@ -84,8 +84,8 @@ class Renderer {
         const uint16_t line_height1,
         const uint16_t x2,
         const uint16_t line_height2,
-        const bool hit_vertical,
-        enum Viewport viewport
+        const uint16_t midpoint,
+        const bool hit_vertical
     );
 
     void draw_quadri_3d_from_angles(
