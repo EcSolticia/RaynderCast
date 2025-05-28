@@ -102,7 +102,14 @@ class Renderer {
 
     void draw_3d_floor(enum Viewport viewport);
 
-    void draw_3d(enum Viewport viewport);
+    void draw_3d(
+        enum Viewport viewport,
+        const uint16_t width,
+        const uint16_t height,
+        const float theta_increment
+    );
+
+    void draw_viewport(enum Viewport viewport);
 
 public:
     void set_drawing_color(const uint8_t r, const uint8_t g, const uint8_t b);

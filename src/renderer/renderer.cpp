@@ -195,23 +195,18 @@ void Renderer::draw_3d_floor(enum Viewport viewport) {
     );
 }
 
-void Renderer::draw_3d(enum Viewport viewport) {
-
-    const uint16_t w = (viewport == Viewport::MAIN) ? this->window_width : this->eucliview_width;
-    const uint16_t h = (viewport == Viewport::MAIN) ? this->window_height : this->eucliview_height;
-
-    if (viewport == Viewport::EUCLI) {
-        this->draw_eucliview_ceiling();
-    }
-
-    this->draw_3d_floor(viewport);
+void Renderer::draw_3d(
+    enum Viewport viewport,
+    const uint16_t width,
+    const uint16_t height,
+    const float theta_increment
+) {
 
     float last_theta;
     HitData last_hit_data;
     bool first_theta_iteration = true;
 
     const float field_of_view = this->config.field_of_view;
-    const float theta_increment = field_of_view/((viewport == Viewport::MAIN) ? this->config.ray_count : this->config.eucliview_ray_count);
 
     for (float theta = -field_of_view/2.0; theta < field_of_view/2.0 + theta_increment; theta += theta_increment) {
         
@@ -239,8 +234,8 @@ void Renderer::draw_3d(enum Viewport viewport) {
                     theta,
                     this->get_renderer_distance(hit_data.coords.x, hit_data.coords.y, viewport),
                     hit_data.vertical,
-                    w,
-                    h
+                    width,
+                    height
                 );
             }
         }
@@ -284,6 +279,22 @@ void Renderer::update_display() {
     SDL_RenderPresent(this->context);
 }
 
+void Renderer::draw_viewport(enum Viewport viewport) {
+
+    const uint16_t w = (viewport == Viewport::MAIN) ? this->window_width : this->eucliview_width;
+    const uint16_t h = (viewport == Viewport::MAIN) ? this->window_height : this->eucliview_height;
+
+    if (viewport == Viewport::EUCLI) {
+        this->draw_eucliview_ceiling();
+    }
+    this->draw_3d_floor(viewport);
+
+    const float theta_increment = this->config.field_of_view/((viewport == Viewport::MAIN) ? this->config.ray_count : this->config.eucliview_ray_count);
+
+    this->draw_3d(viewport, w, h, theta_increment);
+
+}
+
 void Renderer::render_loop() {
     if (!this->map_ptr || !this->player_ptr) {
         throw std::runtime_error("Rendering cannot proceed without valid Map and Player objects.");
@@ -292,8 +303,8 @@ void Renderer::render_loop() {
     this->set_drawing_color(this->config.ceiling_color);
     this->clear_display();
 
-    this->draw_3d(Viewport::MAIN);
-    this->draw_3d(Viewport::EUCLI);
+    this->draw_viewport(Viewport::MAIN);
+    this->draw_viewport(Viewport::EUCLI);
 
     this->update_display();
 }
