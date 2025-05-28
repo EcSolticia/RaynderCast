@@ -90,11 +90,12 @@ class Renderer {
 
     void draw_quadri_3d_from_angles(
         const float angle1, 
-        const CartesianPair hit_coords1,
+        const float distance1,
         const float angle2,
-        const CartesianPair hit_coords2,
+        const float distance2,
         const bool vertical,
-        enum Viewport viewport
+        const uint16_t width,
+        const uint16_t height
     );
 
     void draw_eucliview_ceiling();

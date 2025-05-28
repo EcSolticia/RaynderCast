@@ -120,31 +120,25 @@ void Renderer::draw_quadri_3d(
 
 void Renderer::draw_quadri_3d_from_angles(
     const float angle1, 
-    const CartesianPair hit_coords1,
+    const float distance1,
     const float angle2,
-    const CartesianPair hit_coords2,
+    const float distance2,
     const bool vertical,
-    enum Viewport viewport
+    const uint16_t width,
+    const uint16_t height
 ) {
 
-    const uint16_t w = (viewport == Viewport::MAIN) ? this->window_width : this->eucliview_width;
-    const uint16_t h = (viewport == Viewport::MAIN) ? this->window_height : this->eucliview_height;
-
     const float t1 = (angle1 + this->config.field_of_view/2)/this->config.field_of_view;
-    const uint16_t x1 = w * t1;
+    const uint16_t x1 = width * t1;
 
-    const float distance1 = this->get_renderer_distance(hit_coords1.x, hit_coords1.y, viewport);
-
-    const uint16_t line_height1 = std::clamp(this->config.line_height_scalar * h/distance1, (float)0.0, (float)h);
+    const uint16_t line_height1 = std::clamp(this->config.line_height_scalar * (float)height/distance1, (float)0.0, (float)height);
 
     const float t2 = (angle2 + this->config.field_of_view/2)/this->config.field_of_view;
-    const uint16_t x2 = w * t2;
+    const uint16_t x2 = width * t2;
 
-    const float distance2 = this->get_renderer_distance(hit_coords2.x, hit_coords2.y, viewport);
+    const uint16_t line_height2 = std::clamp(this->config.line_height_scalar * (float)height/distance2, (float)0.0, (float)height);
 
-    const uint16_t line_height2 = std::clamp(this->config.line_height_scalar * h/distance2, (float)0.0, (float)h);
-
-    const uint16_t midpoint = h/2.0; // + origin or offset
+    const uint16_t midpoint = height/2.0; // + origin or offset
 
     this->draw_quadri_3d(
         x1, 
@@ -203,6 +197,9 @@ void Renderer::draw_3d_floor(enum Viewport viewport) {
 
 void Renderer::draw_3d(enum Viewport viewport) {
 
+    const uint16_t w = (viewport == Viewport::MAIN) ? this->window_width : this->eucliview_width;
+    const uint16_t h = (viewport == Viewport::MAIN) ? this->window_height : this->eucliview_height;
+
     if (viewport == Viewport::EUCLI) {
         this->draw_eucliview_ceiling();
     }
@@ -238,11 +235,12 @@ void Renderer::draw_3d(enum Viewport viewport) {
             if (same_orientation && !diagonal) {
                 this->draw_quadri_3d_from_angles(
                     last_theta,
-                    last_hit_data.coords,
+                    this->get_renderer_distance(last_hit_data.coords.x, last_hit_data.coords.y, viewport),
                     theta,
-                    hit_data.coords,
+                    this->get_renderer_distance(hit_data.coords.x, hit_data.coords.y, viewport),
                     hit_data.vertical,
-                    viewport
+                    w,
+                    h
                 );
             }
         }
