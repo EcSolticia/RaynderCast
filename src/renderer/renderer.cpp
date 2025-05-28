@@ -195,7 +195,7 @@ void Renderer::draw_3d_floor(enum Viewport viewport) {
     );
 }
 
-void Renderer::draw_3d(
+void Renderer::draw_3d_wall(
     enum Viewport viewport,
     const uint16_t width,
     const uint16_t height,
@@ -291,7 +291,7 @@ void Renderer::draw_viewport(enum Viewport viewport) {
 
     const float theta_increment = this->config.field_of_view/((viewport == Viewport::MAIN) ? this->config.ray_count : this->config.eucliview_ray_count);
 
-    this->draw_3d(viewport, w, h, theta_increment);
+    this->draw_3d_wall(viewport, w, h, theta_increment);
 
 }
 

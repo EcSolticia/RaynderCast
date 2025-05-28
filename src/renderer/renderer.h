@@ -102,7 +102,7 @@ class Renderer {
 
     void draw_3d_floor(enum Viewport viewport);
 
-    void draw_3d(
+    void draw_3d_wall(
         enum Viewport viewport,
         const uint16_t width,
         const uint16_t height,
