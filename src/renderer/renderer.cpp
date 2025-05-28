@@ -125,20 +125,22 @@ void Renderer::draw_quadri_3d_from_angles(
     const float distance2,
     const bool vertical,
     const uint16_t width,
-    const uint16_t height
+    const uint16_t height,
+    const uint16_t offset_x,
+    const uint16_t offset_y
 ) {
 
     const float t1 = (angle1 + this->config.field_of_view/2)/this->config.field_of_view;
-    const uint16_t x1 = width * t1;
+    const uint16_t x1 = width * t1 + offset_x;
 
     const uint16_t line_height1 = std::clamp(this->config.line_height_scalar * (float)height/distance1, (float)0.0, (float)height);
 
     const float t2 = (angle2 + this->config.field_of_view/2)/this->config.field_of_view;
-    const uint16_t x2 = width * t2;
+    const uint16_t x2 = width * t2 + offset_x;
 
     const uint16_t line_height2 = std::clamp(this->config.line_height_scalar * (float)height/distance2, (float)0.0, (float)height);
 
-    const uint16_t midpoint = height/2.0; // + origin or offset
+    const uint16_t midpoint = height/2.0 + offset_y;
 
     this->draw_quadri_3d(
         x1, 
@@ -154,43 +156,49 @@ void Renderer::draw_eucliview_ceiling() {
 
     const float max_y = this->eucliview_height/2.0;
     const float max_x = this->eucliview_width;
+    const float offx = this->config.eucliview_offset_x;
+    const float offy = this->config.eucliview_offset_y;
 
     this->draw_quad(
-        0, 0,
-        max_x, 0,
-        max_x, max_y,
-        0, max_y,
+        offx, offy,
+        offx + max_x, offy,
+        offx + max_x, offy + max_y,
+        offx, offy + max_y,
         this->config.ceiling_color
     );
 
 }
 
-void Renderer::draw_3d_floor(enum Viewport viewport) {        
+void Renderer::draw_3d_floor(
+    enum Viewport viewport
+) {        
     
     float top_y;
     float bottom_y;
     float max_x;
+    float min_x = this->config.eucliview_offset_x;
 
     switch (viewport) {
         case Viewport::MAIN:
             top_y = this->window_height/2.0;
             bottom_y = this->window_height;
-            max_x = this->window_width;        
+            max_x = this->window_width;
+            min_x = 0;
             break;
         case Viewport::EUCLI:
-            top_y = this->eucliview_height/2.0;
-            bottom_y = this->eucliview_height;
-            max_x = this->eucliview_width;
+            top_y = this->eucliview_height/2.0 + this->config.eucliview_offset_y;
+            bottom_y = this->eucliview_height + this->config.eucliview_offset_y;
+            max_x = this->eucliview_width + min_x;
             break; 
     }
     
     const Color col = this->config.floor_color;
 
     this->draw_quad(
-        0, top_y,
+        min_x, top_y,
         max_x, top_y,
         max_x, bottom_y,
-        0, bottom_y,
+        min_x, bottom_y,
         col 
     );
 }
@@ -199,6 +207,8 @@ void Renderer::draw_3d_wall(
     enum Viewport viewport,
     const uint16_t width,
     const uint16_t height,
+    const uint16_t origin_x,
+    const uint16_t origin_y,
     const float theta_increment
 ) {
 
@@ -235,7 +245,9 @@ void Renderer::draw_3d_wall(
                     this->get_renderer_distance(hit_data.coords.x, hit_data.coords.y, viewport),
                     hit_data.vertical,
                     width,
-                    height
+                    height,
+                    origin_x,
+                    origin_y
                 );
             }
         }
@@ -283,6 +295,8 @@ void Renderer::draw_viewport(enum Viewport viewport) {
 
     const uint16_t w = (viewport == Viewport::MAIN) ? this->window_width : this->eucliview_width;
     const uint16_t h = (viewport == Viewport::MAIN) ? this->window_height : this->eucliview_height;
+    const uint16_t ox = (viewport == Viewport::MAIN) ? 0 : this->config.eucliview_offset_x;
+    const uint16_t oy = (viewport == Viewport::MAIN) ? 0 : this->config.eucliview_offset_y;
 
     if (viewport == Viewport::EUCLI) {
         this->draw_eucliview_ceiling();
@@ -291,7 +305,14 @@ void Renderer::draw_viewport(enum Viewport viewport) {
 
     const float theta_increment = this->config.field_of_view/((viewport == Viewport::MAIN) ? this->config.ray_count : this->config.eucliview_ray_count);
 
-    this->draw_3d_wall(viewport, w, h, theta_increment);
+    this->draw_3d_wall(
+        viewport,
+        w,
+        h,
+        ox,
+        oy,
+        theta_increment
+    );
 
 }
 

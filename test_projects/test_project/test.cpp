@@ -52,6 +52,9 @@ int main() {
 
         rconfig.ray_count = 1024;
 
+        rconfig.eucliview_offset_x = 8;
+        rconfig.eucliview_offset_y = 8;
+
         game.set_renderer_distance_func([](float x, float y) -> float {
             const float length = sqrt(pow(x, 2) + pow(y, 2));
             return length;

@@ -95,17 +95,23 @@ class Renderer {
         const float distance2,
         const bool vertical,
         const uint16_t width,
-        const uint16_t height
+        const uint16_t height,
+        const uint16_t origin_x,
+        const uint16_t origin_y
     );
 
     void draw_eucliview_ceiling();
 
-    void draw_3d_floor(enum Viewport viewport);
+    void draw_3d_floor(
+        enum Viewport viewport
+    );
 
     void draw_3d_wall(
         enum Viewport viewport,
         const uint16_t width,
         const uint16_t height,
+        const uint16_t origin_x,
+        const uint16_t origin_y,
         const float theta_increment
     );
 

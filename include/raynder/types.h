@@ -44,6 +44,9 @@ namespace Raynder {
         float ray_count{1024};
         float eucliview_ray_count{128};
 
+        uint16_t eucliview_offset_x{8};
+        uint16_t eucliview_offset_y{8};
+
         float field_of_view{M_PI * 1/2};
 
         float line_height_scalar{30.0};
