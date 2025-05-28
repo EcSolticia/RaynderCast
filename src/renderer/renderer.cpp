@@ -1,4 +1,4 @@
-#include <renderer.h>
+#include <renderer/renderer.h>
 #include <player.h>
 #include <map.h>
 #include <raycaster.h>
@@ -15,13 +15,13 @@
 
 namespace Raynder {
 
-void Renderer::set_drawing_color(const uint8_t r, const uint8_t g, const uint8_t b) const {
+void Renderer::set_drawing_color(const uint8_t r, const uint8_t g, const uint8_t b) {
     if (SDL_SetRenderDrawColor(this->context, r, g, b, 255)) {
             throw std::runtime_error(SDL_GetError());
     }
 }
 
-void Renderer::set_drawing_color(const Color color) const {
+void Renderer::set_drawing_color(const Color color) {
     this->set_drawing_color(color.r, color.g, color.b);
 }
 
@@ -30,7 +30,7 @@ void Renderer::draw_rectangle(
     const uint16_t origin_y, 
     const uint8_t width, 
     const uint8_t height,
-    FillType filled) const 
+    FillType filled) 
 {
     SDL_Rect rect;
     rect.x = origin_x;
@@ -55,13 +55,13 @@ void Renderer::draw_line(
     const uint16_t y1, 
     const int16_t x2, 
     const int16_t y2
-) const {
+) {
     if (SDL_RenderDrawLine(this->context, x1, y1, x2, y2)) {
         throw std::runtime_error(SDL_GetError());
     }
 }
 
-void Renderer::draw_point(const uint16_t x, const uint16_t y) const {
+void Renderer::draw_point(const uint16_t x, const uint16_t y) {
     if (SDL_RenderDrawPoint(this->context, x, y)) {
         throw std::runtime_error(SDL_GetError());
     }
@@ -73,7 +73,7 @@ void Renderer::draw_quad(
         const float x3, const float y3,
         const float x4, const float y4,
         const Color color
-) const {
+) {
     const SDL_Color draw_color{color.r, color.g, color.b, 255};
     
     this->quad_buffer[0] = SDL_Vertex{SDL_FPoint{x1, y1}, draw_color, SDL_FPoint{0}};
@@ -91,10 +91,9 @@ void Renderer::draw_quadri_3d(
     const uint16_t line_height1,
     const uint16_t x2,
     const uint16_t line_height2,
-    const uint16_t height_on_window,
+    const uint16_t midpoint,
     const bool hit_vertical
-) const {
-    const float midpoint = height_on_window/2;
+) {
     
     const float half_line_height1 = line_height1/2;
     const float half_line_height2 = line_height2/2;
@@ -121,83 +120,109 @@ void Renderer::draw_quadri_3d(
 
 void Renderer::draw_quadri_3d_from_angles(
     const float angle1, 
-    const CartesianPair hit_coords1,
+    const float distance1,
     const float angle2,
-    const CartesianPair hit_coords2,
-    const bool vertical
-) const {
-    
+    const float distance2,
+    const bool vertical,
+    const uint16_t width,
+    const uint16_t height,
+    const uint16_t offset_x,
+    const uint16_t offset_y
+) {
+
     const float t1 = (angle1 + this->config.field_of_view/2)/this->config.field_of_view;
-    const uint16_t x1 = this->config.render_width_on_window * t1 + this->config.render_origin_on_window_x;
+    const uint16_t x1 = width * t1 + offset_x;
 
-    const float distance1 = this->distance_func(hit_coords1.x, hit_coords1.y);
-
-    const uint16_t line_height1 = this->config.line_height_scalar * this->config.render_height_on_window/distance1;
+    const uint16_t line_height1 = std::clamp(this->config.line_height_scalar * (float)height/distance1, (float)0.0, (float)height);
 
     const float t2 = (angle2 + this->config.field_of_view/2)/this->config.field_of_view;
-    const uint16_t x2 = this->config.render_width_on_window * t2 + this->config.render_origin_on_window_x;
+    const uint16_t x2 = width * t2 + offset_x;
 
-    const float distance2 = this->distance_func(hit_coords2.x, hit_coords2.y);
+    const uint16_t line_height2 = std::clamp(this->config.line_height_scalar * (float)height/distance2, (float)0.0, (float)height);
 
-    const uint16_t line_height2 = this->config.line_height_scalar * this->config.render_height_on_window/distance2;
+    const uint16_t midpoint = height/2.0 + offset_y;
 
     this->draw_quadri_3d(
         x1, 
         line_height1, 
         x2, 
         line_height2, 
-        this->config.render_height_on_window, 
+        midpoint,
         vertical
     );
 }
 
-void Renderer::draw_3d_floor(
-    const uint16_t origin_on_window_x, 
-    const uint16_t origin_on_window_y,
-    const uint16_t width_on_window,
-    const uint16_t height_on_window
-) const {        
-    const float top_y = origin_on_window_y + height_on_window/2.0;
-    const float bottom_y = origin_on_window_y + height_on_window;
-    const float max_x = origin_on_window_x + width_on_window;
+void Renderer::draw_eucliview_ceiling() {
 
+    const float max_y = this->eucliview_height/2.0;
+    const float max_x = this->eucliview_width;
+    const float offx = this->config.eucliview_offset_x;
+    const float offy = this->config.eucliview_offset_y;
+
+    this->draw_quad(
+        offx, offy,
+        offx + max_x, offy,
+        offx + max_x, offy + max_y,
+        offx, offy + max_y,
+        this->config.ceiling_color
+    );
+
+}
+
+void Renderer::draw_3d_floor(
+    enum Viewport viewport
+) {        
+    
+    float top_y;
+    float bottom_y;
+    float max_x;
+    float min_x = this->config.eucliview_offset_x;
+
+    switch (viewport) {
+        case Viewport::MAIN:
+            top_y = this->window_height/2.0;
+            bottom_y = this->window_height;
+            max_x = this->window_width;
+            min_x = 0;
+            break;
+        case Viewport::EUCLI:
+            top_y = this->eucliview_height/2.0 + this->config.eucliview_offset_y;
+            bottom_y = this->eucliview_height + this->config.eucliview_offset_y;
+            max_x = this->eucliview_width + min_x;
+            break; 
+    }
+    
     const Color col = this->config.floor_color;
 
     this->draw_quad(
-        (float)origin_on_window_x, top_y,
+        min_x, top_y,
         max_x, top_y,
         max_x, bottom_y,
-        (float)origin_on_window_x, bottom_y,
+        min_x, bottom_y,
         col 
     );
 }
 
-void Renderer::draw_3d() const {
-
-    const uint16_t origin_on_window_x = this->config.render_origin_on_window_x;
-    const uint16_t origin_on_window_y = this->config.render_origin_on_window_y;
-    const uint16_t width_on_window = this->config.render_width_on_window;
-    const uint16_t height_on_window = this->config.render_height_on_window;
-
-    this->draw_3d_floor(origin_on_window_x, origin_on_window_y, width_on_window, height_on_window);
+void Renderer::draw_3d_wall(
+    enum Viewport viewport,
+    const uint16_t width,
+    const uint16_t height,
+    const uint16_t origin_x,
+    const uint16_t origin_y,
+    const float theta_increment
+) {
 
     float last_theta;
     HitData last_hit_data;
     bool first_theta_iteration = true;
 
     const float field_of_view = this->config.field_of_view;
-    const float theta_increment = field_of_view/this->config.ray_count;
 
     for (float theta = -field_of_view/2.0; theta < field_of_view/2.0 + theta_increment; theta += theta_increment) {
         
         HitData hit_data = Raycaster::cast_ray(
             this->player_ptr, 
-            this->map_ptr, 
-            #ifdef DEBUG_BUILD
-            this,
-            #else
-            std::nullopt,
-            #endif
+            this->map_ptr,
             theta
         );
 
@@ -215,10 +240,14 @@ void Renderer::draw_3d() const {
             if (same_orientation && !diagonal) {
                 this->draw_quadri_3d_from_angles(
                     last_theta,
-                    last_hit_data.coords,
+                    this->get_renderer_distance(last_hit_data.coords.x, last_hit_data.coords.y, viewport),
                     theta,
-                    hit_data.coords,
-                    hit_data.vertical
+                    this->get_renderer_distance(hit_data.coords.x, hit_data.coords.y, viewport),
+                    hit_data.vertical,
+                    width,
+                    height,
+                    origin_x,
+                    origin_y
                 );
             }
         }
@@ -228,6 +257,20 @@ void Renderer::draw_3d() const {
         first_theta_iteration = false;
     }
 
+    //this->hud_draw_minimap_base();
+}
+
+const float Renderer::get_renderer_distance(const float x, const float y, enum Viewport viewport) {
+    float result;
+    switch (viewport) {
+        case Viewport::MAIN:
+            result = this->distance_func(x, y);
+            break;
+        case Viewport::EUCLI:
+            result = sqrt(pow(x, 2) + pow(y, 2));
+            break;
+    }
+    return result;
 }
 
 void Renderer::set_map_ptr(Map* map_ptr) {
@@ -238,63 +281,42 @@ void Renderer::set_player_ptr(Player* player_ptr) {
     this->player_ptr = player_ptr;
 }
 
-#ifdef DEBUG_BUILD
-void Renderer::draw_debug_topdown_grid() const {
-
-    const uint8_t row_count = this->map_ptr->get_row_count();
-    const uint8_t col_count = this->map_ptr->get_column_count();
-    const uint8_t side_length = this->map_ptr->get_side_length();
-
-    this->set_drawing_color(255, 255, 255);
-    
-    for (size_t i = 0; i < col_count; ++i) {
-        for (size_t j = 0; j < row_count; ++j) {
-            const uint16_t rect_x = i * side_length;
-            const uint16_t rect_y = j * side_length;
-            
-            if (this->map_ptr->get_data(i, j) == 0) {
-                this->set_drawing_color(255, 0, 0);
-                this->draw_rectangle(rect_x, rect_y, side_length, side_length, FillType::NOT_FILLED);
-            } else {
-                this->set_drawing_color(255, 255, 255);
-                this->draw_rectangle(rect_x, rect_y, side_length, side_length, FillType::FILLED);
-            }
-
-        }
-
-    }
-
-    
-}
-
-void Renderer::draw_debug_topdown_player() const {
-    this->set_drawing_color(this->config.topdown_player_square_color);
-
-    const uint16_t pos_x = this->player_ptr->get_pos_x();
-    const uint16_t pos_y = this->player_ptr->get_pos_y();
-    const uint8_t side_length = 2 * this->player_ptr->config.collision_radius;
-    
-    this->draw_rectangle(
-        pos_x - side_length/2.0, 
-        pos_y - side_length/2.0, 
-        side_length, 
-        side_length, 
-        FillType::FILLED
-    );
-}
-#endif
-
-void Renderer::clear_display() const {
+void Renderer::clear_display() {
     if (SDL_RenderClear(this->context)) {
         throw std::runtime_error(SDL_GetError());
     }
 }
 
-void Renderer::update_display() const {
+void Renderer::update_display() {
     SDL_RenderPresent(this->context);
 }
 
-void Renderer::render_loop() const {
+void Renderer::draw_viewport(enum Viewport viewport) {
+
+    const uint16_t w = (viewport == Viewport::MAIN) ? this->window_width : this->eucliview_width;
+    const uint16_t h = (viewport == Viewport::MAIN) ? this->window_height : this->eucliview_height;
+    const uint16_t ox = (viewport == Viewport::MAIN) ? 0 : this->config.eucliview_offset_x;
+    const uint16_t oy = (viewport == Viewport::MAIN) ? 0 : this->config.eucliview_offset_y;
+
+    if (viewport == Viewport::EUCLI) {
+        this->draw_eucliview_ceiling();
+    }
+    this->draw_3d_floor(viewport);
+
+    const float theta_increment = this->config.field_of_view/((viewport == Viewport::MAIN) ? this->config.ray_count : this->config.eucliview_ray_count);
+
+    this->draw_3d_wall(
+        viewport,
+        w,
+        h,
+        ox,
+        oy,
+        theta_increment
+    );
+
+}
+
+void Renderer::render_loop() {
     if (!this->map_ptr || !this->player_ptr) {
         throw std::runtime_error("Rendering cannot proceed without valid Map and Player objects.");
     }
@@ -302,22 +324,24 @@ void Renderer::render_loop() const {
     this->set_drawing_color(this->config.ceiling_color);
     this->clear_display();
 
-    this->draw_3d();
-
-    #ifdef DEBUG_BUILD
-    this->draw_debug_topdown_grid();
-    this->draw_debug_topdown_player();
-    #endif
+    this->draw_viewport(Viewport::MAIN);
+    this->hud_draw_eucliview();
 
     this->update_display();
 }
 
 Renderer::Renderer(
     const uint16_t window_width, 
-    const uint16_t window_height, 
+    const uint16_t window_height,
+    const uint16_t eucliview_height,
+    const uint16_t eucliview_width,
     std::string window_title,
     const bool enable_vsync
-) {       
+) : window_width{window_width}, 
+    window_height{window_height}, 
+    eucliview_height{eucliview_height}, 
+    eucliview_width{eucliview_width} 
+{       
 
     this->window = SDL_CreateWindow(
         window_title.c_str(),

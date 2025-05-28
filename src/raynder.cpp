@@ -1,6 +1,6 @@
 #include <raynder/raynder.h>
 
-#include <renderer.h>
+#include <renderer/renderer.h>
 #include <map.h>
 #include <player.h>
 #include <raycaster.h>
@@ -55,12 +55,6 @@ void Game::gameloop() {
         this->player_ptr->hit_data = Raycaster::cast_ray(
             this->player_ptr.get(),
             this->map_ptr.get(),
-            #ifdef DEBUG_BUILD
-            this->renderer_ptr.get(),
-            #endif
-            #ifdef RELEASE_BUILD
-            std::nullopt,
-            #endif
             this->player_ptr->get_basis_d_relative_rotation()
         );
 
@@ -118,6 +112,8 @@ void Game::create_map(
 Game::Game(
     const uint16_t window_width, 
     const uint16_t window_height, 
+    const uint16_t eucliview_height,
+    const uint16_t eucliview_width,
     const std::string window_title,
     const GameConfig& config
 ) {
@@ -131,7 +127,9 @@ Game::Game(
     
     this->renderer_ptr = std::make_unique<Renderer>(
         window_width, 
-        window_height, 
+        window_height,
+        eucliview_height,
+        eucliview_width, 
         window_title,
         config.vsync_enabled
     );

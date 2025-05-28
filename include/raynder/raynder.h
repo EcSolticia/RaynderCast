@@ -49,7 +49,9 @@ public:
 
     Game(
         const uint16_t window_width, 
-        const uint16_t window_height, 
+        const uint16_t window_height,
+        const uint16_t eucliview_height,
+        const uint16_t eucliview_width,
         const std::string window_title,
         const GameConfig& config
     );

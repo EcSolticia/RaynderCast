@@ -1,14 +1,13 @@
 #include <raycaster.h>
 #include <player.h>
 #include <map.h>
-#include <renderer.h>
+#include <renderer/renderer.h>
 
 namespace Raynder {
 
 HitData Raycaster::cast_ray(
     Player* player_ptr, 
     Map* map_ptr,
-    std::optional<const Renderer*> renderer_ptr,
     const float relative_angle_to_player
 ) {
 
@@ -111,16 +110,6 @@ HitData Raycaster::cast_ray(
         hit_data.coords = Dh;
         hit_data.vertical = false;
         hit_data.hit_idx = idxh;
-    }
-
-    if (renderer_ptr.has_value()) {
-    renderer_ptr.value()->set_drawing_color(renderer_ptr.value()->config.topdown_ray_color);
-    renderer_ptr.value()->draw_line(
-        pos.x, 
-        pos.y, 
-        pos.x + hit_data.coords.x, 
-        pos.y + hit_data.coords.y
-    );
     }
 
     return hit_data;

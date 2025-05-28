@@ -35,11 +35,6 @@ int main() {
 
         rconfig.horizontal_wall_color = Raynder::Color{227, 238, 178};
         rconfig.vertical_wall_color = Raynder::Color{255, 255, 255};
-        
-        rconfig.render_origin_on_window_x = 0;
-        rconfig.render_origin_on_window_y = 0;
-        rconfig.render_height_on_window = 480;
-        rconfig.render_width_on_window = 640;
 
         rconfig.ray_count = 1024;
 
