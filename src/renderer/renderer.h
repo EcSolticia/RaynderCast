@@ -117,6 +117,8 @@ class Renderer {
 
     void draw_viewport(enum Viewport viewport);
 
+    void hud_draw_eucliview();
+
 public:
     void set_drawing_color(const uint8_t r, const uint8_t g, const uint8_t b);
     void set_drawing_color(const Color color);
@@ -144,8 +146,6 @@ public:
     void set_player_ptr(Player* player_ptr);
 
     void clear_display();
-
-    void hud_draw_minimap_base();
 
     void render_loop();
 

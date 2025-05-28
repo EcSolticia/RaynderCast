@@ -325,7 +325,7 @@ void Renderer::render_loop() {
     this->clear_display();
 
     this->draw_viewport(Viewport::MAIN);
-    this->draw_viewport(Viewport::EUCLI);
+    this->hud_draw_eucliview();
 
     this->update_display();
 }
