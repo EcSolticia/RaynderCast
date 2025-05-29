@@ -7,28 +7,42 @@
 int main() {
 
     Raynder::GameConfig gconfig;
-    gconfig.vsync_enabled = true;
+    gconfig.vsync_enabled = false;
 
-    Raynder::Game game(640, 480, "New Parameter?", gconfig);
+    Raynder::Game game(
+        1280, 
+        720,
+        16 * 12,
+        16 * 16, 
+        "Eucliview!", 
+        gconfig
+    );
 
-    std::string map_data = "1 1 1 1 1 1 1 1 1 1\n"
-                           "1 0 0 0 0 0 0 0 0 1\n"
-                           "1 0 0 0 0 0 0 0 0 1\n"
-                           "1 0 0 0 0 0 0 0 0 1\n"
-                           "1 0 0 1 1 1 0 1 1 1\n"
-                           "1 0 0 1 0 0 0 0 0 1\n"
-                           "1 0 0 1 0 0 0 0 0 1\n"
-                           "1 0 0 0 0 0 0 0 0 1\n"
-                           "1 1 1 1 1 1 1 1 1 1";
+    std::string map_data = "1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1\n"
+                           "1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1\n"
+                           "1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1\n"
+                           "1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1\n"
+                           "1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1\n"
+                           "1 0 0 0 0 0 1 0 0 0 0 0 0 0 0 1\n"
+                           "1 0 0 0 0 0 1 0 0 0 0 0 1 1 1 1\n"
+                           "1 0 0 0 0 0 1 0 0 0 0 1 0 0 0 1\n"
+                           "1 0 0 0 0 0 1 0 0 0 1 0 0 0 0 1\n"
+                           "1 0 0 0 0 0 1 0 0 1 0 0 0 0 0 1\n"
+                           "1 0 0 0 0 0 1 1 1 1 0 0 0 0 0 1\n"
+                           "1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1\n"
+                           "1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1\n"
+                           "1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1\n"
+                           "1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1\n"
+                           "1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1\n";
 
     try {
-        game.create_map(10, 9, 32, map_data);
+        game.create_map(16, 16, 32, map_data);
         game.create_player(72, 72, 0);
 
         Raynder::RendererConfig rconfig;
         Raynder::PlayerConfig pconfig;
 
-        pconfig.translational_speed = 75.0;
+        pconfig.translational_speed = 125.0;
         pconfig.collision_radius = 20.0;
         rconfig.floor_color = Raynder::Color{78, 102, 136};
         rconfig.ceiling_color = Raynder::Color{51, 45, 86};
@@ -38,9 +52,12 @@ int main() {
 
         rconfig.ray_count = 1024;
 
+        rconfig.eucliview_offset_x = 8;
+        rconfig.eucliview_offset_y = 8;
+
         game.set_renderer_distance_func([](float x, float y) -> float {
             const float length = sqrt(pow(x, 2) + pow(y, 2));
-            return length + sin(length) * length/16.0;
+            return length;
         });
 
         game.configure_player(pconfig);
