@@ -29,20 +29,12 @@ class Player {
     float vel_y = 0;
     float angular_vel = 0;
     
-    Map* map_ptr;
+    const Map* const map_ptr;
 
     float basis_dx = 0;
     float basis_dy = 0;
     float global_basis_dx = 0;
     float global_basis_dy = 0;
-
-    void set_pos_x(const float x);
-    void set_pos_y(const float y);
-    void set_pos(const float x, const float y);
-    void set_rotation(const float rotation);
-
-    void rotate(const float amount_in_rad);
-    void add_pos(const float dx, const float dy);
 
 public:
     PlayerConfig config;
@@ -63,12 +55,12 @@ public:
 
     void move_and_slide();
 
-    Player() {};
+    Player() : map_ptr{nullptr} {};
     Player(
         const float pos_x, 
         const float pos_y, 
         const float rotation,
-        Map* map_ptr
+        const Map* const map_ptr
     );
 };
 

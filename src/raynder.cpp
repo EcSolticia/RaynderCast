@@ -24,7 +24,7 @@ void Game::compute_delta() {
 }
 
 void Game::gameloop() {
-    running = true;
+    bool running = true;
     while (running) {
 
         this->compute_delta();
@@ -66,11 +66,11 @@ void Game::configure_renderer(const RendererConfig& config) const {
     this->renderer_ptr->config = config;
 }
 
-void Game::configure_player(const PlayerConfig& config) {
+void Game::configure_player(const PlayerConfig& config) const {
     this->player_ptr->config = config;
 }
 
-void Game::set_renderer_distance_func(RendererDistanceFunc func) const {
+void Game::set_renderer_distance_func(const RendererDistanceFunc& func) const {
     this->renderer_ptr->distance_func = func;
 }
 

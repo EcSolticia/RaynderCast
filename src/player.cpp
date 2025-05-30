@@ -11,23 +11,6 @@ float Player::get_pos_x() const {return this->pos_x;}
 float Player::get_pos_y() const {return this->pos_y;}
 float Player::get_rotation() const {return this->rotation;}
 
-void Player::set_pos_x(const float x) {this->pos_x = x;}
-void Player::set_pos_y(const float y) {this->pos_y = y;}
-void Player::set_pos(const float x, const float y) {
-    this->pos_x = x;
-    this->pos_y = y;
-}
-void Player::set_rotation(const float rotation) {this->rotation = rotation;}
-
-void Player::rotate(const float amount_in_rad) {
-    this->rotation += amount_in_rad;
-}
-
-void Player::add_pos(const float dx, const float dy) {
-    this->pos_x += dx;
-    this->pos_y += dy;
-}
-
 void Player::update_key_status() {
     const uint8_t* keyboard_state = SDL_GetKeyboardState(NULL);
 
@@ -152,12 +135,11 @@ Player::Player(
     const float pos_x, 
     const float pos_y, 
     const float rotation,
-    Map* map_ptr
-) {
+    const Map* const map_ptr
+) : map_ptr{map_ptr} {
     this->pos_x = pos_x;
     this->pos_y = pos_y;
     this->rotation = rotation;
-    this->map_ptr = map_ptr;
 }
 
 }

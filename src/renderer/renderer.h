@@ -26,8 +26,8 @@ class Renderer {
     SDL_Window* window;
     SDL_Renderer* context;
 
-    Map* map_ptr = nullptr;
-    Player* player_ptr = nullptr;
+    Map* map_ptr = nullptr; // readonly
+    Player* player_ptr = nullptr; // readonly
 
     enum FillType {
         NOT_FILLED = 0,
@@ -57,14 +57,6 @@ class Renderer {
         const float v2_euc_dist = sqrt(pow(v2.x, 2) + pow(v2.y, 2));
         return acos(dotprod/(v1_euc_dist * v2_euc_dist));
     }
-    
-    void draw_rectangle(const uint16_t origin_x, 
-                        const uint16_t origin_y, 
-                        const uint8_t width, 
-                        const uint8_t height,
-                        FillType filled);
-
-    void draw_point(const uint16_t x, const uint16_t y);
 
     void draw_quad(
         const float x1, const float y1,
@@ -120,15 +112,8 @@ class Renderer {
     void hud_draw_eucliview();
 
 public:
-    void set_drawing_color(const uint8_t r, const uint8_t g, const uint8_t b);
-    void set_drawing_color(const Color color);
-
-    void draw_line(
-        const uint16_t x1, 
-        const uint16_t y1, 
-        const int16_t x2, 
-        const int16_t y2
-    );
+    void set_drawing_color(const uint8_t r, const uint8_t g, const uint8_t b) const;
+    void set_drawing_color(const Color color) const;
 
     RendererConfig config;
 
@@ -140,16 +125,16 @@ public:
         const float x,
         const float y,
         enum Viewport viewport
-    );
+    ) const;
 
     void set_map_ptr(Map* map_ptr);
     void set_player_ptr(Player* player_ptr);
 
-    void clear_display();
+    void clear_display() const;
 
     void render_loop();
 
-    void update_display();
+    void update_display() const;
 
     Renderer() : window_width{0}, window_height{0}, eucliview_height{0}, eucliview_width{0} {};
     Renderer(
