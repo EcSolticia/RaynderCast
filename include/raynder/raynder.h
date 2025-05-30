@@ -20,8 +20,6 @@ class RAYNDERCAST_EXPORT Game {
     std::unique_ptr<Map> map_ptr;
     std::unique_ptr<Player> player_ptr;
 
-    bool running = false;
-
     uint64_t last_tick;
     uint64_t current_tick;
     float delta;
@@ -31,9 +29,9 @@ public:
     void gameloop();
 
     void configure_renderer(const RendererConfig& config) const;
-    void configure_player(const PlayerConfig& config);
+    void configure_player(const PlayerConfig& config) const;
 
-    void set_renderer_distance_func(RendererDistanceFunc func) const;
+    void set_renderer_distance_func(const RendererDistanceFunc& func) const;
 
     void create_map(
         const uint8_t col_count, 
