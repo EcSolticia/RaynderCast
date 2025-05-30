@@ -1,10 +1,6 @@
 name: CMake on multiple platforms
 
-on:
-  push:
-    branches: [ "ci-setup-test" ]
-  pull_request:
-    branches: [ "ci-setup-test" ]
+on: [push, pull_request]
 
 jobs:
   build:
