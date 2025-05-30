@@ -15,56 +15,14 @@
 
 namespace Raynder {
 
-void Renderer::set_drawing_color(const uint8_t r, const uint8_t g, const uint8_t b) {
+void Renderer::set_drawing_color(const uint8_t r, const uint8_t g, const uint8_t b) const {
     if (SDL_SetRenderDrawColor(this->context, r, g, b, 255)) {
             throw std::runtime_error(SDL_GetError());
     }
 }
 
-void Renderer::set_drawing_color(const Color color) {
+void Renderer::set_drawing_color(const Color color) const {
     this->set_drawing_color(color.r, color.g, color.b);
-}
-
-void Renderer::draw_rectangle(
-    const uint16_t origin_x, 
-    const uint16_t origin_y, 
-    const uint8_t width, 
-    const uint8_t height,
-    FillType filled) 
-{
-    SDL_Rect rect;
-    rect.x = origin_x;
-    rect.y = origin_y;
-    rect.w = width;
-    rect.h = height;
-
-    if (!filled) {
-        if (SDL_RenderDrawRect(this->context, &rect)) {
-                throw std::runtime_error(SDL_GetError());
-        }
-    } else {
-        if (SDL_RenderFillRect(this->context, &rect)) {
-            throw std::runtime_error(SDL_GetError());
-        }
-    }
-    
-}
-
-void Renderer::draw_line(
-    const uint16_t x1, 
-    const uint16_t y1, 
-    const int16_t x2, 
-    const int16_t y2
-) {
-    if (SDL_RenderDrawLine(this->context, x1, y1, x2, y2)) {
-        throw std::runtime_error(SDL_GetError());
-    }
-}
-
-void Renderer::draw_point(const uint16_t x, const uint16_t y) {
-    if (SDL_RenderDrawPoint(this->context, x, y)) {
-        throw std::runtime_error(SDL_GetError());
-    }
 }
 
 void Renderer::draw_quad(
@@ -260,7 +218,11 @@ void Renderer::draw_3d_wall(
     //this->hud_draw_minimap_base();
 }
 
-const float Renderer::get_renderer_distance(const float x, const float y, enum Viewport viewport) {
+const float Renderer::get_renderer_distance(
+    const float x, 
+    const float y, 
+    enum Viewport viewport
+) const {
     float result;
     switch (viewport) {
         case Viewport::MAIN:
@@ -281,13 +243,13 @@ void Renderer::set_player_ptr(Player* player_ptr) {
     this->player_ptr = player_ptr;
 }
 
-void Renderer::clear_display() {
+void Renderer::clear_display() const {
     if (SDL_RenderClear(this->context)) {
         throw std::runtime_error(SDL_GetError());
     }
 }
 
-void Renderer::update_display() {
+void Renderer::update_display() const {
     SDL_RenderPresent(this->context);
 }
 
