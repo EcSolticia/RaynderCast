@@ -8,7 +8,11 @@
 #include <string>
 #include <vector>
 
+#ifndef _USE_MATH_DEFINES
+#define _USE_MATH_DEFINES // for Windows
+#endif
 #include <cmath>
+
 #include <algorithm>
 
 #include <SDL2/SDL.h>

@@ -2,7 +2,12 @@
 #include <raynder/export_raynder.h>
 
 #include <stdint.h>
+
+#ifndef _USE_MATH_DEFINES
+#define _USE_MATH_DEFINES // for Windows
+#endif
 #include <cmath>
+
 #include <functional>
 #include <string>
 
