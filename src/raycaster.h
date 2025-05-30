@@ -11,8 +11,8 @@ class Renderer;
 namespace Raycaster {
 
     HitData cast_ray(
-        Player* player_ptr, 
-        Map* map_ptr,
+        const Player* const player_ptr, 
+        const Map* const map_ptr,
         const float relative_angle_to_player
     );
 
