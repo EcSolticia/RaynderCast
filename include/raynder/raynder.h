@@ -25,13 +25,6 @@ class RAYNDERCAST_EXPORT Game {
     float delta;
 
     void compute_delta();
-public:
-    void gameloop();
-
-    void configure_renderer(const RendererConfig& config) const;
-    void configure_player(const PlayerConfig& config) const;
-
-    void set_renderer_distance_func(const RendererDistanceFunc& func) const;
 
     void create_map(
         const uint8_t col_count, 
@@ -44,14 +37,19 @@ public:
         const float initial_y, 
         const float initial_rotation
     );
+    void configure_renderer(const RendererConfig& config) const;
+    void configure_player(const PlayerConfig& config) const;
+
+public:
+    void gameloop();
+
+    void set_renderer_distance_func(const RendererDistanceFunc& func) const;
 
     Game(
-        const uint16_t window_width, 
-        const uint16_t window_height,
-        const uint16_t eucliview_height,
-        const uint16_t eucliview_width,
-        const std::string window_title,
-        const GameConfig& config
+        const GameConfig& config,
+        const RendererConfig& renderer_config,
+        const PlayerConfig& player_config,
+        const MapConfig& map_config
     );
     ~Game();
 };
