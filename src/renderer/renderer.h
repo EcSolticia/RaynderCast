@@ -1,6 +1,11 @@
 #pragma once
 #include <stdint.h>
+
+#ifndef _USE_MATH_DEFINES
+#define _USE_MATH_DEFINES // for Windows
+#endif
 #include <cmath>
+
 #include <vector>
 #include <string>
 
