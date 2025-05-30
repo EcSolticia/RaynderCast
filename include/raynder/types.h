@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <cmath>
 #include <functional>
+#include <string>
 
 namespace Raynder {
 
@@ -63,6 +64,11 @@ namespace Raynder {
 
     struct RAYNDERCAST_EXPORT GameConfig {
         bool vsync_enabled{false};
+        uint16_t window_width{640};
+        uint16_t window_height{480};
+        uint16_t eucliview_height{16 * 4};
+        uint16_t eucliview_width{16 * 6};
+        std::string window_title{"RaynderCast Default Title"};
     };
 
 }

@@ -28,8 +28,8 @@ class RAYNDERCAST_EXPORT Game {
 public:
     void gameloop();
 
-    void configure_renderer(const RendererConfig& config) const;
-    void configure_player(const PlayerConfig& config) const;
+    void configure_renderer(const RendererConfig& config) const; // 
+    void configure_player(const PlayerConfig& config) const; // 
 
     void set_renderer_distance_func(const RendererDistanceFunc& func) const;
 
@@ -38,19 +38,14 @@ public:
         const uint8_t row_count,
         const uint8_t side_length,
         const std::string& map_grid_data
-    );
+    ); //
     void create_player(
         const float initial_x, 
         const float initial_y, 
         const float initial_rotation
-    );
+    ); //
 
     Game(
-        const uint16_t window_width, 
-        const uint16_t window_height,
-        const uint16_t eucliview_height,
-        const uint16_t eucliview_width,
-        const std::string window_title,
         const GameConfig& config
     );
     ~Game();

@@ -9,14 +9,7 @@ int main() {
     Raynder::GameConfig gconfig;
     gconfig.vsync_enabled = false;
 
-    Raynder::Game game(
-        1280, 
-        720,
-        16 * 12,
-        16 * 16, 
-        "Eucliview!", 
-        gconfig
-    );
+    Raynder::Game game(gconfig);
 
     std::string map_data = "1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1\n"
                            "1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1\n"
