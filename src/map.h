@@ -29,7 +29,6 @@ public:
 
     void set_data(const uint8_t x, const uint8_t y, const int value);
 
-    Map();
     Map(
         const uint8_t column_count, 
         const uint8_t row_count,

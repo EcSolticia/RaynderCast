@@ -20,8 +20,6 @@ void Map::set_data(const uint8_t x, const uint8_t y, const int value) {
     this->data[y * column_count + x] = value;
 }
 
-Map::Map() : row_count{0}, column_count{0}, side_length{0} {};
-
 Map::Map(
     const uint8_t column_count, 
     const uint8_t row_count,

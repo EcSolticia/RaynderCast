@@ -55,7 +55,6 @@ public:
 
     void move_and_slide();
 
-    Player() : map_ptr{nullptr} {};
     Player(
         const float pos_x, 
         const float pos_y, 

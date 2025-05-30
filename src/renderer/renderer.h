@@ -136,7 +136,6 @@ public:
 
     void update_display() const;
 
-    Renderer() : window_width{0}, window_height{0}, eucliview_height{0}, eucliview_width{0} {};
     Renderer(
         const uint16_t window_width,
         const uint16_t window_height,
