@@ -60,6 +60,17 @@ namespace Raynder {
         
         float translational_speed{100.0};
         float rotational_speed{M_PI * 3/4};
+
+        float initial_x{-10};
+        float initial_y{-10};
+        float initial_rotation{0};
+    };
+
+    struct RAYNDERCAST_EXPORT MapConfig {
+        uint8_t col_count{0};
+        uint8_t row_count{0};
+        uint8_t side_length{0};
+        std::string& map_grid_data;
     };
 
     struct RAYNDERCAST_EXPORT GameConfig {

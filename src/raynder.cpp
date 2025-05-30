@@ -110,7 +110,10 @@ void Game::create_map(
 }
 
 Game::Game(
-    const GameConfig& config
+    const GameConfig& config,
+    const RendererConfig& renderer_config,
+    const PlayerConfig& player_config,
+    const MapConfig& map_config
 ) {
     if (!config.window_width || !config.window_height) {
         throw std::runtime_error("Window resolution cannot be 0x0.");
@@ -128,6 +131,22 @@ Game::Game(
         config.window_title,
         config.vsync_enabled
     );
+
+    this->configure_renderer(renderer_config);
+
+    this->create_map(
+        map_config.col_count,
+        map_config.row_count,
+        map_config.side_length,
+        map_config.map_grid_data
+    );
+    
+    this->create_player(
+        player_config.initial_x,
+        player_config.initial_y,
+        player_config.initial_rotation
+    );
+    this->configure_player(player_config);
 };
 
 Game::~Game() {
