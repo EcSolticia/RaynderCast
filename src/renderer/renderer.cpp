@@ -297,14 +297,16 @@ Renderer::Renderer(
     std::string window_title,
     const bool enable_vsync,
     const Map* const map_ptr,
-    const Player* const player_ptr
+    const Player* const player_ptr,
+    const RendererConfig config
 
 ) : window_width{window_width}, 
     window_height{window_height}, 
     eucliview_height{eucliview_height}, 
     eucliview_width{eucliview_width},
     map_ptr{map_ptr},
-    player_ptr{player_ptr}
+    player_ptr{player_ptr},
+    config{config}
 {
 
     this->window = SDL_CreateWindow(

@@ -62,10 +62,6 @@ void Game::gameloop() {
     }
 }
 
-void Game::configure_renderer(const RendererConfig& config) const {
-    this->renderer_ptr->config = config;
-}
-
 void Game::set_renderer_distance_func(const RendererDistanceFunc& func) const {
     this->renderer_ptr->distance_func = func;
 }
@@ -126,10 +122,9 @@ Game::Game(
         config.window_title,
         config.vsync_enabled,
         this->map_ptr.get(),
-        this->player_ptr.get()
+        this->player_ptr.get(),
+        renderer_config
     );
-
-    this->configure_renderer(renderer_config);
 };
 
 Game::~Game() {

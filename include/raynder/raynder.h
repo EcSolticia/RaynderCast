@@ -32,12 +32,7 @@ class RAYNDERCAST_EXPORT Game {
         const uint8_t side_length,
         const std::string& map_grid_data
     );
-    void create_player(
-        const float initial_x, 
-        const float initial_y, 
-        const float initial_rotation
-    );
-    void configure_renderer(const RendererConfig& config) const;
+    
     void validate_player_config(const PlayerConfig& config) const;
 
 public:

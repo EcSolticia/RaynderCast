@@ -120,7 +120,7 @@ public:
     void set_drawing_color(const uint8_t r, const uint8_t g, const uint8_t b) const;
     void set_drawing_color(const Color color) const;
 
-    RendererConfig config;
+    const RendererConfig config;
 
     RendererDistanceFunc distance_func = [](float x, float y) -> float {
         return sqrt(pow(x, 2) + pow(y, 2));
@@ -146,7 +146,8 @@ public:
         const std::string window_title,
         const bool enable_vsync,
         const Map* const map_ptr,
-        const Player* const player_ptr
+        const Player* const player_ptr,
+        const RendererConfig config
     );
     ~Renderer();
 };
