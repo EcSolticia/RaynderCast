@@ -62,34 +62,14 @@ void Game::gameloop() {
     }
 }
 
-void Game::configure_renderer(const RendererConfig& config) const {
-    this->renderer_ptr->config = config;
-}
-
-void Game::configure_player(const PlayerConfig& config) const {
-    this->player_ptr->config = config;
-}
-
 void Game::set_renderer_distance_func(const RendererDistanceFunc& func) const {
     this->renderer_ptr->distance_func = func;
 }
 
-void Game::create_player(
-    const float initial_x, 
-    const float initial_y, 
-    const float initial_rotation
-) {
-    if (!this->map_ptr) {
+void Game::validate_player_config(const PlayerConfig& config) const {
+    if (config.initial_x < 0 || config.initial_y < 0) {
         throw std::runtime_error("Cannot create Player object prior to the Map object.");
     }
-
-    if (initial_x < 0 || initial_y < 0) {
-        throw std::runtime_error("Position values must be non-negative");
-    }
-
-    this->player_ptr = std::make_unique<Player> (
-        Player(initial_x, initial_y, initial_rotation, this->map_ptr.get())
-    );
 }
 
 void Game::create_map(
@@ -128,13 +108,12 @@ Game::Game(
         map_config.map_grid_data
     );
     
-    this->create_player(
-        player_config.initial_x,
-        player_config.initial_y,
-        player_config.initial_rotation
+    this->validate_player_config(player_config);
+    this->player_ptr = std::make_unique<Player>(
+        this->map_ptr.get(),
+        player_config
     );
-    this->configure_player(player_config);
-
+    
     this->renderer_ptr = std::make_unique<Renderer>(
         config.window_width, 
         config.window_height,
@@ -143,10 +122,9 @@ Game::Game(
         config.window_title,
         config.vsync_enabled,
         this->map_ptr.get(),
-        this->player_ptr.get()
+        this->player_ptr.get(),
+        renderer_config
     );
-
-    this->configure_renderer(renderer_config);
 };
 
 Game::~Game() {
