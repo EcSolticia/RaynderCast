@@ -239,14 +239,6 @@ const float Renderer::get_renderer_distance(
     return result;
 }
 
-void Renderer::set_map_ptr(Map* map_ptr) {
-    this->map_ptr = map_ptr;
-}
-
-void Renderer::set_player_ptr(Player* player_ptr) {
-    this->player_ptr = player_ptr;
-}
-
 void Renderer::clear_display() const {
     if (SDL_RenderClear(this->context)) {
         throw std::runtime_error(SDL_GetError());
@@ -297,17 +289,23 @@ void Renderer::render_loop() {
 }
 
 Renderer::Renderer(
+    
     const uint16_t window_width, 
     const uint16_t window_height,
     const uint16_t eucliview_height,
     const uint16_t eucliview_width,
     std::string window_title,
-    const bool enable_vsync
+    const bool enable_vsync,
+    const Map* const map_ptr,
+    const Player* const player_ptr
+
 ) : window_width{window_width}, 
     window_height{window_height}, 
     eucliview_height{eucliview_height}, 
-    eucliview_width{eucliview_width} 
-{       
+    eucliview_width{eucliview_width},
+    map_ptr{map_ptr},
+    player_ptr{player_ptr}
+{
 
     this->window = SDL_CreateWindow(
         window_title.c_str(),

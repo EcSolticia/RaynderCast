@@ -31,8 +31,8 @@ class Renderer {
     SDL_Window* window;
     SDL_Renderer* context;
 
-    Map* map_ptr = nullptr; // readonly
-    Player* player_ptr = nullptr; // readonly
+    const Map* const map_ptr = nullptr;
+    const Player* const player_ptr = nullptr;
 
     enum FillType {
         NOT_FILLED = 0,
@@ -132,9 +132,6 @@ public:
         enum Viewport viewport
     ) const;
 
-    void set_map_ptr(Map* map_ptr);
-    void set_player_ptr(Player* player_ptr);
-
     void clear_display() const;
 
     void render_loop();
@@ -147,7 +144,9 @@ public:
         const uint16_t eucliview_height,
         const uint16_t eucliview_width,
         const std::string window_title,
-        const bool enable_vsync
+        const bool enable_vsync,
+        const Map* const map_ptr,
+        const Player* const player_ptr
     );
     ~Renderer();
 };

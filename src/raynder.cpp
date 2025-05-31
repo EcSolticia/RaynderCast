@@ -90,7 +90,6 @@ void Game::create_player(
     this->player_ptr = std::make_unique<Player> (
         Player(initial_x, initial_y, initial_rotation, this->map_ptr.get())
     );
-    this->renderer_ptr->set_player_ptr(this->player_ptr.get());
 }
 
 void Game::create_map(
@@ -106,7 +105,6 @@ void Game::create_map(
     this->map_ptr = std::make_unique<Map>(
         Map(col_count, row_count, side_length, map_grid_data)
     );
-    this->renderer_ptr->set_map_ptr(this->map_ptr.get());
 }
 
 Game::Game(
@@ -122,17 +120,6 @@ Game::Game(
     if (SDL_Init(SDL_INIT_EVERYTHING)) {
         throw std::runtime_error(SDL_GetError());
     }
-    
-    this->renderer_ptr = std::make_unique<Renderer>(
-        config.window_width, 
-        config.window_height,
-        config.eucliview_height,
-        config.eucliview_width, 
-        config.window_title,
-        config.vsync_enabled
-    );
-
-    this->configure_renderer(renderer_config);
 
     this->create_map(
         map_config.col_count,
@@ -147,6 +134,19 @@ Game::Game(
         player_config.initial_rotation
     );
     this->configure_player(player_config);
+
+    this->renderer_ptr = std::make_unique<Renderer>(
+        config.window_width, 
+        config.window_height,
+        config.eucliview_height,
+        config.eucliview_width, 
+        config.window_title,
+        config.vsync_enabled,
+        this->map_ptr.get(),
+        this->player_ptr.get()
+    );
+
+    this->configure_renderer(renderer_config);
 };
 
 Game::~Game() {
