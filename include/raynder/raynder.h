@@ -38,7 +38,7 @@ class RAYNDERCAST_EXPORT Game {
         const float initial_rotation
     );
     void configure_renderer(const RendererConfig& config) const;
-    void configure_player(const PlayerConfig& config) const;
+    void validate_player_config(const PlayerConfig& config) const;
 
 public:
     void gameloop();

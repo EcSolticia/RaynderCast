@@ -132,15 +132,14 @@ void Player::move_and_slide() {
 }
 
 Player::Player(
-    const float pos_x, 
-    const float pos_y, 
-    const float rotation,
-    const Map* const map_ptr
+    const Map* const map_ptr,
+    const PlayerConfig config
 ) : 
-    pos_x{pos_x},
-    pos_y{pos_y},
-    rotation{rotation},
-    map_ptr{map_ptr}
+    pos_x{config.initial_x},
+    pos_y{config.initial_y},
+    rotation{config.initial_rotation},
+    map_ptr{map_ptr},
+    config{config}
 {}
 
 }

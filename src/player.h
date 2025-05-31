@@ -37,7 +37,7 @@ class Player {
     float global_basis_dy = 0;
 
 public:
-    PlayerConfig config;
+    const PlayerConfig config;
 
     HitData hit_data;
 
@@ -56,10 +56,8 @@ public:
     void move_and_slide();
 
     Player(
-        const float pos_x, 
-        const float pos_y, 
-        const float rotation,
-        const Map* const map_ptr
+        const Map* const map_ptr,
+        const PlayerConfig config
     );
 };
 
