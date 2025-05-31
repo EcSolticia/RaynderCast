@@ -13,9 +13,9 @@
 namespace Raynder {
 
 class Map {
-    uint8_t row_count;
-    uint8_t column_count;
-    uint8_t side_length;
+    const uint8_t row_count;
+    const uint8_t column_count;
+    const uint8_t side_length;
 
     std::vector<int> data;
 
