@@ -136,10 +136,11 @@ Player::Player(
     const float pos_y, 
     const float rotation,
     const Map* const map_ptr
-) : map_ptr{map_ptr} {
-    this->pos_x = pos_x;
-    this->pos_y = pos_y;
-    this->rotation = rotation;
-}
+) : 
+    pos_x{pos_x},
+    pos_y{pos_y},
+    rotation{rotation},
+    map_ptr{map_ptr}
+{}
 
 }

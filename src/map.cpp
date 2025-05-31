@@ -25,14 +25,10 @@ Map::Map(
     const uint8_t row_count,
     const uint8_t side_length,
     const std::string& string_as_data
-) {
-
-    this->row_count = row_count;
-    this->column_count = column_count;
+) : row_count{row_count}, column_count{column_count}, side_length{side_length}
+{
     this->data.resize(row_count * column_count);
         
-    this->side_length = side_length;
-
     std::string row_regex_str = "(^\\s*(\\d+\\s+){" + std::to_string(column_count - 1) + "}\\d+\\s*$)";
     std::regex row_regex(row_regex_str);
 

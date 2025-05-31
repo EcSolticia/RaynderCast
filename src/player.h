@@ -21,9 +21,9 @@ class Player {
     KeyStatus key_just_pressed;
     KeyStatus key_just_released;
 
-    float pos_x = -1;
-    float pos_y = -1;
-    float rotation = 0;
+    float pos_x;
+    float pos_y;
+    float rotation;
 
     float vel_x = 0;
     float vel_y = 0;
