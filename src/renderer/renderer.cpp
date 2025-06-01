@@ -95,12 +95,12 @@ void Renderer::draw_quadri_3d_from_angles(
     const float t1 = (angle1 + this->config.field_of_view/2)/this->config.field_of_view;
     const uint16_t x1 = width * t1 + offset_x;
 
-    const uint16_t line_height1 = std::clamp(this->config.line_height_scalar * (float)height/distance1, (float)0.0, (float)height);
+    const uint16_t line_height1 = std::clamp((float)30.0 * (float)height/distance1, (float)0.0, (float)height);
 
     const float t2 = (angle2 + this->config.field_of_view/2)/this->config.field_of_view;
     const uint16_t x2 = width * t2 + offset_x;
 
-    const uint16_t line_height2 = std::clamp(this->config.line_height_scalar * (float)height/distance2, (float)0.0, (float)height);
+    const uint16_t line_height2 = std::clamp((float)30.0 * (float)height/distance2, (float)0.0, (float)height);
 
     const uint16_t midpoint = height/2.0 + offset_y;
 

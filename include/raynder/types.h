@@ -29,11 +29,6 @@ namespace Raynder {
         bool vertical;
     };
 
-    struct RayData {
-        HitData hit_data;
-        float relative_theta;
-    };
-
     struct RAYNDERCAST_EXPORT Color {
         uint8_t r = 0;
         uint8_t g = 0;
@@ -54,8 +49,6 @@ namespace Raynder {
         uint16_t eucliview_offset_y{8};
 
         float field_of_view{M_PI * 1/2};
-
-        float line_height_scalar{30.0};
 
         bool vsync_enabled{false};
     };
