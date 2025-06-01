@@ -42,8 +42,8 @@ namespace Raynder {
         Color vertical_wall_color{100, 90, 90};
         Color horizontal_wall_color{100, 100, 100};
 
-        float ray_count{1024};
-        float eucliview_ray_count{128};
+        uint16_t ray_count{1024};
+        uint16_t eucliview_ray_count{128};
 
         uint16_t eucliview_offset_x{8};
         uint16_t eucliview_offset_y{8};
