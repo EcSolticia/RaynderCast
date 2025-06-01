@@ -56,6 +56,8 @@ namespace Raynder {
         float field_of_view{M_PI * 1/2};
 
         float line_height_scalar{30.0};
+
+        bool vsync_enabled{false};
     };
 
     typedef std::function<float(float, float)> RendererDistanceFunc;
@@ -79,7 +81,6 @@ namespace Raynder {
     };
 
     struct RAYNDERCAST_EXPORT GameConfig {
-        bool vsync_enabled{false};
         uint16_t window_width{640};
         uint16_t window_height{480};
         uint16_t eucliview_height{16 * 4};

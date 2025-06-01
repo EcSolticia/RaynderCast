@@ -7,7 +7,6 @@
 int main() {
 
     Raynder::GameConfig gconfig;
-    gconfig.vsync_enabled = false;
 
     std::string map_data = "1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1\n"
                            "1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1\n"
@@ -27,6 +26,8 @@ int main() {
                            "1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1\n";
 
     Raynder::RendererConfig rconfig;
+
+    rconfig.vsync_enabled = false;
 
     Raynder::PlayerConfig pconfig;
     pconfig.initial_x = 72;

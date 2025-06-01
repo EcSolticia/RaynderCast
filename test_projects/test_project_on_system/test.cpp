@@ -7,16 +7,6 @@
 int main() {
 
     Raynder::GameConfig gconfig;
-    gconfig.vsync_enabled = false;
-
-    Raynder::Game game(
-        1280, 
-        720,
-        16 * 12,
-        16 * 16, 
-        "Eucliview!", 
-        gconfig
-    );
 
     std::string map_data = "1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1\n"
                            "1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1\n"
@@ -35,33 +25,42 @@ int main() {
                            "1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1\n"
                            "1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1\n";
 
+    Raynder::RendererConfig rconfig;
+
+    rconfig.vsync_enabled = false;
+
+    Raynder::PlayerConfig pconfig;
+    pconfig.initial_x = 72;
+    pconfig.initial_y = 72;
+
+    pconfig.translational_speed = 125.0;
+    pconfig.collision_radius = 20.0;
+    rconfig.floor_color = Raynder::Color{78, 102, 136};
+    rconfig.ceiling_color = Raynder::Color{51, 45, 86};
+
+    rconfig.horizontal_wall_color = Raynder::Color{227, 238, 178};
+    rconfig.vertical_wall_color = Raynder::Color{255, 255, 255};
+
+    rconfig.ray_count = 1024;
+
+    rconfig.eucliview_offset_x = 8;
+    rconfig.eucliview_offset_y = 8;
+
+    Raynder::MapConfig mconfig{16, 16, 32, map_data};
+
     try {
-        game.create_map(16, 16, 32, map_data);
-        game.create_player(72, 72, 0);
 
-        Raynder::RendererConfig rconfig;
-        Raynder::PlayerConfig pconfig;
-
-        pconfig.translational_speed = 125.0;
-        pconfig.collision_radius = 20.0;
-        rconfig.floor_color = Raynder::Color{78, 102, 136};
-        rconfig.ceiling_color = Raynder::Color{51, 45, 86};
-
-        rconfig.horizontal_wall_color = Raynder::Color{227, 238, 178};
-        rconfig.vertical_wall_color = Raynder::Color{255, 255, 255};
-
-        rconfig.ray_count = 1024;
-
-        rconfig.eucliview_offset_x = 8;
-        rconfig.eucliview_offset_y = 8;
+        Raynder::Game game(
+            gconfig,
+            rconfig,
+            pconfig,
+            mconfig
+        );
 
         game.set_renderer_distance_func([](float x, float y) -> float {
             const float length = sqrt(pow(x, 2) + pow(y, 2));
             return length;
         });
-
-        game.configure_player(pconfig);
-        game.configure_renderer(rconfig);
 
         game.gameloop();
     } catch (const std::exception& e) {

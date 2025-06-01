@@ -295,7 +295,6 @@ Renderer::Renderer(
     const uint16_t eucliview_height,
     const uint16_t eucliview_width,
     std::string window_title,
-    const bool enable_vsync,
     const Map* const map_ptr,
     const Player* const player_ptr,
     const RendererConfig config
@@ -322,7 +321,7 @@ Renderer::Renderer(
     this->context = SDL_CreateRenderer(
         this->window, 
         -1, 
-        SDL_RENDERER_ACCELERATED | (int(enable_vsync) * SDL_RENDERER_PRESENTVSYNC)
+        SDL_RENDERER_ACCELERATED | (int(config.vsync_enabled) * SDL_RENDERER_PRESENTVSYNC)
     );
     if (this->context == NULL) {
         throw std::runtime_error(SDL_GetError());

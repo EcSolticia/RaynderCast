@@ -120,7 +120,6 @@ Game::Game(
         config.eucliview_height,
         config.eucliview_width, 
         config.window_title,
-        config.vsync_enabled,
         this->map_ptr.get(),
         this->player_ptr.get(),
         renderer_config

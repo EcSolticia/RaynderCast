@@ -144,7 +144,6 @@ public:
         const uint16_t eucliview_height,
         const uint16_t eucliview_width,
         const std::string window_title,
-        const bool enable_vsync,
         const Map* const map_ptr,
         const Player* const player_ptr,
         const RendererConfig config
