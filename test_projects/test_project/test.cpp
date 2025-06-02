@@ -1,5 +1,6 @@
 #include <raynder/raynder.h>
 #include <raynder/types.h>
+#include <raynder/math_helpers.h>
 #include <iostream>
 #include <string>
 #include <stdexcept>

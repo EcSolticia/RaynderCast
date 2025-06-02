@@ -3,6 +3,8 @@
 #include <map.h>
 #include <raycaster.h>
 
+#include <raynder/math_helpers.h>
+
 #include <stdexcept>
 
 #include <string>
@@ -95,12 +97,12 @@ void Renderer::draw_quadri_3d_from_angles(
     const float t1 = (angle1 + this->config.field_of_view/2)/this->config.field_of_view;
     const uint16_t x1 = width * t1 + offset_x;
 
-    const uint16_t line_height1 = std::clamp((float)30.0 * (float)height/distance1, (float)0.0, (float)height);
+    const uint16_t line_height1 = std::clamp((float)30.0 * Math::pos_divide(height, distance1), (float)0.0, (float)height);
 
     const float t2 = (angle2 + this->config.field_of_view/2)/this->config.field_of_view;
     const uint16_t x2 = width * t2 + offset_x;
 
-    const uint16_t line_height2 = std::clamp((float)30.0 * (float)height/distance2, (float)0.0, (float)height);
+    const uint16_t line_height2 = std::clamp((float)30.0 * Math::pos_divide(height, distance2), (float)0.0, (float)height);
 
     const uint16_t midpoint = height/2.0 + offset_y;
 
@@ -219,7 +221,6 @@ void Renderer::draw_3d_wall(
         first_theta_iteration = false;
     }
 
-    //this->hud_draw_minimap_base();
 }
 
 const float Renderer::get_renderer_distance(
