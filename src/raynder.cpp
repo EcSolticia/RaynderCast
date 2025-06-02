@@ -99,7 +99,7 @@ void Game::validate_player_config(const PlayerConfig& config) const {
         throw std::runtime_error("Cannot create Player outside the map.");
     }
 
-    if (config.collision_radius < 0) {
+    if (config.collision_radius <= 0) {
         throw std::runtime_error("Cannot create Player with non-positive collision radius.");
     }
 }
