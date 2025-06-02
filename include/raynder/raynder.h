@@ -26,13 +26,8 @@ class RAYNDERCAST_EXPORT Game {
 
     void compute_delta();
 
-    void create_map(
-        const uint8_t col_count, 
-        const uint8_t row_count,
-        const uint8_t side_length,
-        const std::string& map_grid_data
-    );
-    
+    void validate_map_config(const MapConfig& config) const;
+    void validate_renderer_config(const RendererConfig& config) const;
     void validate_player_config(const PlayerConfig& config) const;
 
 public:

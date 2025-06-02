@@ -66,25 +66,42 @@ void Game::set_renderer_distance_func(const RendererDistanceFunc& func) const {
     this->renderer_ptr->distance_func = func;
 }
 
-void Game::validate_player_config(const PlayerConfig& config) const {
-    if (config.initial_x < 0 || config.initial_y < 0) {
-        throw std::runtime_error("Cannot create Player object prior to the Map object.");
+void Game::validate_map_config(const MapConfig& map_config) const {
+    if (!map_config.row_count || !map_config.col_count) {
+        throw std::runtime_error("Grid dimensions cannot be zero.");
+    }
+ 
+    if (!map_config.side_length) {
+        throw std::runtime_error("Grid square side-length cannot be zero.");
+    }
+
+    if (map_config.map_grid_data.empty()) {
+        throw std::runtime_error("Grid data cannot be empty.");
     }
 }
 
-void Game::create_map(
-    const uint8_t col_count, 
-    const uint8_t row_count,
-    const uint8_t side_length, 
-    const std::string& map_grid_data
-) {       
-    if (!row_count || !col_count) {
-        throw std::runtime_error("Grid dimensions cannot be zero.");
+void Game::validate_renderer_config(const RendererConfig& config) const {
+    if (!config.ray_count) {
+        throw std::runtime_error("Number of rays must be greater than zero.");
     }
-    
-    this->map_ptr = std::make_unique<Map>(
-        Map(col_count, row_count, side_length, map_grid_data)
-    );
+
+    if (!config.eucliview_ray_count) {
+        throw std::runtime_error("Number of eucliview rays must be greater than zero.");
+    }
+
+    if (config.field_of_view <= 0) {
+        throw std::runtime_error("Field of view must be greater than zero.");
+    }
+}
+
+void Game::validate_player_config(const PlayerConfig& config) const {
+    if (config.initial_x < 0 || config.initial_y < 0) {
+        throw std::runtime_error("Cannot create Player outside the map.");
+    }
+
+    if (config.collision_radius < 0) {
+        throw std::runtime_error("Cannot create Player with non-positive collision radius.");
+    }
 }
 
 Game::Game(
@@ -93,22 +110,30 @@ Game::Game(
     const PlayerConfig& player_config,
     const MapConfig& map_config
 ) {
+
     if (!config.window_width || !config.window_height) {
         throw std::runtime_error("Window resolution cannot be 0x0.");
     }
+
+    if (!config.eucliview_width || !config.eucliview_height) {
+        throw std::runtime_error("Eucliview resolution cannot be 0x0.");
+    }
+
+    this->validate_map_config(map_config);
+    this->validate_player_config(player_config);
+    this->validate_renderer_config(renderer_config);
 
     if (SDL_Init(SDL_INIT_EVERYTHING)) {
         throw std::runtime_error(SDL_GetError());
     }
 
-    this->create_map(
+    this->map_ptr = std::make_unique<Map>(
         map_config.col_count,
         map_config.row_count,
         map_config.side_length,
         map_config.map_grid_data
     );
     
-    this->validate_player_config(player_config);
     this->player_ptr = std::make_unique<Player>(
         this->map_ptr.get(),
         player_config
