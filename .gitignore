@@ -1,6 +1,4 @@
 .vscode
 
 build
-build-release
-
-install_log.txt
+release

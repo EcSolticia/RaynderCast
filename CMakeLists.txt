@@ -98,21 +98,21 @@ write_basic_package_version_file(
 configure_package_config_file(
     "${CMAKE_CURRENT_LIST_DIR}/cmake/RaynderCastConfig.cmake.in"
     "${CMAKE_CURRENT_BINARY_DIR}/RaynderCastConfig.cmake"
-    INSTALL_DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/cmake/raynder
+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
 )
 
 install(
     FILES
         "${CMAKE_CURRENT_BINARY_DIR}/RaynderCastConfig.cmake"
         "${CMAKE_CURRENT_BINARY_DIR}/RaynderCastConfigVersion.cmake"
-    DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/cmake/raynder
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
 )
 
 install(
     EXPORT RaynderCastTargets
     FILE RaynderCastTargets.cmake
     NAMESPACE RaynderCast::
-    DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/cmake/raynder
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
 )
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
