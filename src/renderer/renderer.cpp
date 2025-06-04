@@ -3,6 +3,7 @@
 #include <map.h>
 #include <raycaster.h>
 
+#include <raynder/types.h>
 #include <raynder/math_helpers.h>
 
 #include <stdexcept>
@@ -50,6 +51,16 @@ void Renderer::draw_quad(
     }
 }
 
+const Color Renderer::get_line_color(const float avg_line_height) const {
+    const float t = avg_line_height/this->window_height;
+
+    const SignedColor scol = Math::multiply_color(SignedColor(255, 255, 255), t);
+
+    const Color col = Math::get_usable_color(scol);
+
+    return col;
+}
+
 void Renderer::draw_quadri_3d(
     const uint16_t x1,
     const uint16_t line_height1,
@@ -71,7 +82,8 @@ void Renderer::draw_quadri_3d(
         top_point2 = 0;
     }
 
-    const Color col = hit_vertical ? (this->config.vertical_wall_color) : (this->config.horizontal_wall_color);
+    //const Color col = hit_vertical ? (this->config.vertical_wall_color) : (this->config.horizontal_wall_color);
+    const Color col = this->get_line_color((line_height1 + line_height2)/2.0);
 
     this->draw_quad(
         (float)x1, top_point1,

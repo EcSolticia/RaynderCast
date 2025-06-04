@@ -76,6 +76,8 @@ class Renderer {
         EUCLI
     };
 
+    const Color get_line_color(const float avg_line_height) const;
+
     void draw_quadri_3d(
         const uint16_t x1,
         const uint16_t line_height1,
