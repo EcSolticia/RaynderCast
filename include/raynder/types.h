@@ -56,7 +56,11 @@ namespace Raynder {
         Color floor_color;
         Color ceiling_color{37, 44, 44};
         
+        Color vertical_wall_color_min{100, 90, 90};
+        Color vertical_wall_color_max{50, 40, 40};
         Color vertical_wall_color{100, 90, 90};
+        Color horizontal_wall_color_min{100, 100, 100};
+        Color horizontal_wall_color_max{50, 50, 50};
         Color horizontal_wall_color{100, 100, 100};
 
         uint16_t ray_count{1024};

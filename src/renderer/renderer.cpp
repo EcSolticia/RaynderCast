@@ -51,14 +51,27 @@ void Renderer::draw_quad(
     }
 }
 
-const Color Renderer::get_line_color(const float avg_line_height) const {
-    const float t = avg_line_height/this->window_height;
+const Color Renderer::get_line_color(
+    const float avg_line_height,
+    const bool hit_vertical
+) const {
+    const float t = avg_line_height/(float)this->window_height;
 
-    const SignedColor scol = Math::multiply_color(SignedColor(255, 255, 255), t);
+    const SignedColor max = hit_vertical ? 
+        this->config.vertical_wall_color_max : 
+        this->config.horizontal_wall_color_max;
+    const SignedColor min = hit_vertical ?
+        this->config.vertical_wall_color_min :
+        this->config.horizontal_wall_color_min;
 
-    const Color col = Math::get_usable_color(scol);
+    const SignedColor diff = Math::subtract_color(max, min);
 
-    return col;
+    const SignedColor scol = Math::add_color(
+        min, 
+        Math::multiply_color(diff, t)
+    );
+
+    return Math::get_usable_color(scol);
 }
 
 void Renderer::draw_quadri_3d(
@@ -83,7 +96,7 @@ void Renderer::draw_quadri_3d(
     }
 
     //const Color col = hit_vertical ? (this->config.vertical_wall_color) : (this->config.horizontal_wall_color);
-    const Color col = this->get_line_color((line_height1 + line_height2)/2.0);
+    const Color col = this->get_line_color((line_height1 + line_height2)/2.0, hit_vertical);
 
     this->draw_quad(
         (float)x1, top_point1,

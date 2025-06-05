@@ -39,8 +39,10 @@ int main() {
     rconfig.floor_color = Raynder::Color{78, 102, 136};
     rconfig.ceiling_color = Raynder::Color{51, 45, 86};
 
-    rconfig.horizontal_wall_color = Raynder::Color{227, 238, 178};
-    rconfig.vertical_wall_color = Raynder::Color{255, 255, 255};
+    rconfig.horizontal_wall_color_max = Raynder::Color{255, 0, 0};
+    rconfig.horizontal_wall_color_min = Raynder::Color{133, 255, 255};
+    rconfig.vertical_wall_color_max = Raynder::Color{0, 0, 255};
+    rconfig.vertical_wall_color_min = Raynder::Color{255, 255, 255};
 
     rconfig.ray_count = 1024;
 
@@ -59,7 +61,14 @@ int main() {
         );
 
         game.set_renderer_distance_func([](float x, float y) -> float {
-            const float length = sqrt(pow(x, 2) + pow(y, 2));
+            
+            const float n = 4.0;
+
+            const float length = pow(
+                pow(x, n) + pow(y, n),
+                1.0/n
+            );
+
             return length;
         });
 
