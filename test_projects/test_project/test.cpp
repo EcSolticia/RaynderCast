@@ -40,9 +40,9 @@ int main() {
     rconfig.ceiling_color = Raynder::Color{51, 45, 86};
 
     rconfig.horizontal_wall_color_max = Raynder::Color{255, 0, 0};
-    rconfig.horizontal_wall_color_min = Raynder::Color{133, 255, 255};
-    rconfig.vertical_wall_color_max = Raynder::Color{0, 0, 255};
-    rconfig.vertical_wall_color_min = Raynder::Color{255, 255, 255};
+    rconfig.horizontal_wall_color_min = Raynder::Color{0, 0, 255};
+    rconfig.vertical_wall_color_max = Raynder::Color{255, 0, 0};
+    rconfig.vertical_wall_color_min = Raynder::Color{0, 0, 255};
 
     rconfig.ray_count = 1024;
 

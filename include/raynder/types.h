@@ -47,8 +47,8 @@ namespace Raynder {
         SignedColor(const int16_t r, const int16_t g, const int16_t b) : r{r}, g{g}, b{b} {}  
         SignedColor(const Color color) : 
             r{(int16_t)color.r}, 
-            b{(int16_t)color.b}, 
-            g{(int16_t)color.g} 
+            g{(int16_t)color.g}, 
+            b{(int16_t)color.b} 
         {}
     };
 
