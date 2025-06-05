@@ -55,7 +55,8 @@ const Color Renderer::get_line_color(
     const float avg_line_height,
     const bool hit_vertical
 ) const {
-    const float t = avg_line_height/(float)this->window_height;
+    const float h = this->viewport_indicator == Viewport::MAIN ? this->window_height : this->eucliview_height;
+    const float t = avg_line_height/h;
 
     const SignedColor max = hit_vertical ? 
         this->config.vertical_wall_color_max : 
@@ -200,6 +201,7 @@ void Renderer::draw_3d_wall(
     const uint16_t origin_y,
     const float theta_increment
 ) {
+    this->viewport_indicator = viewport;
 
     float last_theta;
     HitData last_hit_data;

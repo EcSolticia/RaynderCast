@@ -76,6 +76,8 @@ class Renderer {
         EUCLI
     };
 
+    Viewport viewport_indicator;
+
     const Color get_line_color(
         const float avg_line_height,
         const bool hit_vertical
