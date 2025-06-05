@@ -30,16 +30,37 @@ namespace Raynder {
     };
 
     struct RAYNDERCAST_EXPORT Color {
-        uint8_t r = 0;
-        uint8_t g = 0;
-        uint8_t b = 0;
+        uint8_t r;
+        uint8_t g;
+        uint8_t b;
+
+        Color() : r{0}, g{0}, b{0} {};
+        Color(const uint8_t r, const uint8_t g, const uint8_t b) : r{r}, g{g}, b{b} {};
+    };
+
+    struct SignedColor {
+        int16_t r = 0;
+        int16_t g = 0;
+        int16_t b = 0;
+
+        SignedColor();
+        SignedColor(const int16_t r, const int16_t g, const int16_t b) : r{r}, g{g}, b{b} {}  
+        SignedColor(const Color color) : 
+            r{(int16_t)color.r}, 
+            g{(int16_t)color.g}, 
+            b{(int16_t)color.b} 
+        {}
     };
 
     struct RAYNDERCAST_EXPORT RendererConfig {
         Color floor_color;
         Color ceiling_color{37, 44, 44};
         
+        Color vertical_wall_color_min{100, 90, 90};
+        Color vertical_wall_color_max{50, 40, 40};
         Color vertical_wall_color{100, 90, 90};
+        Color horizontal_wall_color_min{100, 100, 100};
+        Color horizontal_wall_color_max{50, 50, 50};
         Color horizontal_wall_color{100, 100, 100};
 
         uint16_t ray_count{1024};

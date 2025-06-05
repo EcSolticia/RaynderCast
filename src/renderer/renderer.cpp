@@ -3,6 +3,7 @@
 #include <map.h>
 #include <raycaster.h>
 
+#include <raynder/types.h>
 #include <raynder/math_helpers.h>
 
 #include <stdexcept>
@@ -50,6 +51,30 @@ void Renderer::draw_quad(
     }
 }
 
+const Color Renderer::get_line_color(
+    const float avg_line_height,
+    const bool hit_vertical
+) const {
+    const float h = this->viewport_indicator == Viewport::MAIN ? this->window_height : this->eucliview_height;
+    const float t = avg_line_height/h;
+
+    const SignedColor max = hit_vertical ? 
+        this->config.vertical_wall_color_max : 
+        this->config.horizontal_wall_color_max;
+    const SignedColor min = hit_vertical ?
+        this->config.vertical_wall_color_min :
+        this->config.horizontal_wall_color_min;
+
+    const SignedColor diff = Math::subtract_color(max, min);
+
+    const SignedColor scol = Math::add_color(
+        min, 
+        Math::multiply_color(diff, t)
+    );
+
+    return Math::get_usable_color(scol);
+}
+
 void Renderer::draw_quadri_3d(
     const uint16_t x1,
     const uint16_t line_height1,
@@ -71,7 +96,8 @@ void Renderer::draw_quadri_3d(
         top_point2 = 0;
     }
 
-    const Color col = hit_vertical ? (this->config.vertical_wall_color) : (this->config.horizontal_wall_color);
+    //const Color col = hit_vertical ? (this->config.vertical_wall_color) : (this->config.horizontal_wall_color);
+    const Color col = this->get_line_color((line_height1 + line_height2)/2.0, hit_vertical);
 
     this->draw_quad(
         (float)x1, top_point1,
@@ -175,6 +201,7 @@ void Renderer::draw_3d_wall(
     const uint16_t origin_y,
     const float theta_increment
 ) {
+    this->viewport_indicator = viewport;
 
     float last_theta;
     HitData last_hit_data;
