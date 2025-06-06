@@ -29,7 +29,7 @@ void Game::gameloop() {
 
         this->compute_delta();
         #ifdef DEBUG_BUILD
-            std::cout << "[Game] delta: " << delta << "\n";
+            //std::cout << "[Game] delta: " << delta << "\n";
         #endif
 
         this->player_ptr->apply_velocity(this->delta);
@@ -51,6 +51,33 @@ void Game::gameloop() {
         }
 
         this->renderer_ptr->render_loop();
+
+        #ifdef DEBUG_BUILD
+        if (
+            this->player_ptr->get_movement_direction(Player::Axis::HORIZONTAL)
+            == Player::MovementDirection::UP
+        ) {
+            std::cout << "[Player] Moving UP\n";
+        }
+        if (
+            this->player_ptr->get_movement_direction(Player::Axis::HORIZONTAL)
+            == Player::MovementDirection::DOWN
+        ) {
+            std::cout << "[Player] Moving DOWN\n";
+        }
+        if (
+            this->player_ptr->get_movement_direction(Player::Axis::VERTICAL)
+            == Player::MovementDirection::LEFT
+        ) {
+            std::cout << "[Player] Moving LEFT\n";
+        }
+        if (
+            this->player_ptr->get_movement_direction(Player::Axis::VERTICAL)
+            == Player::MovementDirection::RIGHT
+        ) {
+            std::cout << "[Player] Moving RIGHT\n";
+        }
+        #endif
 
         this->player_ptr->hit_data = Raycaster::cast_ray(
             this->player_ptr.get(),
