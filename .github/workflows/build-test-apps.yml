@@ -5,6 +5,7 @@ on:
     workflows: ["CMake on multiple platforms"]
     types:
       - completed
+  pull_request:
     
 jobs:
   build:
