@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.17)
 
-project(RayTest CXX)
+project(RaynderCast_test CXX)
 
 find_package(RaynderCast CONFIG)
 
