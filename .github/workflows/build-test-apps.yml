@@ -1,0 +1,58 @@
+name: Build Test Apps
+
+on:
+  workflow_run:
+    workflows: ["CMake on multiple platforms"]
+    types:
+      - completed
+    
+jobs:
+  build:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        build_type: [Release, Debug]
+        c_compiler: [gcc, clang, cl]
+        include:
+          - os: windows-latest
+            c_compiler: cl
+            cpp_compiler: cl
+          - os: ubuntu-latest
+            c_compiler: gcc
+            cpp_compiler: g++
+          - os: ubuntu-latest
+            c_compiler: clang
+            cpp_compiler: clang++
+        exclude:
+          - os: windows-latest
+            c_compiler: gcc
+          - os: windows-latest
+            c_compiler: clang
+          - os: ubuntu-latest
+            c_compiler: cl
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set reusable strings
+      id: strings
+      shell: bash
+      run: |
+        echo "build-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
+        echo "apps-dir=${{ github.workspace }}/apps" >> "$GITHUB_OUTPUT"
+
+    - uses: actions/download-artifact@v4
+      with:
+        name: lib-${{ matrix.os }}-${{ matrix.build_type }}-${{ matrix.cpp_compiler }}
+        path: ${{ steps.strings.outputs.build-dir }}
+
+    - name: (Test) Build debug_no_install
+      run: |
+        cmake -S ${{ steps.strings.outputs.apps-dir }}/debug_no_install -B ${{ steps.strings.outputs.apps-dir }}/debug_no_install/build
+        cmake --build ${{ steps.strings.outputs.apps-dir }}/debug_no_install/build
