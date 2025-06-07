@@ -69,28 +69,6 @@ enum MovementDirection Player::get_movement_direction(enum Axis axis) const {
     return dir;
 }
 
-const float Player::get_basis_d_relative_rotation() const {
-    float result;
-    if (basis_dy > 0 && basis_dx == 0) { //forward
-        result = 0;
-    } else if (basis_dy < 0 && basis_dx == 0) { //backward
-        result = M_PI;
-    } else if (basis_dy == 0 && basis_dx > 0) { //left
-        result = -M_PI/2.0;
-    } else if (basis_dy == 0 && basis_dx < 0) { //right
-        result = M_PI/2.0;
-    } else if (basis_dx > 0 && basis_dy > 0) {
-        result = -M_PI/4.0;
-    } else if (basis_dx < 0 && basis_dy > 0) {
-        result = M_PI/4.0;
-    } else if (basis_dx < 0 && basis_dy < 0) {
-        result = 2.0/3.0 * M_PI;
-    } else if (basis_dx > 0 && basis_dy < 0) {
-        result = -2.0/3.0 * M_PI;
-    }
-    return result;
-}
-
 void Player::input_to_dir() {
     this->basis_dx = 0;
     this->basis_dy = 0;

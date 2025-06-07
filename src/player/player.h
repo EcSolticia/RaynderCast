@@ -59,11 +59,9 @@ public:
 
     void reset_collision_dir();
     CollisionDirection collision_direction;
-    
-    enum MovementDirection get_movement_direction(enum Axis axis) const;
 
-    const float get_basis_d_relative_rotation() const;
     void input_to_dir();
+    enum MovementDirection get_movement_direction(enum Axis axis) const;
 
     void detect_collision();
     void move_and_slide();
