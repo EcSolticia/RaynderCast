@@ -54,26 +54,26 @@ void Game::gameloop() {
 
         #ifdef DEBUG_BUILD
         if (
-            this->player_ptr->get_movement_direction(Player::Axis::HORIZONTAL)
-            == Player::MovementDirection::UP
+            this->player_ptr->get_movement_direction(Axis::HORIZONTAL)
+            == MovementDirection::UP
         ) {
             std::cout << "[Player] Moving UP\n";
         }
         if (
-            this->player_ptr->get_movement_direction(Player::Axis::HORIZONTAL)
-            == Player::MovementDirection::DOWN
+            this->player_ptr->get_movement_direction(Axis::HORIZONTAL)
+            == MovementDirection::DOWN
         ) {
             std::cout << "[Player] Moving DOWN\n";
         }
         if (
-            this->player_ptr->get_movement_direction(Player::Axis::VERTICAL)
-            == Player::MovementDirection::LEFT
+            this->player_ptr->get_movement_direction(Axis::VERTICAL)
+            == MovementDirection::LEFT
         ) {
             std::cout << "[Player] Moving LEFT\n";
         }
         if (
-            this->player_ptr->get_movement_direction(Player::Axis::VERTICAL)
-            == Player::MovementDirection::RIGHT
+            this->player_ptr->get_movement_direction(Axis::VERTICAL)
+            == MovementDirection::RIGHT
         ) {
             std::cout << "[Player] Moving RIGHT\n";
         }

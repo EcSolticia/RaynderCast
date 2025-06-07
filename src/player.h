@@ -50,18 +50,6 @@ public:
     float get_pos_y() const;
     float get_rotation() const;
 
-    enum Axis {
-        HORIZONTAL,
-        VERTICAL
-    };
-
-    enum MovementDirection {
-        UP,
-        DOWN,
-        LEFT,
-        RIGHT
-    };
-
     enum MovementDirection get_movement_direction(enum Axis axis) const;
 
     const float get_basis_d_relative_rotation() const;

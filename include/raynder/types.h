@@ -13,6 +13,18 @@
 
 namespace Raynder {
 
+    enum Axis {
+        HORIZONTAL,
+        VERTICAL
+    };
+
+    enum MovementDirection {
+        UP,
+        DOWN,
+        LEFT,
+        RIGHT
+    };
+
     struct RAYNDERCAST_EXPORT IdxPair {
         uint8_t x;
         uint8_t y;

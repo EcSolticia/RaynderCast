@@ -50,7 +50,7 @@ void Player::apply_angular_velocity(const float delta) {
     this->rotation += angular_vel * delta;
 }
 
-enum Player::MovementDirection Player::get_movement_direction(enum Axis axis) const {
+enum MovementDirection Player::get_movement_direction(enum Axis axis) const {
     enum MovementDirection dir;
     switch (axis) {
         case Axis::HORIZONTAL:
