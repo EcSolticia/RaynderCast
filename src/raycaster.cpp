@@ -5,6 +5,38 @@
 
 namespace Raynder {
 
+const CartesianPair Raycaster::get_pos_in_tile(
+    const CartesianPair pos,
+    const uint8_t side_length
+) {
+
+    // by constructor design, pos can't be negative and no checks are done in this regard.
+    return CartesianPair {
+        pos.x - ((int)pos.x/side_length) * side_length,
+        pos.y - ((int)pos.y/side_length) * side_length
+    };
+
+}
+
+const float Raycaster::cast_ray_along_axis(
+    const Player* const player_ptr,
+    const Map* const map_tr,
+    enum MovementDirection dir) {
+
+    switch (dir) {
+        case MovementDirection::UP:
+            
+            break;
+        case MovementDirection::DOWN:
+            break;
+        case MovementDirection::LEFT:
+            break;
+        case MovementDirection::RIGHT:
+            break;
+    }
+
+}
+
 HitData Raycaster::cast_ray(
     const Player* const player_ptr, 
     const Map* const map_ptr,
@@ -19,10 +51,10 @@ HitData Raycaster::cast_ray(
 
     const uint8_t side_length = map_ptr->get_side_length();
 
-    // by constructor design, pos can't be negative and no checks are done in this regard.
-    CartesianPair pos_in_tile;
-    pos_in_tile.x = pos.x - ((int)pos.x/side_length) * side_length;
-    pos_in_tile.y = pos.y - ((int)pos.y/side_length) * side_length;
+    CartesianPair pos_in_tile = Raycaster::get_pos_in_tile(
+        pos,
+        side_length
+    );
 
     const float cos_angle = cos(angle);
     const float sin_angle = sin(angle);
