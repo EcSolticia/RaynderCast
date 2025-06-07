@@ -8,11 +8,48 @@
 
 namespace Raynder {
 
+const float Player::get_basis_d_relative_rotation() const {
+    float result;
+    if (basis_dy > 0 && basis_dx == 0) { //forward
+        result = 0;
+    } else if (basis_dy < 0 && basis_dx == 0) { //backward
+        result = M_PI;
+    } else if (basis_dy == 0 && basis_dx > 0) { //left
+        result = -M_PI/2.0;
+    } else if (basis_dy == 0 && basis_dx < 0) { //right
+        result = M_PI/2.0;
+    } else if (basis_dx > 0 && basis_dy > 0) {
+        result = -M_PI/4.0;
+    } else if (basis_dx < 0 && basis_dy > 0) {
+        result = M_PI/4.0;
+    } else if (basis_dx < 0 && basis_dy < 0) {
+        result = 2.0/3.0 * M_PI;
+    } else if (basis_dx > 0 && basis_dy < 0) {
+        result = -2.0/3.0 * M_PI;
+    }
+    return result;
+}
+
+const bool Player::within_collision_distance() const {
+    HitData hit_data = Raycaster::cast_ray(
+        this,
+        this->map_ptr,
+        this->get_basis_d_relative_rotation()
+    );
+
+    return pow(hit_data.coords.x, 2) + pow(hit_data.coords.y, 2) <= pow(this->config.collision_radius, 2);
+}
+
 void Player::detect_collision() {
+    this->reset_collision_dir();
+
+    if (!within_collision_distance()) {
+        return;
+    }
+
     enum MovementDirection hdir = this->get_movement_direction(Axis::HORIZONTAL);
     enum MovementDirection vdir = this->get_movement_direction(Axis::VERTICAL);
     
-    this->reset_collision_dir();
     if (Raycaster::cast_ray_along_axis_in_tile(
         this,
         this->map_ptr,

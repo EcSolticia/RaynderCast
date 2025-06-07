@@ -43,10 +43,12 @@ class Player {
     float global_basis_dx = 0;
     float global_basis_dy = 0;
 
+    const float get_basis_d_relative_rotation() const;
+
+    const bool within_collision_distance() const;
+
 public:
     const PlayerConfig config;
-
-    HitData hit_data;
 
     void update_key_status();
 

@@ -36,7 +36,7 @@ int main() {
     pconfig.initial_rotation = M_PI/4.0;
 
     pconfig.translational_speed = 125.0;
-    pconfig.collision_radius = 20.0;
+    pconfig.collision_radius = 2.0;
     rconfig.floor_color = Raynder::Color{78, 102, 136};
     rconfig.ceiling_color = Raynder::Color{51, 45, 86};
 
