@@ -50,6 +50,10 @@ void Player::apply_angular_velocity(const float delta) {
     this->rotation += angular_vel * delta;
 }
 
+void Player::reset_collision_dir() {
+    this->collision_direction = CollisionDirection();
+}
+
 enum MovementDirection Player::get_movement_direction(enum Axis axis) const {
     enum MovementDirection dir;
     switch (axis) {
@@ -122,7 +126,7 @@ void Player::move_and_slide() {
     const float p_vel_x = this->global_basis_dx * this->config.translational_speed;
     const float p_vel_y = this->global_basis_dy * this->config.translational_speed;
 
-    const float relative_angle = this->get_basis_d_relative_rotation();
+    /*const float relative_angle = this->get_basis_d_relative_rotation();
 
     const float hit_dist_squared = pow(hit_data.coords.x, 2) + pow(hit_data.coords.y, 2);
 
@@ -136,8 +140,20 @@ void Player::move_and_slide() {
     } else {
         this->vel_x = p_vel_x;
         this->vel_y = p_vel_y;
-    }
+    }*/
 
+
+    if (collision_direction.y_colliding && collision_direction.x_colliding) {
+        
+    } else if (collision_direction.y_colliding) {
+        this->vel_x = p_vel_x;
+    } else if (collision_direction.x_colliding) {
+        this->vel_y = p_vel_y;
+    } else {
+        this->vel_x = p_vel_x;
+        this->vel_y = p_vel_y;
+    }
+    
     if (this->key_pressed.q) {
         this->angular_vel = -this->config.rotational_speed;
     }

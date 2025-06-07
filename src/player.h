@@ -16,6 +16,13 @@ struct KeyStatus {
     bool e;
 };
 
+struct CollisionDirection {
+        bool right;
+        bool x_colliding{false};
+        bool up;
+        bool y_colliding{false};
+};
+
 class Player {
     KeyStatus key_pressed;
     KeyStatus key_just_pressed;
@@ -50,6 +57,9 @@ public:
     float get_pos_y() const;
     float get_rotation() const;
 
+    void reset_collision_dir();
+    CollisionDirection collision_direction;
+    
     enum MovementDirection get_movement_direction(enum Axis axis) const;
 
     const float get_basis_d_relative_rotation() const;
