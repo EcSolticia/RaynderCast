@@ -5,6 +5,25 @@
 
 namespace Raynder {
 
+const IdxPair Raycaster::get_idx(
+    const CartesianPair pos,
+    const uint8_t side_length,
+    const CartesianPair diff,
+    const bool vertical
+) {
+    IdxPair idx;
+    
+    if (!vertical) {
+        idx.y = (int)((pos.y + diff.y)/side_length) - int(diff.y < 0);
+        idx.x = (int)((pos.x + diff.x)/side_length);
+    } else {
+        idx.y = (int)((pos.y + diff.y)/side_length);
+        idx.x = (int)((pos.x + diff.x)/side_length) - int(diff.x < 0);
+    }
+
+    return idx;
+}
+
 const CartesianPair Raycaster::get_pos_in_tile(
     const CartesianPair pos,
     const uint8_t side_length
@@ -18,7 +37,7 @@ const CartesianPair Raycaster::get_pos_in_tile(
 
 }
 
-const float Raycaster::cast_ray_along_axis_in_tile(
+HitData Raycaster::cast_ray_along_axis_in_tile(
     const Player* const player_ptr,
     const Map* const map_ptr,
     enum MovementDirection dir) {
@@ -36,25 +55,26 @@ const float Raycaster::cast_ray_along_axis_in_tile(
         Raycaster::get_pos_in_tile(pos, side_length)
     };
 
-    float distance;
-
+    HitData hit_data;
+    
     switch (dir) {
         case MovementDirection::UP:
-            distance = side_length - pos.y;
+            hit_data.coords.y = side_length - pos.y;
             break;
         case MovementDirection::DOWN:
-            distance = pos.y;
+            hit_data.coords.y = pos.y;
             break;
         case MovementDirection::LEFT:
-            distance = pos.x;
+            hit_data.coords.x = pos.x;
             break;
         case MovementDirection::RIGHT:
-            distance = side_length - pos.x;
+            hit_data.coords.x = side_length - pos.x;
             break;
     }
 
+    throw std::runtime_error("Raycaster::cast_ray_along_axis_in_tile not yet fully implemented.");
 
-    return distance;
+    return hit_data; // incomplete
 }
 
 HitData Raycaster::cast_ray(
@@ -101,8 +121,7 @@ HitData Raycaster::cast_ray(
     IdxPair idxv;
 
     while (!hit_wall_v) {
-        idxv.y = (int)((pos.y + Dv.y)/side_length);
-        idxv.x = (int)((pos.x + Dv.x)/side_length) - int(Dv.x < 0);
+        idxv = Raycaster::get_idx(pos, side_length, Dv, true);
 
         if (idxv.y >= map_ptr->get_row_count() || idxv.x >= map_ptr->get_column_count()) {
             hit_wall_v = true;
@@ -135,8 +154,7 @@ HitData Raycaster::cast_ray(
     IdxPair idxh;
 
     while (!hit_wall_h) {
-        idxh.y = (int)((pos.y + Dh.y)/side_length) - int(Dv.y < 0);
-        idxh.x = (int)((pos.x + Dh.x)/side_length);
+        idxh = Raycaster::get_idx(pos, side_length, Dh, false);
 
         if (idxh.y >= map_ptr->get_row_count() || idxh.x >= map_ptr->get_column_count()) {
             hit_wall_h = true;
