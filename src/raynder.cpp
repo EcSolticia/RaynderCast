@@ -64,11 +64,15 @@ void Game::gameloop() {
             if (hdir == MovementDirection::UP) {
                 this->player_ptr->collision_direction.up = true;
                 this->player_ptr->collision_direction.y_colliding = true;
+                #ifdef DEBUG_BUILD
                 std::cout << "[C] Hit UP!\n";
+                #endif
             } else {
                 this->player_ptr->collision_direction.up = false;
                 this->player_ptr->collision_direction.y_colliding = true;
+                #ifdef DEBUG_BUILD
                 std::cout << "[C] Hit DOWN!\n";
+                #endif
             }
         }
         if (Raycaster::cast_ray_along_axis_in_tile(
@@ -79,11 +83,15 @@ void Game::gameloop() {
             if (vdir == MovementDirection::LEFT) {
                 this->player_ptr->collision_direction.right = false;
                 this->player_ptr->collision_direction.x_colliding = true;
+                #ifdef DEBUG_BUILD
                 std::cout << "[C] Hit LEFT!\n";
+                #endif
             } else {
                 this->player_ptr->collision_direction.right = true;
                 this->player_ptr->collision_direction.x_colliding = true;
+                #ifdef DEBUG_BUILD
                 std::cout << "[C] Hit RIGHT!\n";
+                #endif
             }
         }
 
