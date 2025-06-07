@@ -15,9 +15,9 @@ namespace Raycaster {
         const uint8_t side_length
     );
 
-    const float cast_ray_along_axis(
+    const float cast_ray_along_axis_in_tile(
         const Player* const player_ptr,
-        const Map* const map_tr,
+        const Map* const map_ptr,
         enum MovementDirection dir
     );
 

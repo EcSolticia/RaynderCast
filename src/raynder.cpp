@@ -52,6 +52,7 @@ void Game::gameloop() {
 
         this->renderer_ptr->render_loop();
 
+        /*
         #ifdef DEBUG_BUILD
         if (
             this->player_ptr->get_movement_direction(Axis::HORIZONTAL)
@@ -77,7 +78,7 @@ void Game::gameloop() {
         ) {
             std::cout << "[Player] Moving RIGHT\n";
         }
-        #endif
+        #endif*/
 
         this->player_ptr->hit_data = Raycaster::cast_ray(
             this->player_ptr.get(),

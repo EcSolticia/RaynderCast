@@ -18,23 +18,43 @@ const CartesianPair Raycaster::get_pos_in_tile(
 
 }
 
-const float Raycaster::cast_ray_along_axis(
+const float Raycaster::cast_ray_along_axis_in_tile(
     const Player* const player_ptr,
-    const Map* const map_tr,
+    const Map* const map_ptr,
     enum MovementDirection dir) {
+
+    const CartesianPair pos{
+        player_ptr->get_pos_x(),
+        player_ptr->get_pos_y()
+    };
+
+    const uint8_t side_length{
+        map_ptr->get_side_length()
+    };
+
+    const CartesianPair pos_in_tile{
+        Raycaster::get_pos_in_tile(pos, side_length)
+    };
+
+    float distance;
 
     switch (dir) {
         case MovementDirection::UP:
-            
+            distance = side_length - pos.y;
             break;
         case MovementDirection::DOWN:
+            distance = pos.y;
             break;
         case MovementDirection::LEFT:
+            distance = pos.x;
             break;
         case MovementDirection::RIGHT:
+            distance = side_length - pos.x;
             break;
     }
 
+
+    return distance;
 }
 
 HitData Raycaster::cast_ray(
@@ -45,9 +65,10 @@ HitData Raycaster::cast_ray(
 
     const float angle = player_ptr->get_rotation() + relative_angle_to_player;
     
-    CartesianPair pos;
-    pos.x = player_ptr->get_pos_x();
-    pos.y = player_ptr->get_pos_y();
+    CartesianPair pos{
+        pos.x = player_ptr->get_pos_x(),
+        pos.y = player_ptr->get_pos_y()
+    };
 
     const uint8_t side_length = map_ptr->get_side_length();
 
