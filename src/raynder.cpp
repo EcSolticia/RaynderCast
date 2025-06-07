@@ -2,7 +2,7 @@
 
 #include <renderer/renderer.h>
 #include <map.h>
-#include <player.h>
+#include <player/player.h>
 #include <raycaster.h>
 
 #include <SDL2/SDL.h>

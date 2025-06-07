@@ -23,10 +23,11 @@ set_target_properties(${PROJECT_NAME}
 
 target_sources(${PROJECT_NAME} PRIVATE
     src/raynder.cpp
-    src/player.cpp
     src/map.cpp
     src/raycaster.cpp
 
+    src/player/player.cpp
+    
     src/renderer/renderer.cpp
     src/renderer/renderer_hud.cpp
 )

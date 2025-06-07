@@ -1,5 +1,5 @@
 #include <raycaster.h>
-#include <player.h>
+#include <player/player.h>
 #include <map.h>
 #include <renderer/renderer.h>
 

@@ -1,4 +1,4 @@
-#include <player.h>
+#include <player/player.h>
 #include <stdexcept>
 #include <SDL2/SDL.h>
 #include <math.h>
