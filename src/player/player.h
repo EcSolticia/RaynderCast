@@ -65,6 +65,7 @@ public:
     const float get_basis_d_relative_rotation() const;
     void input_to_dir();
 
+    void detect_collision();
     void move_and_slide();
 
     Player(

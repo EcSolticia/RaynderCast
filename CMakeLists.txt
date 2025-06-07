@@ -27,7 +27,8 @@ target_sources(${PROJECT_NAME} PRIVATE
     src/raycaster.cpp
 
     src/player/player.cpp
-    
+    src/player/player_collision.cpp
+
     src/renderer/renderer.cpp
     src/renderer/renderer_hud.cpp
 )

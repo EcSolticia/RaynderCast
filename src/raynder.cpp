@@ -38,6 +38,7 @@ void Game::gameloop() {
         this->player_ptr->update_key_status();
         this->player_ptr->input_to_dir();
         
+        this->player_ptr->detect_collision();
         this->player_ptr->move_and_slide();
 
         SDL_Event event;
@@ -51,55 +52,6 @@ void Game::gameloop() {
         }
 
         this->renderer_ptr->render_loop();
-
-        enum MovementDirection hdir = this->player_ptr->get_movement_direction(Axis::HORIZONTAL);
-        enum MovementDirection vdir = this->player_ptr->get_movement_direction(Axis::VERTICAL);
-        
-        this->player_ptr->reset_collision_dir();
-        if (Raycaster::cast_ray_along_axis_in_tile(
-            this->player_ptr.get(),
-            this->map_ptr.get(),
-            hdir
-        )) {
-            if (hdir == MovementDirection::UP) {
-                this->player_ptr->collision_direction.up = true;
-                this->player_ptr->collision_direction.y_colliding = true;
-                #ifdef DEBUG_BUILD
-                std::cout << "[C] Hit UP!\n";
-                #endif
-            } else {
-                this->player_ptr->collision_direction.up = false;
-                this->player_ptr->collision_direction.y_colliding = true;
-                #ifdef DEBUG_BUILD
-                std::cout << "[C] Hit DOWN!\n";
-                #endif
-            }
-        }
-        if (Raycaster::cast_ray_along_axis_in_tile(
-            this->player_ptr.get(),
-            this->map_ptr.get(),
-            vdir
-        )) {
-            if (vdir == MovementDirection::LEFT) {
-                this->player_ptr->collision_direction.right = false;
-                this->player_ptr->collision_direction.x_colliding = true;
-                #ifdef DEBUG_BUILD
-                std::cout << "[C] Hit LEFT!\n";
-                #endif
-            } else {
-                this->player_ptr->collision_direction.right = true;
-                this->player_ptr->collision_direction.x_colliding = true;
-                #ifdef DEBUG_BUILD
-                std::cout << "[C] Hit RIGHT!\n";
-                #endif
-            }
-        }
-
-        this->player_ptr->hit_data = Raycaster::cast_ray(
-            this->player_ptr.get(),
-            this->map_ptr.get(),
-            this->player_ptr->get_basis_d_relative_rotation()
-        );
 
         this->renderer_ptr->update_display();
     }
