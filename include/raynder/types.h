@@ -31,8 +31,8 @@ namespace Raynder {
     };
 
     struct RAYNDERCAST_EXPORT CartesianPair {
-        float x;
-        float y;
+        float x{0};
+        float y{0};
     };
 
     struct RAYNDERCAST_EXPORT HitData {

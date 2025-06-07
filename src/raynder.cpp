@@ -29,7 +29,7 @@ void Game::gameloop() {
 
         this->compute_delta();
         #ifdef DEBUG_BUILD
-            //std::cout << "[Game] delta: " << delta << "\n";
+            std::cout << "[Game] delta: " << delta << "\n";
         #endif
 
         this->player_ptr->apply_velocity(this->delta);
@@ -51,6 +51,34 @@ void Game::gameloop() {
         }
 
         this->renderer_ptr->render_loop();
+
+        #ifdef DEBUG_BUILD
+        enum MovementDirection hdir = this->player_ptr->get_movement_direction(Axis::HORIZONTAL);
+        enum MovementDirection vdir = this->player_ptr->get_movement_direction(Axis::VERTICAL);
+        
+        if (Raycaster::cast_ray_along_axis_in_tile(
+            this->player_ptr.get(),
+            this->map_ptr.get(),
+            hdir
+        )) {
+            if (hdir == MovementDirection::UP) {
+                std::cout << "[C] Hit UP!\n";
+            } else {
+                std::cout << "[C] Hit DOWN!\n";
+            }
+        }
+        if (Raycaster::cast_ray_along_axis_in_tile(
+            this->player_ptr.get(),
+            this->map_ptr.get(),
+            vdir
+        )) {
+            if (vdir == MovementDirection::LEFT) {
+                std::cout << "[C] Hit LEFT!\n";
+            } else {
+                std::cout << "[C] Hit RIGHT!\n";
+            }
+        }
+        #endif
 
         /*
         #ifdef DEBUG_BUILD

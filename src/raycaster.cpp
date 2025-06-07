@@ -37,7 +37,7 @@ const CartesianPair Raycaster::get_pos_in_tile(
 
 }
 
-HitData Raycaster::cast_ray_along_axis_in_tile(
+const bool Raycaster::cast_ray_along_axis_in_tile(
     const Player* const player_ptr,
     const Map* const map_ptr,
     enum MovementDirection dir) {
@@ -55,26 +55,33 @@ HitData Raycaster::cast_ray_along_axis_in_tile(
         Raycaster::get_pos_in_tile(pos, side_length)
     };
 
-    HitData hit_data;
-    
+    CartesianPair diff;
+    bool vertical;
+
     switch (dir) {
         case MovementDirection::UP:
-            hit_data.coords.y = side_length - pos.y;
+            diff.y = side_length - pos_in_tile.y;
+            vertical = false;
             break;
         case MovementDirection::DOWN:
-            hit_data.coords.y = pos.y;
+            diff.y = -pos_in_tile.y;
+            vertical = false;
             break;
         case MovementDirection::LEFT:
-            hit_data.coords.x = pos.x;
+            diff.x = -pos_in_tile.x;
+            vertical = true;
             break;
         case MovementDirection::RIGHT:
-            hit_data.coords.x = side_length - pos.x;
+            diff.x = side_length - pos_in_tile.x;
+            vertical = true;
             break;
     }
 
-    throw std::runtime_error("Raycaster::cast_ray_along_axis_in_tile not yet fully implemented.");
+    const IdxPair idx{
+        Raycaster::get_idx(pos, side_length, diff, vertical)
+    };
 
-    return hit_data; // incomplete
+    return (bool)map_ptr->get_data(idx.x, idx.y);
 }
 
 HitData Raycaster::cast_ray(
