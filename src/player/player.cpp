@@ -1,4 +1,4 @@
-#include <player.h>
+#include <player/player.h>
 #include <stdexcept>
 #include <SDL2/SDL.h>
 #include <math.h>
@@ -50,26 +50,23 @@ void Player::apply_angular_velocity(const float delta) {
     this->rotation += angular_vel * delta;
 }
 
-const float Player::get_basis_d_relative_rotation() const {
-    float result;
-    if (basis_dy > 0 && basis_dx == 0) { //forward
-        result = 0;
-    } else if (basis_dy < 0 && basis_dx == 0) { //backward
-        result = M_PI;
-    } else if (basis_dy == 0 && basis_dx > 0) { //left
-        result = -M_PI/2.0;
-    } else if (basis_dy == 0 && basis_dx < 0) { //right
-        result = M_PI/2.0;
-    } else if (basis_dx > 0 && basis_dy > 0) {
-        result = -M_PI/4.0;
-    } else if (basis_dx < 0 && basis_dy > 0) {
-        result = M_PI/4.0;
-    } else if (basis_dx < 0 && basis_dy < 0) {
-        result = 2.0/3.0 * M_PI;
-    } else if (basis_dx > 0 && basis_dy < 0) {
-        result = -2.0/3.0 * M_PI;
+void Player::reset_collision_dir() {
+    this->collision_direction = CollisionDirection();
+}
+
+enum MovementDirection Player::get_movement_direction(enum Axis axis) const {
+    enum MovementDirection dir;
+    switch (axis) {
+        case Axis::HORIZONTAL:
+            if (!global_basis_dy) break;
+            dir = (global_basis_dy > 0) ? MovementDirection::UP : MovementDirection::DOWN;
+            break;
+        case Axis::VERTICAL:
+            if (!global_basis_dx) break;
+            dir = (global_basis_dx > 0) ? MovementDirection::RIGHT : MovementDirection::LEFT;
+            break;
     }
-    return result;
+    return dir;
 }
 
 void Player::input_to_dir() {
@@ -107,7 +104,7 @@ void Player::move_and_slide() {
     const float p_vel_x = this->global_basis_dx * this->config.translational_speed;
     const float p_vel_y = this->global_basis_dy * this->config.translational_speed;
 
-    const float relative_angle = this->get_basis_d_relative_rotation();
+    /*const float relative_angle = this->get_basis_d_relative_rotation();
 
     const float hit_dist_squared = pow(hit_data.coords.x, 2) + pow(hit_data.coords.y, 2);
 
@@ -121,8 +118,20 @@ void Player::move_and_slide() {
     } else {
         this->vel_x = p_vel_x;
         this->vel_y = p_vel_y;
-    }
+    }*/
 
+
+    if (collision_direction.y_colliding && collision_direction.x_colliding) {
+        
+    } else if (collision_direction.y_colliding) {
+        this->vel_x = p_vel_x;
+    } else if (collision_direction.x_colliding) {
+        this->vel_y = p_vel_y;
+    } else {
+        this->vel_x = p_vel_x;
+        this->vel_y = p_vel_y;
+    }
+    
     if (this->key_pressed.q) {
         this->angular_vel = -this->config.rotational_speed;
     }

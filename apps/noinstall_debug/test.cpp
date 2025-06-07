@@ -12,7 +12,7 @@ int main() {
     std::string map_data = "1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1\n"
                            "1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1\n"
                            "1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1\n"
-                           "1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1\n"
+                           "1 0 0 1 0 0 0 0 0 0 0 0 0 0 0 1\n"
                            "1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1\n"
                            "1 0 0 0 0 0 1 0 0 0 0 0 0 0 0 1\n"
                            "1 0 0 0 0 0 1 0 0 0 0 0 1 1 1 1\n"
@@ -33,9 +33,10 @@ int main() {
     Raynder::PlayerConfig pconfig;
     pconfig.initial_x = 72;
     pconfig.initial_y = 72;
+    pconfig.initial_rotation = M_PI/4.0;
 
     pconfig.translational_speed = 125.0;
-    pconfig.collision_radius = 20.0;
+    pconfig.collision_radius = 2.0;
     rconfig.floor_color = Raynder::Color{78, 102, 136};
     rconfig.ceiling_color = Raynder::Color{51, 45, 86};
 
