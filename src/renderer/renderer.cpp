@@ -24,7 +24,7 @@ namespace Raynder {
 
 void Renderer::set_drawing_color(const uint8_t r, const uint8_t g, const uint8_t b) const {
     if (SDL_SetRenderDrawColor(this->context, r, g, b, 255)) {
-            throw std::runtime_error(SDL_GetError());
+        throw std::runtime_error(SDL_GetError());
     }
 }
 
@@ -33,11 +33,11 @@ void Renderer::set_drawing_color(const Color color) const {
 }
 
 void Renderer::draw_quad(
-        const float x1, const float y1,
-        const float x2, const float y2,
-        const float x3, const float y3,
-        const float x4, const float y4,
-        const Color color
+    const float x1, const float y1,
+    const float x2, const float y2,
+    const float x3, const float y3,
+    const float x4, const float y4,
+    const Color color
 ) {
     const SDL_Color draw_color{color.r, color.g, color.b, 255};
     
@@ -163,9 +163,9 @@ void Renderer::draw_3d_floor(
     enum Viewport viewport
 ) {        
     
-    float top_y;
-    float bottom_y;
-    float max_x;
+    float top_y{0};
+    float bottom_y{0};
+    float max_x{0};
     float min_x = this->config.eucliview_offset_x;
 
     switch (viewport) {
@@ -179,7 +179,10 @@ void Renderer::draw_3d_floor(
             top_y = this->eucliview_height/2.0 + this->config.eucliview_offset_y;
             bottom_y = this->eucliview_height + this->config.eucliview_offset_y;
             max_x = this->eucliview_width + min_x;
-            break; 
+            break;
+        default:
+            throw std::runtime_error("Unexpected code execution path.");
+            break;
     }
     
     const Color col = this->config.floor_color;
@@ -203,7 +206,7 @@ void Renderer::draw_3d_wall(
 ) {
     this->viewport_indicator = viewport;
 
-    float last_theta;
+    float last_theta{0};
     HitData last_hit_data;
     bool first_theta_iteration = true;
 
@@ -219,11 +222,9 @@ void Renderer::draw_3d_wall(
 
         const bool same_or_adjacent_blocks = Renderer::same_or_adjacent_blocks(last_hit_data.hit_idx, hit_data.hit_idx);
 
-        bool convex_outline_from_view;
-
         if (!first_theta_iteration && same_or_adjacent_blocks) {
 
-            convex_outline_from_view = !diagonal_blocks(last_hit_data.hit_idx, hit_data.hit_idx);
+            const bool convex_outline_from_view = !diagonal_blocks(last_hit_data.hit_idx, hit_data.hit_idx);
             const bool diagonal = !convex_outline_from_view;
 
             const bool same_orientation = hit_data.vertical == last_hit_data.vertical;
@@ -255,13 +256,16 @@ const float Renderer::get_renderer_distance(
     const float y, 
     enum Viewport viewport
 ) const {
-    float result;
+    float result = 0.0f;
     switch (viewport) {
         case Viewport::MAIN:
             result = this->distance_func(x, y);
             break;
         case Viewport::EUCLI:
             result = sqrt(pow(x, 2) + pow(y, 2));
+            break;
+        default:
+            throw std::runtime_error("Unexpected code execution path.");
             break;
     }
     return result;

@@ -20,9 +20,9 @@ class RAYNDERCAST_EXPORT Game {
     std::unique_ptr<Map> map_ptr;
     std::unique_ptr<Player> player_ptr;
 
-    uint64_t last_tick;
-    uint64_t current_tick;
-    float delta;
+    uint64_t last_tick{0};
+    uint64_t current_tick{0};
+    float delta{0};
 
     void compute_delta();
 

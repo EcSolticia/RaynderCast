@@ -56,7 +56,7 @@ const bool Raycaster::cast_ray_along_axis_in_tile(
     };
 
     CartesianPair diff;
-    bool vertical;
+    bool vertical{false};
 
     switch (dir) {
         case MovementDirection::UP:
