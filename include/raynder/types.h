@@ -51,11 +51,11 @@ namespace Raynder {
     };
 
     struct SignedColor {
-        int16_t r = 0;
-        int16_t g = 0;
-        int16_t b = 0;
+        int16_t r;
+        int16_t g;
+        int16_t b;
 
-        SignedColor();
+        SignedColor() : r{0}, g{0}, b{0} {};
         SignedColor(const int16_t r, const int16_t g, const int16_t b) : r{r}, g{g}, b{b} {}  
         SignedColor(const Color color) : 
             r{(int16_t)color.r}, 
