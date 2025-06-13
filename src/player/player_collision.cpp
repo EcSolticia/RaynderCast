@@ -111,9 +111,9 @@ void Player::detect_collision() {
     if (!this->collision_direction.x_colliding && !this->collision_direction.y_colliding) {
         if (this->map_ptr->get_data(idx.x + dx, idx.y + dy)) {
             #ifdef DEBUG_BUILD
-            std::cout << "[C] Woah woah woah, hold on!\n";
-            std::cout << "[x] " << (int)dx << "\n";
-            std::cout << "[y] " << (int)dy << "\n";
+            std::cout << "[C] Hit player-facing diagonal!\n";
+            std::cout << "[C][x] " << (int)dx << "\n";
+            std::cout << "[C][y] " << (int)dy << "\n";
             #endif
             collision_direction.x_colliding = true;
             collision_direction.y_colliding = true;
