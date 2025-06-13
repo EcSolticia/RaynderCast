@@ -55,7 +55,7 @@ void Player::reset_collision_dir() {
 }
 
 enum MovementDirection Player::get_movement_direction(enum Axis axis) const {
-    enum MovementDirection dir;
+    enum MovementDirection dir = MovementDirection::UP;
     switch (axis) {
         case Axis::HORIZONTAL:
             if (!global_basis_dy) break;
@@ -64,6 +64,9 @@ enum MovementDirection Player::get_movement_direction(enum Axis axis) const {
         case Axis::VERTICAL:
             if (!global_basis_dx) break;
             dir = (global_basis_dx > 0) ? MovementDirection::RIGHT : MovementDirection::LEFT;
+            break;
+        default:
+            throw std::runtime_error("Unexpected code execution path.");
             break;
     }
     return dir;
@@ -103,23 +106,6 @@ void Player::move_and_slide() {
 
     const float p_vel_x = this->global_basis_dx * this->config.translational_speed;
     const float p_vel_y = this->global_basis_dy * this->config.translational_speed;
-
-    /*const float relative_angle = this->get_basis_d_relative_rotation();
-
-    const float hit_dist_squared = pow(hit_data.coords.x, 2) + pow(hit_data.coords.y, 2);
-
-    if (hit_dist_squared <= pow(this->config.collision_radius, 2)) {
-        
-        if (hit_data.vertical) {
-            this->vel_y = p_vel_y;
-        } else {
-            this->vel_x = p_vel_x;
-        }
-    } else {
-        this->vel_x = p_vel_x;
-        this->vel_y = p_vel_y;
-    }*/
-
 
     if (collision_direction.y_colliding && collision_direction.x_colliding) {
         

@@ -26,8 +26,8 @@ namespace Raynder {
     };
 
     struct RAYNDERCAST_EXPORT IdxPair {
-        uint8_t x;
-        uint8_t y;
+        uint8_t x{0};
+        uint8_t y{0};
     };
 
     struct RAYNDERCAST_EXPORT CartesianPair {
@@ -38,7 +38,7 @@ namespace Raynder {
     struct RAYNDERCAST_EXPORT HitData {
         CartesianPair coords;
         IdxPair hit_idx;
-        bool vertical;
+        bool vertical{false};
     };
 
     struct RAYNDERCAST_EXPORT Color {
@@ -51,11 +51,11 @@ namespace Raynder {
     };
 
     struct SignedColor {
-        int16_t r = 0;
-        int16_t g = 0;
-        int16_t b = 0;
+        int16_t r;
+        int16_t g;
+        int16_t b;
 
-        SignedColor();
+        SignedColor() : r{0}, g{0}, b{0} {};
         SignedColor(const int16_t r, const int16_t g, const int16_t b) : r{r}, g{g}, b{b} {}  
         SignedColor(const Color color) : 
             r{(int16_t)color.r}, 

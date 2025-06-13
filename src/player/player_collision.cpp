@@ -9,9 +9,9 @@
 namespace Raynder {
 
 const float Player::get_basis_d_relative_rotation() const {
-    float result;
+    float result = 0.0;
     if (basis_dy > 0 && basis_dx == 0) { //forward
-        result = 0;
+        result = 0.0;
     } else if (basis_dy < 0 && basis_dx == 0) { //backward
         result = M_PI;
     } else if (basis_dy == 0 && basis_dx > 0) { //left

@@ -33,7 +33,7 @@ Map::Map(
     std::regex row_regex(row_regex_str);
 
     std::stringstream ss(string_as_data);
-    std::string line;
+    std::string line{""};
 
     uint8_t loc_y = 0;
 
