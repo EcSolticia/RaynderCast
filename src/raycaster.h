@@ -29,6 +29,12 @@ namespace Raycaster {
     );
 
     const HitData cast_ray(
+        const CartesianPair origin_pos,
+        const float absolute_angle,
+        const Map* const map_ptr
+    );
+
+    const HitData cast_ray(
         const Player* const player_ptr, 
         const Map* const map_ptr,
         const float relative_angle_to_player

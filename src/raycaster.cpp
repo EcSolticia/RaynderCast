@@ -85,27 +85,20 @@ const bool Raycaster::cast_ray_along_axis_in_tile(
 }
 
 const HitData Raycaster::cast_ray(
-    const Player* const player_ptr, 
-    const Map* const map_ptr,
-    const float relative_angle_to_player
+    const CartesianPair origin_pos,
+    const float absolute_angle,
+    const Map* const map_ptr
 ) {
-
-    const float angle = player_ptr->get_rotation() + relative_angle_to_player;
-    
-    CartesianPair pos{
-        pos.x = player_ptr->get_pos_x(),
-        pos.y = player_ptr->get_pos_y()
-    };
 
     const uint8_t side_length = map_ptr->get_side_length();
 
     CartesianPair pos_in_tile = Raycaster::get_pos_in_tile(
-        pos,
+        origin_pos,
         side_length
     );
 
-    const float cos_angle = cos(angle);
-    const float sin_angle = sin(angle);
+    const float cos_angle = cos(absolute_angle);
+    const float sin_angle = sin(absolute_angle);
     const float tan_angle = sin_angle/cos_angle;
     const float cot_angle = cos_angle/sin_angle;
 
@@ -128,7 +121,7 @@ const HitData Raycaster::cast_ray(
     IdxPair idxv;
 
     while (!hit_wall_v) {
-        idxv = Raycaster::get_idx(pos, side_length, Dv, true);
+        idxv = Raycaster::get_idx(origin_pos, side_length, Dv, true);
 
         if (idxv.y >= map_ptr->get_row_count() || idxv.x >= map_ptr->get_column_count()) {
             hit_wall_v = true;
@@ -161,7 +154,7 @@ const HitData Raycaster::cast_ray(
     IdxPair idxh;
 
     while (!hit_wall_h) {
-        idxh = Raycaster::get_idx(pos, side_length, Dh, false);
+        idxh = Raycaster::get_idx(origin_pos, side_length, Dh, false);
 
         if (idxh.y >= map_ptr->get_row_count() || idxh.x >= map_ptr->get_column_count()) {
             hit_wall_h = true;
@@ -191,6 +184,27 @@ const HitData Raycaster::cast_ray(
     }
 
     return hit_data;
+
+}
+
+const HitData Raycaster::cast_ray(
+    const Player* const player_ptr, 
+    const Map* const map_ptr,
+    const float relative_angle_to_player
+) {
+
+    const float angle = player_ptr->get_rotation() + relative_angle_to_player;
+    
+    CartesianPair pos{
+        player_ptr->get_pos_x(),
+        player_ptr->get_pos_y()
+    };
+
+    return cast_ray(
+        pos,
+        angle,
+        map_ptr
+    );
 }
 
 }
