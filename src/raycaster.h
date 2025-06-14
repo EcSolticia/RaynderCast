@@ -28,7 +28,7 @@ namespace Raycaster {
         enum MovementDirection dir
     );
 
-    HitData cast_ray(
+    const HitData cast_ray(
         const Player* const player_ptr, 
         const Map* const map_ptr,
         const float relative_angle_to_player

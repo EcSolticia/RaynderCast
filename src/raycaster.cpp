@@ -84,7 +84,7 @@ const bool Raycaster::cast_ray_along_axis_in_tile(
     return (bool)map_ptr->get_data(idx.x, idx.y);
 }
 
-HitData Raycaster::cast_ray(
+const HitData Raycaster::cast_ray(
     const Player* const player_ptr, 
     const Map* const map_ptr,
     const float relative_angle_to_player
