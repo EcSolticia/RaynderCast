@@ -87,8 +87,13 @@ namespace Raynder {
     struct RAYNDERCAST_EXPORT ViewportConfig {
         uint16_t ray_count{1024};
         float field_of_view{M_PI/3.0};
-        RendererDistanceFunc distance_function;
-        Renderer* renderer_ptr;
+        RendererDistanceFunc distance_function{
+            [](const float x, const float y) -> float {
+                return sqrt(
+                    pow(x, 2.0) + pow(y, 2.0)
+                );
+            }
+        };
     };
 
     struct RAYNDERCAST_EXPORT PlayerConfig {

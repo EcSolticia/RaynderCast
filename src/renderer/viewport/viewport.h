@@ -25,7 +25,10 @@ public:
         const uint16_t origin_y,
         const uint16_t width,
         const uint16_t height,
-        const ViewportConfig config
+
+        const ViewportConfig config,
+
+        Renderer* renderer_ptr
     ); 
 };
 
