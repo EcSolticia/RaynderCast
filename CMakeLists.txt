@@ -28,9 +28,8 @@ target_sources(${PROJECT_NAME} PRIVATE
 
     src/player/player.cpp
     src/player/player_collision.cpp
-
+    
     src/renderer/renderer.cpp
-    src/renderer/renderer_hud.cpp
 )
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)

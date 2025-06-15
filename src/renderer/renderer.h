@@ -34,11 +34,6 @@ class Renderer {
     const Map* const map_ptr = nullptr;
     const Player* const player_ptr = nullptr;
 
-    enum FillType {
-        NOT_FILLED = 0,
-        FILLED = 1
-    };
-
     std::vector<SDL_Vertex> quad_buffer;
     std::vector<int> quad_indices = { 0, 1, 2, 0, 2, 3 };
 
@@ -70,58 +65,6 @@ class Renderer {
         const float x4, const float y4,
         const Color color
     );
-      
-    enum Viewport {
-        MAIN,
-        EUCLI
-    };
-
-    Viewport viewport_indicator;
-
-    const Color get_line_color(
-        const float avg_line_height,
-        const bool hit_vertical
-    ) const;
-
-    void draw_quadri_3d(
-        const uint16_t x1,
-        const uint16_t line_height1,
-        const uint16_t x2,
-        const uint16_t line_height2,
-        const uint16_t midpoint,
-        const bool hit_vertical
-    );
-
-    void draw_quadri_3d_from_angles(
-        const float angle1, 
-        const float distance1,
-        const float angle2,
-        const float distance2,
-        const bool vertical,
-        const uint16_t width,
-        const uint16_t height,
-        const uint16_t origin_x,
-        const uint16_t origin_y
-    );
-
-    void draw_eucliview_ceiling();
-
-    void draw_3d_floor(
-        enum Viewport viewport
-    );
-
-    void draw_3d_wall(
-        enum Viewport viewport,
-        const uint16_t width,
-        const uint16_t height,
-        const uint16_t origin_x,
-        const uint16_t origin_y,
-        const float theta_increment
-    );
-
-    void draw_viewport(enum Viewport viewport);
-
-    void hud_draw_eucliview();
 
 public:
     void set_drawing_color(const uint8_t r, const uint8_t g, const uint8_t b) const;
@@ -132,12 +75,6 @@ public:
     RendererDistanceFunc distance_func = [](float x, float y) -> float {
         return sqrt(pow(x, 2) + pow(y, 2));
     };
-
-    const float get_renderer_distance(
-        const float x,
-        const float y,
-        enum Viewport viewport
-    ) const;
 
     void clear_display() const;
 
