@@ -84,6 +84,13 @@ namespace Raynder {
 
     typedef std::function<float(float, float)> RendererDistanceFunc;
 
+    struct RAYNDERCAST_EXPORT ViewportConfig {
+        uint16_t ray_count{1024};
+        float field_of_view{M_PI/3.0};
+        RendererDistanceFunc distance_function;
+        Renderer* renderer_ptr;
+    };
+
     struct RAYNDERCAST_EXPORT PlayerConfig {
         float collision_radius{10.0};
         
