@@ -76,10 +76,6 @@ namespace Raynder {
         Color horizontal_wall_color{100, 100, 100};
 
         uint16_t ray_count{1024};
-        uint16_t eucliview_ray_count{128};
-
-        uint16_t eucliview_offset_x{8};
-        uint16_t eucliview_offset_y{8};
 
         float field_of_view{M_PI * 1/2};
 
@@ -109,8 +105,6 @@ namespace Raynder {
     struct RAYNDERCAST_EXPORT GameConfig {
         uint16_t window_width{640};
         uint16_t window_height{480};
-        uint16_t eucliview_height{16 * 4};
-        uint16_t eucliview_width{16 * 6};
         std::string window_title{"RaynderCast Default Title"};
     };
 

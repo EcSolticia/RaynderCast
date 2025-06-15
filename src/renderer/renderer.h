@@ -25,9 +25,6 @@ class Renderer {
     const uint16_t window_height;
     const uint16_t window_width;
 
-    const uint16_t eucliview_height;
-    const uint16_t eucliview_width;
-
     SDL_Window* window;
     SDL_Renderer* context;
 
@@ -85,8 +82,6 @@ public:
     Renderer(
         const uint16_t window_width,
         const uint16_t window_height,
-        const uint16_t eucliview_height,
-        const uint16_t eucliview_width,
         const std::string window_title,
         const Map* const map_ptr,
         const Player* const player_ptr,

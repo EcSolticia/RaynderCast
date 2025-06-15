@@ -47,9 +47,6 @@ int main() {
 
     rconfig.ray_count = 1024;
 
-    rconfig.eucliview_offset_x = 8;
-    rconfig.eucliview_offset_y = 8;
-
     Raynder::MapConfig mconfig{16, 16, 32, map_data};
 
     try {

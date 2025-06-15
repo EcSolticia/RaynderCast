@@ -80,10 +80,6 @@ void Game::validate_renderer_config(const RendererConfig& config) const {
         throw std::runtime_error("Number of rays must be greater than zero.");
     }
 
-    if (!config.eucliview_ray_count) {
-        throw std::runtime_error("Number of eucliview rays must be greater than zero.");
-    }
-
     if (config.field_of_view <= 0) {
         throw std::runtime_error("Field of view must be greater than zero.");
     }
@@ -110,10 +106,6 @@ Game::Game(
         throw std::runtime_error("Window resolution cannot be 0x0.");
     }
 
-    if (!config.eucliview_width || !config.eucliview_height) {
-        throw std::runtime_error("Eucliview resolution cannot be 0x0.");
-    }
-
     this->validate_map_config(map_config);
     this->validate_player_config(player_config);
     this->validate_renderer_config(renderer_config);
@@ -137,8 +129,6 @@ Game::Game(
     this->renderer_ptr = std::make_unique<Renderer>(
         config.window_width, 
         config.window_height,
-        config.eucliview_height,
-        config.eucliview_width, 
         config.window_title,
         this->map_ptr.get(),
         this->player_ptr.get(),

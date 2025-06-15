@@ -78,8 +78,6 @@ Renderer::Renderer(
     
     const uint16_t window_width, 
     const uint16_t window_height,
-    const uint16_t eucliview_height,
-    const uint16_t eucliview_width,
     std::string window_title,
     const Map* const map_ptr,
     const Player* const player_ptr,
@@ -87,8 +85,6 @@ Renderer::Renderer(
 
 ) : window_width{window_width}, 
     window_height{window_height}, 
-    eucliview_height{eucliview_height}, 
-    eucliview_width{eucliview_width},
     map_ptr{map_ptr},
     player_ptr{player_ptr},
     config{config}
