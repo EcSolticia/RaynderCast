@@ -16,6 +16,7 @@ pkgs.mkShellNoCC {
   packages = with pkgs; [
     gcc
     libgcc
+    gdb
     gnumake
     cmake
     SDL2
